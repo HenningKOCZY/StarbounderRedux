@@ -38,6 +38,4 @@ sysinfo.txt
 *.apk
 *.unitypackage
 *.prefab
-*.shader
-*.mat
 *.psd
