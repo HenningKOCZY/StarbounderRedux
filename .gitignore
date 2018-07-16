@@ -43,8 +43,4 @@ sysinfo.txt
 *.shader
 *.mat
 *.meta
-*.mp3
-*.wav
-*.aif
 *.psd
-*.mb
