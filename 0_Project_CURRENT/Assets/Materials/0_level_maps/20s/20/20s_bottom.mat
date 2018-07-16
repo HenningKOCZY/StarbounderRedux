@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 20s_bottom
+  m_Shader: {fileID: 4800000, guid: a796e1d080760445ebc802d0ba8dd227, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _LightMap:
+        m_Texture: {fileID: 2800000, guid: 1ce4636b1b6c448b0813946f8727fa9c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 335a31f2788054d6fb1f52ad9581062e, type: 3}
+        m_Scale: {x: 4, y: 4}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Shininess: 0.7
+    m_Colors:
+    - _Color: {r: 0.9764706, g: 0.85266376, b: 0.13785467, a: 1}
+    - _Emission: {r: 1, g: 0.7886443, b: 0.39552242, a: 1}
+    - _SpecColor: {r: 0, g: 0, b: 0, a: 1}
+--- !u!1002 &2100001
+EditorExtensionImpl:
+  serializedVersion: 6
