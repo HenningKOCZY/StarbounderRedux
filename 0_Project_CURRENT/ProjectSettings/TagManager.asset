@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - StartCube
+  - StartPos
+  - ResetPos
+  - DiagA
+  - DiagB
+  - Start
+  - DiagA1
+  - DiagA2
+  - DiagB1
+  - DiagB2
+  - mayaMesh
+  - Fade
+  - Kill
+  - Tilted
+  - artifact
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - ship
+  - roads
+  - blockRay
+  - artifact
+  - GUI
+  - platform
+  - 
+  - GUILayer1
+  - GUILayer2
+  - GUILayer3
+  - GUILayer4
+  - GUILayer5
+  - GUILayer6
+  - GUILayer7
+  - GUILayer8
+  - GUILayer9
+  - GUILayer10
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0

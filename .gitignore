@@ -37,3 +37,14 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+*.prefab
+*.cs
+*.js
+*.shader
+*.mat
+*.meta
+*.mp3
+*.wav
+*.aif
+*.psd
+*.mb
