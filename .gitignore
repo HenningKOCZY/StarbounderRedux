@@ -40,7 +40,6 @@ sysinfo.txt
 0_Project_CURRENT/Assets/Materials/0_level_maps/40s/48/48_sides2.psd
 0_Project_CURRENT/Assets/Materials/0_level_maps/40s/48/48_top2.psd
 
-0_Project_CURRENT/Assets/Materials/0_level_maps/50s/51/
 
 0_Project_CURRENT/Assets/Materials/0_level_maps/50s/tile_top.psd
 0_Project_CURRENT/Assets/Materials/0_level_maps/50s/tile_Rside.psd
@@ -48,3 +47,5 @@ sysinfo.txt
 0_Project_CURRENT/Assets/Materials/0_level_maps/50s/50/50_front.psd
 0_Project_CURRENT/Assets/Materials/0_level_maps/50s/50/50_bottom.psd
 0_Project_CURRENT/Assets/Materials/0_level_maps/50s/50/50_top.psd
+0_Project_CURRENT/Assets/Materials/0_level_maps/50s/50/50_Rside_lightmap.psd
+0_Project_CURRENT/Assets/Materials/0_level_maps/50s/51/51_Lside_lightmap.psd
