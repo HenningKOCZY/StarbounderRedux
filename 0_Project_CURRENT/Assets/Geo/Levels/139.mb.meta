@@ -1,0 +1,177 @@
+fileFormatVersion: 2
+guid: 22d87de921780d8449a81acd6fd514ba
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: sideSurfaces
+    100002: topSurfaces
+    100004: frontSurfaces
+    100006: bottomSurfaces
+    100008: //RootNode
+    400000: sideSurfaces
+    400002: topSurfaces
+    400004: frontSurfaces
+    400006: bottomSurfaces
+    400008: //RootNode
+    2300000: sideSurfaces
+    2300002: topSurfaces
+    2300004: frontSurfaces
+    2300006: bottomSurfaces
+    3300000: sideSurfaces
+    3300002: topSurfaces
+    3300004: frontSurfaces
+    3300006: bottomSurfaces
+    4300000: topSurfaces
+    4300002: sideSurfaces
+    4300004: frontSurfaces
+    4300006: bottomSurfaces
+    4300008: left
+    4300010: right
+    4300012: front
+    4300014: left
+    4300016: right
+    4300018: front
+    4300020: left
+    4300022: right
+    4300024: front
+    4300026: left
+    4300028: right
+    4300030: front
+    4300032: left
+    4300034: right
+    4300036: front
+    4300038: left
+    4300040: right
+    4300042: front
+    4300044: left
+    4300046: right
+    4300048: front
+    4300050: left
+    4300052: right
+    4300054: front
+    4300056: left
+    4300058: right
+    4300060: front
+    4300062: left
+    4300064: right
+    4300066: front
+    4300068: left
+    4300070: right
+    4300072: front
+    4300074: left
+    4300076: right
+    4300078: front
+    4300080: left
+    4300082: right
+    4300084: front
+    4300086: left
+    4300088: right
+    4300090: front
+    4300092: left
+    4300094: right
+    4300096: front
+    4300098: left
+    4300100: right
+    4300102: front
+    4300104: left
+    4300106: right
+    4300108: front
+    4300110: left
+    4300112: right
+    4300114: front
+    4300116: left
+    4300118: right
+    4300120: front
+    4300122: left
+    4300124: right
+    4300126: front
+    4300128: left
+    4300130: right
+    4300132: front
+    4300134: topSurfaces1
+    4300136: frontFadeSurfaces
+    4300138: sideFadeSurfaces
+    4300140: sideSurfaces1
+    4300142: frontSurfaces1
+    11100000: //RootNode
+  externalObjects: {}
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 0
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 4
+    normalCalculationMode: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  humanoidOversampling: 1
+  additionalBone: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

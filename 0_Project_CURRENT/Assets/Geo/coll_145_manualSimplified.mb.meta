@@ -1,0 +1,227 @@
+fileFormatVersion: 2
+guid: 88837d604bedf47478e6ac611c6f7dc8
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100152: //RootNode
+    400152: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: polySurface1
+    4300002: polySurface2
+    4300004: polySurface3
+    4300006: polySurface4
+    4300008: polySurface5
+    4300010: polySurface6
+    4300012: polySurface7
+    4300014: polySurface8
+    4300016: polySurface9
+    4300018: polySurface10
+    4300020: polySurface11
+    4300022: polySurface12
+    4300024: polySurface13
+    4300026: polySurface14
+    4300028: polySurface15
+    4300030: polySurface16
+    4300032: polySurface17
+    4300034: polySurface18
+    4300036: polySurface19
+    4300038: polySurface20
+    4300040: polySurface21
+    4300042: polySurface22
+    4300044: polySurface23
+    4300046: polySurface24
+    4300048: polySurface25
+    4300050: polySurface26
+    4300052: polySurface27
+    4300054: polySurface28
+    4300056: polySurface29
+    4300058: polySurface30
+    4300060: polySurface31
+    4300062: polySurface32
+    4300064: polySurface33
+    4300066: polySurface34
+    4300068: polySurface35
+    4300070: polySurface36
+    4300072: polySurface37
+    4300074: polySurface38
+    4300076: polySurface39
+    4300078: polySurface40
+    4300080: polySurface41
+    4300082: polySurface42
+    4300084: polySurface43
+    4300086: polySurface44
+    4300088: polySurface45
+    4300090: polySurface46
+    4300092: polySurface47
+    4300094: polySurface48
+    4300096: polySurface49
+    4300098: polySurface50
+    4300100: polySurface51
+    4300102: polySurface52
+    4300104: polySurface53
+    4300106: polySurface54
+    4300108: polySurface55
+    4300110: polySurface56
+    4300112: polySurface57
+    4300114: polySurface58
+    4300116: polySurface59
+    4300118: polySurface60
+    4300120: polySurface61
+    4300122: polySurface62
+    4300124: polySurface63
+    4300126: polySurface64
+    4300128: polySurface65
+    4300130: polySurface66
+    4300132: polySurface67
+    4300134: polySurface68
+    4300136: polySurface69
+    4300138: polySurface70
+    4300140: polySurface71
+    4300142: polySurface72
+    4300144: polySurface73
+    4300146: polySurface74
+    4300148: polySurface75
+    4300150: polySurface76
+    4300152: polySurface77
+    4300154: polySurface78
+    4300156: polySurface79
+    4300158: polySurface80
+    4300160: polySurface81
+    4300162: polySurface82
+    4300164: polySurface83
+    4300166: polySurface84
+    4300168: polySurface85
+    4300170: polySurface86
+    4300172: polySurface87
+    4300174: polySurface88
+    4300176: polySurface89
+    4300178: polySurface90
+    4300180: polySurface91
+    4300182: polySurface92
+    4300184: polySurface93
+    4300186: polySurface94
+    4300188: polySurface95
+    4300190: polySurface96
+    4300192: polySurface97
+    4300194: polySurface98
+    4300196: polySurface99
+    4300198: polySurface100
+    4300200: polySurface101
+    4300202: polySurface102
+    4300204: polySurface103
+    4300206: polySurface104
+    4300208: polySurface105
+    4300210: polySurface106
+    4300212: polySurface107
+    4300214: polySurface108
+    4300216: polySurface109
+    4300218: polySurface110
+    4300220: polySurface111
+    4300222: polySurface112
+    4300224: polySurface113
+    4300226: polySurface114
+    4300228: polySurface115
+    4300230: polySurface116
+    4300232: polySurface117
+    4300234: polySurface118
+    4300236: polySurface119
+    4300238: polySurface120
+    4300240: polySurface121
+    4300242: polySurface122
+    4300244: polySurface123
+    4300246: polySurface124
+    4300248: polySurface125
+    4300250: polySurface126
+    4300252: polySurface127
+    4300254: polySurface128
+    4300256: polySurface129
+    4300258: polySurface130
+    4300260: polySurface131
+    4300262: polySurface132
+    4300264: polySurface133
+    4300266: polySurface134
+    4300268: polySurface135
+    4300270: collMesh
+    11100000: //RootNode
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 3
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 0
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 4
+    normalCalculationMode: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  humanoidOversampling: 1
+  additionalBone: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
