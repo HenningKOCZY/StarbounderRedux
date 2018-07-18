@@ -13,7 +13,7 @@ public class PantherFlagScript : MonoBehaviour {
 	MoveShip ship;
 	Material hologramMat;
 
-	int on = 0;
+	public int on = 0;
 	bool turnOn = false;
 	bool flyIn = false;
 	Vector4 projectorMatColor;

@@ -7,7 +7,7 @@ public class GameMaster : MonoBehaviour {
 		Computer,
 		iPhone
 
-	}
+		}
 
 	public DeviceType device;
 
@@ -15,12 +15,12 @@ public class GameMaster : MonoBehaviour {
 		Player,
 		Programmer
 
-	}
+		}
 
 	public DiagMode diagMode;
 
 	GameObject pantherFlag;
-	PantherFlagScript pantherFlagScript;
+	public PantherFlagScript pantherFlagScript;
 	GameObject musicSource;
 	public int level;
 	bool clearData;
@@ -39,9 +39,9 @@ public class GameMaster : MonoBehaviour {
 	public int worldNum;
 	public int gamePhase;
 	public float gameSpeed;
-	Vector3 startPos;
-	Vector3[] resetPos;
-	int rPointCounter = 0;
+	public Vector3 startPos;
+	public Vector3[] resetPos;
+	public int rPointCounter = 0;
 	public int shipNum;
 	GameObject currLevel;
 	GameObject which;
@@ -57,7 +57,7 @@ public class GameMaster : MonoBehaviour {
 	Light levelLight;
 	Color[] levelLightColor;
 
-	BG_plane bgScript;
+	public BG_plane bgScript;
 	GUIScript gui;
 	MoveShip ship;
 	MoveCam cam;
@@ -194,7 +194,7 @@ public class GameMaster : MonoBehaviour {
 			pantherFlag.transform.position = new Vector3(0, 0, -100);
 	}
 
-	void updateGameSpeed(int num) {
+	public void updateGameSpeed(int num) {
 		gameSpeed = 0.75f + (num * 0.125f);
 		PlayerPrefs.SetInt("GameSpeed", num);
 		gui.gameSpeed = num;
@@ -204,7 +204,7 @@ public class GameMaster : MonoBehaviour {
 		}
 	}
 
-	void updateWorld() {
+	public void updateWorld() {
 		if (gui.tutorialState < 1 && level == 60) {
 			gui.tutorialState = 1;
 			PlayerPrefs.SetInt("TutorialState", 1);
@@ -269,7 +269,7 @@ public class GameMaster : MonoBehaviour {
 		}	
 	}
 
-	void makeLevel() {
+	public void makeLevel() {
 		print("makeLevel!");
 		updateWorld();
 
@@ -323,7 +323,7 @@ public class GameMaster : MonoBehaviour {
 
 
 
-	void killLevel() {
+	public void killLevel() {
 		if (pantherFlag) {
 			pantherFlag.transform.position = new Vector3(0, 0, -100);
 			pantherFlagScript.GetComponent<AudioSource>().Stop();
@@ -483,7 +483,7 @@ public class GameMaster : MonoBehaviour {
 		}
 	}
 
-	void incrementLevel() {
+	public void incrementLevel() {
 		level++;
 		if (level == 60)
 			level = 0;
@@ -493,12 +493,12 @@ public class GameMaster : MonoBehaviour {
 	}
 
 
-	void setLevel(int lev) {
+	public void setLevel(int lev) {
 		level = lev;
-		PlayerPrefs.SetInt("Level", level);
+		PlayerPrefs.SetInt("Level", lev);
 	}
 
-	bool saveTime(float t) {
+	public bool saveTime(float t) {
 		oldRecord = PlayerPrefs.GetFloat(("Level" + level + "Time"), 99.99f);
 		if (t < oldRecord) {
 			PlayerPrefs.SetFloat(("Level" + level + "Time"), t);
@@ -507,7 +507,7 @@ public class GameMaster : MonoBehaviour {
 			return false;
 	}
 
-	int countPanthers() {
+	public int countPanthers() {
 		int flagTotal = 0;
 	
 		for (int i = 0; i < 60; i++) {
@@ -517,7 +517,7 @@ public class GameMaster : MonoBehaviour {
 		return flagTotal;
 	}
 
-	int countArtifacts() {
+	public int countArtifacts() {
 		int artTotal = 0;
 	
 		for (int i = 0; i < 60; i++) {
@@ -532,7 +532,7 @@ public class GameMaster : MonoBehaviour {
 		return artTotal;
 	}
 
-	int countLevels() {
+	public int countLevels() {
 		int levTotal = 0;
 	
 		for (int i = 0; i < 60; i++) {
@@ -544,7 +544,7 @@ public class GameMaster : MonoBehaviour {
 	}
 
 
-	void resetEasy() {
+	public void resetEasy() {
 		// ***new
 		//lomScript.UpdateNumbers(level);
 		if (shipNum == 10)

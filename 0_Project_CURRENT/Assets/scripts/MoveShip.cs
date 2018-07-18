@@ -100,7 +100,7 @@ public class MoveShip : MonoBehaviour {
 	Transform cruiseLightsPF;
 	GameObject camFlare;
 	int level;
-	int levelAttempts = 1;
+	public int levelAttempts = 1;
 	Transform warpTubeObj;
 
 	private float blackerPause;
@@ -144,24 +144,21 @@ public class MoveShip : MonoBehaviour {
 	int pDigit = -1;
 
 	float curTime = 0;
-	bool newRecord = false;
+	public bool newRecord = false;
 	public bool sfx = false;
 
 	int rc;
 	int rcb;
 	float deltaY;
 	string rcs;
-	float efRando;
-	float rando;
-	float randob;
-	float efRandob;
+
 	GameObject musicSource;
 	public Music musicSourceScript;
 	int cc = 0;
 	public bool fakeCC = false;
 	GUIQuadObj[] guiObjs;
 
-	bool restarted = false;
+	public bool restarted = false;
 
 	public class CharacterState {
 		public bool started = false;
@@ -201,12 +198,12 @@ public class MoveShip : MonoBehaviour {
 	}
 
 	public class SoundClips {
-		AudioClip metalHit;
-		AudioClip[] jump;
-		AudioClip[] explosion;
-		AudioClip winGate;
-		AudioClip[] VCsound;
-		AudioClip artSound;
+		public AudioClip metalHit;
+		public AudioClip[] jump;
+		public AudioClip[] explosion;
+		public AudioClip winGate;
+		public AudioClip[] VCsound;
+		public AudioClip artSound;
 		public AudioClip[] engineSound;
 	}
 
@@ -225,7 +222,7 @@ public class MoveShip : MonoBehaviour {
 
 		guiCam = GameObject.Find("GUICameraL1").GetComponent<Camera>();
 		musicSource = GameObject.Find("MusicSource(Clone)");
-		musicSourceScript = musicSource.GetComponent("Music");
+		musicSourceScript = musicSource.GetComponent<Music>();
 		if (!sfx)
 			engineAudio.active = false;
 		defGrav = grav;
@@ -258,11 +255,11 @@ public class MoveShip : MonoBehaviour {
 //				engineAudio.GetComponent<AudioSource>().clip = sound.engineSound[1];
 		}
 
-		shipObj = Instantiate(Resources.Load("ship" + shipNum), Vector3.zero, Quaternion.identity);
+		shipObj = Instantiate(Resources.Load<GameObject>("ship" + shipNum), Vector3.zero, Quaternion.identity) as GameObject;
 		shipObj.transform.parent = parentToObj;
 		shipObj.transform.localPosition = Vector3.zero;
 		
-		camTrans = cam.GetComponent(Transform);
+		camTrans = cam.transform;
 		if (shipNum != 10) { 
 			ultraMaxZSpeed = maxZSpeed;
 			Transform ccs = transform.Find("collCheckL");
@@ -597,18 +594,6 @@ public class MoveShip : MonoBehaviour {
 					//state.elapsedTime=((Time.time-state.startedTime)/gameMaster.gameSpeed)+state.progressedTime;
 				}
 
-			// ship engines
-			/*
-	for (bone in engineBones) {
-		rando= Random.Range(-1.4, -1.2);
-		bone.localPosition.z=rando;
-	}
-	
-	efRando = Random.Range(0.4, 0.5);
-	engineFlare1.localScale=Vector3(efRando, efRando, efRando);
-	if (shipNum != 4 && shipNum != 6 && shipNum!=10) engineFlare2.localScale=Vector3(efRando, efRando, efRando);
-	*/
-
 			if (!state.crashing && !state.cruising) {
 
 				// check gateways
@@ -788,7 +773,7 @@ public class MoveShip : MonoBehaviour {
 
 
 	void vcfly() {
-		float timer = 1.0;
+		float timer = 1.0f;
 		float oldZ = 0;
 		float goalZtemp = 0;
 
@@ -799,9 +784,9 @@ public class MoveShip : MonoBehaviour {
 			if (timer < 0) {
 				oldZ = goalZtemp;
 				do {
-					goalZtemp = oldZ + Random.Range(-8.0, 8.0);
+					goalZtemp = oldZ + Random.Range(-8.0f, 8.0f);
 				} while (goalZtemp < -12 || goalZtemp > 12);
-				timer = Random.Range(1.0, 3.5) * (Mathf.Abs(oldZ - goalZtemp) / 8);
+				timer = Random.Range(1.0f, 3.5f) * (Mathf.Abs(oldZ - goalZtemp) / 8);
 				//print("diff: "+Mathf.Abs(oldZ-goalZtemp)+" +time: "+timer);
 			}
 			rb.rotation = Quaternion.Slerp(rb.rotation, Quaternion.Euler(0, 0, goalZtemp), Time.deltaTime * 2);
@@ -896,9 +881,9 @@ public class MoveShip : MonoBehaviour {
 						jumpMult = 1.3f;
 						rb.velocity.y = jumpforce * jumpMult;
 						anim.Play("rJump");
-						collRight = 0.0;
+						collRight = 0;
 						disableX(-1);
-						rb.position.x -= 1.0;
+						rb.position.x -= 1;
 						rb.velocity.x = -25 + (8 * xfRaw);
 						//print(-25+(8*xfRaw));
 						xf2 = 40;
@@ -907,12 +892,12 @@ public class MoveShip : MonoBehaviour {
 					} else if (which == 3) {
 
 							maxZSpeed = defPantherMaxZ;
-							jumpMult = 1.3;
+							jumpMult = 1.3f;
 							rb.velocity.y = jumpforce * jumpMult;
 							anim.Play("lJump");
-							collLeft = 0.0;
+							collLeft = 0;
 							disableX(1);
-							rb.position.x -= 1.0;
+							rb.position.x -= 1;
 							rb.velocity.x = 25 + (8 * xfRaw);
 							//print(25+(8*xfRaw));
 							xf2 = -40;
@@ -971,7 +956,7 @@ public class MoveShip : MonoBehaviour {
 		elecBurst[0].transform.position = pos;	
 		elecBurst[1].transform.position = rb.position;
 
-		warpPath.transform.position = Vector3(rb.position.x, rb.position.y, rb.position.z - 5);
+		warpPath.transform.position = rb.position - new Vector3(0, 0, 5);
 		warpPathAniObj.GetComponent<Animation>().Play("warpPath");
 
 		for (int i = 0; i < 2; i++) {
@@ -1032,7 +1017,7 @@ public class MoveShip : MonoBehaviour {
 	}
 
 
-	void checkLanding() {
+	public void checkLanding() {
 		//print("landingCheck");
 		cc = raycheckDown(1);	
 		if (cc > 0 || fakeCC == true) {
@@ -1040,7 +1025,7 @@ public class MoveShip : MonoBehaviour {
 			state.jumps = 0;
 			state.landed = true;
 			state.grounded = true;
-			airBurstScript.Reset();
+			airBurstScript.CardStop();
 			state.handling = defaultHandling;
 			playSound("land");
 			if (shipNum != 10) {
@@ -1050,7 +1035,7 @@ public class MoveShip : MonoBehaviour {
 			} else {
 				if (maxZSpeed < defPantherMaxZ)
 					maxZSpeed = defPantherMaxZ;
-				jumpMult = 1.0;
+				jumpMult = 1.0f;
 				// print("start landing");
 				adjustyv2();
 				anim.Stop();
@@ -1096,19 +1081,19 @@ public class MoveShip : MonoBehaviour {
 			ArtiBurst(collision.transform.position);
 			collision.transform.position.z = -100;
 			if (collision.gameObject.name == "artifact1") {
-				if (!gui.a1state)
+				if (gui.a1state == 0)
 					artCount += 100;
 				gui.a1state = 1;
 				a1.UV.x = 480;
 			}
 			if (collision.gameObject.name == "artifact2") {
-				if (!gui.a2state)
+				if (gui.a2state == 0)
 					artCount += 10;
 				gui.a2state = 1;
 				a2.UV.x = 480;
 			}
 			if (collision.gameObject.name == "artifact3") {
-				if (!gui.a3state)
+				if (gui.a3state == 0)
 					artCount += 1;
 				gui.a3state = 1;
 				a3.UV.x = 480;
@@ -1142,16 +1127,16 @@ public class MoveShip : MonoBehaviour {
 		Debug.DrawRay(new Vector3(pos.x + xRad, pos.y + yRad, pos.z - zRad), -Vector3.up * (rayDist), Color.green);
 		Debug.DrawRay(new Vector3(pos.x - xRad, pos.y + yRad, pos.z - zRad), -Vector3.up * (rayDist), Color.green);
 		//cast 4 down
-		if (Physics.Raycast(new Vector3(pos.x + xRad, pos.y + yRad, pos.z + zRad), -Vector3.up, hit, rayDist))
+		if (Physics.Raycast(new Vector3(pos.x + xRad, pos.y + yRad, pos.z + zRad), -Vector3.up, out hit, rayDist))
 			if (hit.collider.tag != "Kill")
 				count++;
-		if (Physics.Raycast(new Vector3(pos.x - xRad, pos.y + yRad, pos.z + zRad), -Vector3.up, hit, rayDist))
+		if (Physics.Raycast(new Vector3(pos.x - xRad, pos.y + yRad, pos.z + zRad), -Vector3.up, out hit, rayDist))
 			if (hit.collider.tag != "Kill")
 				count++;
-		if (Physics.Raycast(new Vector3(pos.x + xRad, pos.y + yRad, pos.z - zRad), -Vector3.up, hit, rayDist))
+		if (Physics.Raycast(new Vector3(pos.x + xRad, pos.y + yRad, pos.z - zRad), -Vector3.up, out hit, rayDist))
 			if (hit.collider.tag != "Kill")
 				count++;
-		if (Physics.Raycast(new Vector3(pos.x - xRad, pos.y + yRad, pos.z - zRad), -Vector3.up, hit, rayDist))
+		if (Physics.Raycast(new Vector3(pos.x - xRad, pos.y + yRad, pos.z - zRad), -Vector3.up, out hit, rayDist))
 			if (hit.collider.tag != "Kill")
 				count++;
 
@@ -1172,16 +1157,16 @@ public class MoveShip : MonoBehaviour {
 		if (which == 0) { // left
 			Debug.DrawRay(new Vector3(pos.x, pos.y + yH, pos.z + zRad), -Vector3.right * (rayDist), Color.green);
 			Debug.DrawRay(new Vector3(pos.x, pos.y + yH, pos.z - zRad), -Vector3.right * (rayDist), Color.green);
-			if (Physics.Raycast(new Vector3(pos.x, pos.y + yH, pos.z + zRad), -Vector3.right, hit, rayDist))
+			if (Physics.Raycast(new Vector3(pos.x, pos.y + yH, pos.z + zRad), -Vector3.right, out hit, rayDist))
 				count++;
-			if (Physics.Raycast(new Vector3(pos.x, pos.y + yH, pos.z - zRad), -Vector3.right, hit, rayDist))
+			if (Physics.Raycast(new Vector3(pos.x, pos.y + yH, pos.z - zRad), -Vector3.right, out hit, rayDist))
 				count++;
 		} else if (which == 1) { // right
 				Debug.DrawRay(new Vector3(pos.x, pos.y + yH, pos.z + zRad), Vector3.right * (rayDist), Color.green);
 				Debug.DrawRay(new Vector3(pos.x, pos.y + yH, pos.z - zRad), Vector3.right * (rayDist), Color.green);
-				if (Physics.Raycast(new Vector3(pos.x, pos.y + yH, pos.z + zRad), Vector3.right, hit, rayDist))
+				if (Physics.Raycast(new Vector3(pos.x, pos.y + yH, pos.z + zRad), Vector3.right, out hit, rayDist))
 					count++;
-				if (Physics.Raycast(new Vector3(pos.x, pos.y + yH, pos.z - zRad), Vector3.right, hit, rayDist))
+				if (Physics.Raycast(new Vector3(pos.x, pos.y + yH, pos.z - zRad), Vector3.right, out hit, rayDist))
 					count++;
 			}
 
@@ -1202,27 +1187,27 @@ public class MoveShip : MonoBehaviour {
 		Debug.DrawRay(new Vector3(pos.x + xRad, pos.y + yRad, pos.z + zRad), Vector3.forward * (rayDist), Color.green);
 		Debug.DrawRay(new Vector3(pos.x - xRad, pos.y + yRad, pos.z + zRad), Vector3.forward * (rayDist), Color.green);
 		//cast 4 down
-		if (Physics.Raycast(new Vector3(pos.x + xRad, pos.y + 0.5f, pos.z + zRad), Vector3.forward, hit, rayDist))
+		if (Physics.Raycast(new Vector3(pos.x + xRad, pos.y + 0.5f, pos.z + zRad), Vector3.forward, out hit, rayDist))
 			count++;
-		if (Physics.Raycast(new Vector3(pos.x - xRad, pos.y + 0.5f, pos.z + zRad), Vector3.forward, hit, rayDist))
+		if (Physics.Raycast(new Vector3(pos.x - xRad, pos.y + 0.5f, pos.z + zRad), Vector3.forward, out hit, rayDist))
 			count++;
-		if (Physics.Raycast(new Vector3(pos.x + xRad, pos.y + yRad, pos.z + zRad), Vector3.forward, hit, rayDist))
+		if (Physics.Raycast(new Vector3(pos.x + xRad, pos.y + yRad, pos.z + zRad), Vector3.forward, out hit, rayDist))
 			count++;
-		if (Physics.Raycast(new Vector3(pos.x - xRad, pos.y + yRad, pos.z + zRad), Vector3.forward, hit, rayDist))
+		if (Physics.Raycast(new Vector3(pos.x - xRad, pos.y + yRad, pos.z + zRad), Vector3.forward, out hit, rayDist))
 			count++;
-		if (Physics.Raycast(new Vector3(pos.x, pos.y + 1, pos.z + zRad), Vector3.forward, hit, rayDist))
+		if (Physics.Raycast(new Vector3(pos.x, pos.y + 1, pos.z + zRad), Vector3.forward, out hit, rayDist))
 			count++;
 		return count;
 	}
 
-	void crash(int type) { //type: 0=wall hit, 1=falling death (no sound or splode or wait)
+	public void crash(int type) { //type: 0=wall hit, 1=falling death (no sound or splode or wait)
 		float secs = 0.0f;
 		shad.enabled = false;
 		state.crashing = true;	
 		shad.enabled = false;
 		cam.goalZ = rb.position.z + 2;
 		//print(rigidbody.position);
-		cam.mode = "stop";
+		cam.mode = MoveCam.Mode.Stop;
 		minZSpeed = 0;
 		targetSpeed = 0;
 		xf = 0;	
@@ -1272,7 +1257,7 @@ public class MoveShip : MonoBehaviour {
 			newRecord = false;
 		// print ("Level: "+level+"   Time: "+gui.curTime);
 		playSound("win");
-		cam.mode = "stop";
+		cam.mode = MoveCam.Mode.Stop;
 		state.winning = true;
 		if (sfx && engineAudio.active)
 			engineAudio.GetComponent<AudioSource>().Stop();
@@ -1370,13 +1355,14 @@ public class MoveShip : MonoBehaviour {
 			cam.newRecordCheck = true;
 
 		gameMaster.incrementLevel();
-		Destroy(gameMaster.bgScript.currBG.gameObject);
+//		Destroy(gameMaster.bgScript.currBG.gameObject);
+		gameMaster.bgScript.killBackground();
 		gameMaster.killLevel();
 		anim2.Play("winCruise1");	
 		repoShip();	
 
 		rb.position.x = 0;
-		cam.switchTo("win");
+		cam.switchTo(MoveCam.Mode.Win);
 		gui.message = "none";
 		explosionMark.transform.position = new Vector3(0, 0, -50);
 		//	gui.updateVC();
@@ -1384,7 +1370,7 @@ public class MoveShip : MonoBehaviour {
 
 		targetSpeed = 0;
 		//make star streaks
-		warpTubeObj = Instantiate(warpTubePF, Vector3(0, 0, 0), Quaternion.identity) as Transform;
+		warpTubeObj = Instantiate(warpTubePF, Vector3.zero, Quaternion.identity) as Transform;
 		// make star lights
 		for (int i = 1; i <= 20; i++) {
 			shipWarpRefl[i] = Resources.Load<Texture2D>("ship/world" + gameMaster.worldNum + "_warpRefl/world" + gameMaster.worldNum + "_warpRefl_" + i);
@@ -1456,7 +1442,7 @@ public class MoveShip : MonoBehaviour {
 		state.jumps = 2;
 		cam.goalHeight = -1;
 		targetSpeed = 0;
-		cam.switchTo("title");
+		cam.switchTo(MoveCam.Mode.Title);
 		anim2.Play("titleCruise");	
 		repoShip();	
 		if (sfx && engineAudio.active)
@@ -1465,13 +1451,13 @@ public class MoveShip : MonoBehaviour {
 		gui.camBlack("up");	
 	}
 
-	void repoShip() {
+	public void repoShip() {
 		//print("repoShip");
 		xf = 0;
 		grav = 0;
 		targetSpeed = 0;
-		rb.velocity = Vector3(0, 0, 0);
-		rb.position = gameMaster.startPos + Vector3(0, 5, 0);	
+		rb.velocity = Vector3.zero;
+		rb.position = gameMaster.startPos + new Vector3(0, 5, 0);	
 		state.lastY = rb.position.y;
 		rb.rotation = Quaternion.identity;
 		anim2.transform.localPosition.z = 0;
@@ -1483,7 +1469,7 @@ public class MoveShip : MonoBehaviour {
 	}
 
 
-	void resetRepoShip() {
+	public void resetRepoShip() {
 		//print("repoShip");
 		qbClear = false;
 		xf = 0;
@@ -1510,14 +1496,14 @@ public class MoveShip : MonoBehaviour {
 	}
 
 	void level10Init() {
-		topSurface = gameObject.Find("topSurfaces");
-		sideSurface = gameObject.Find("sideSurfaces");
-		frontSurface = gameObject.Find("frontSurfaces");
+		topSurface = GameObject.Find("topSurfaces");
+		sideSurface = GameObject.Find("sideSurfaces");
+		frontSurface = GameObject.Find("frontSurfaces");
 		//var shipLightTemp : GameObject = gameObject.Find("/Ship/ShipLighting1(Clone)/bottomLight");
 		//shipLight10s = shipLightTemp.GetComponent(Light);
 	}
 
-	void reset(int type) { // 0: regular 1: after victory cruise 2: vary beginning 3: skip title check
+	public void reset(int type) { // 0: regular 1: after victory cruise 2: vary beginning 3: skip title check
 		System.GC.Collect();
 		if (gameMaster.worldNum == 1)
 			level10null();
@@ -1564,7 +1550,7 @@ public class MoveShip : MonoBehaviour {
 
 		state.tunnel = false;
 		state.tunnel2 = false;
-		jumpMult = 1.0;
+		jumpMult = 1.0f;
 
 		resetCards();
 		explosionMark.transform.position = new Vector3(0, 0, -50);
@@ -1596,7 +1582,7 @@ public class MoveShip : MonoBehaviour {
 			gameMaster.makeLevel();
 			xf = 0;
 			sub.rotation = Quaternion.Euler(0, 0, 0);
-			cam.switchTo("play");
+			cam.switchTo(MoveCam.Mode.Play);
 			//gameMaster.bgScript.switchTo("play");
 			anim2.Stop();
 			if (shipNum == 10) {
@@ -1633,7 +1619,7 @@ public class MoveShip : MonoBehaviour {
 		}
 	}
 
-	void stopDead() {
+	public void stopDead() {
 		if (!state.stopDead) {
 			print("Stoppin'....Dead");
 			playSound("land");
@@ -1647,7 +1633,7 @@ public class MoveShip : MonoBehaviour {
 
 	void bounceBack() {
 
-		rb.position.z -= 1.0;
+		rb.position.z -= 1;
 		rb.velocity.z = -30;
 		//rigidbody.velocity.x=0;
 		targetSpeed = 0;
@@ -1675,7 +1661,8 @@ public class MoveShip : MonoBehaviour {
 	}
 
 	void playSound(string which) { // jump, land, win, explode
-		if (sfx == 1) {
+		int rando = 0;
+		if (sfx) {
 			if (which == "jump") {
 				if (shipNum != 10) {
 					rando = (int)Random.Range(0, 2);
@@ -1712,7 +1699,7 @@ public class MoveShip : MonoBehaviour {
 		}
 	}
 
-	void speedUpZ() {
+	public void speedUpZ() {
 		brakeOverride = true;
 		while (minZSpeed < minZBrake) {
 			minZSpeed = Mathf.Clamp(targetSpeed, 0, minZBrake);

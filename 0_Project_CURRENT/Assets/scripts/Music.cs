@@ -14,7 +14,7 @@ public class Music : MonoBehaviour {
 		DontDestroyOnLoad(transform.gameObject);
 	}
 
-	void SetTrack() {
+	public void SetTrack() {
 		music = PlayerPrefs.GetInt("Music", 1);	
 		if (music == 1) {
 			gameObject.GetComponent<AudioSource>().loop = true;
@@ -43,7 +43,7 @@ public class Music : MonoBehaviour {
 			StopTrack();
 	}
 
-	void StopTrack() {
+	public void StopTrack() {
 		gameObject.GetComponent<AudioSource>().Stop();	
 	}
 }

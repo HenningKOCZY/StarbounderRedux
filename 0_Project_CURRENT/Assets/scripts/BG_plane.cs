@@ -46,4 +46,8 @@ public class BG_plane : MonoBehaviour {
 
 		return worldNum;
 	}
+
+	public void killBackground() {
+		Destroy(currBG);
+	}
 }

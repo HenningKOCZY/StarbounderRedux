@@ -23,7 +23,7 @@ public class MoveCam : MonoBehaviour {
 	public Mode mode = Mode.Play;
 
 	Transform lookTarget;
-	float goalZ = 0f;
+	public float goalZ = 0f;
 	float goalRY = 0f;
 	public MoveShip ship;
 	Transform titlePF;
@@ -67,7 +67,7 @@ public class MoveCam : MonoBehaviour {
 
 	int level;
 	float t;
-	bool newRecordCheck = false;
+	public bool newRecordCheck = false;
 	float camXLerpSpeed;
 
 	public Vector3 lp;
@@ -171,7 +171,7 @@ public class MoveCam : MonoBehaviour {
 
 	void LateUpdate() {	
 		if (mode == Mode.Title) {
-			if (gameMaster.device == DeviceType.iPhone) {	
+			if (gameMaster.device == GameMaster.DeviceType.iPhone) {	
 				foreach (Touch touch in Input.touches) {
 					if (touch.phase == TouchPhase.Began) {
 						ship.reset(3);

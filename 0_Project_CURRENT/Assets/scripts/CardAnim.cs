@@ -11,7 +11,7 @@ public class CardAnim : MonoBehaviour {
 	public int FPS = 30;
 	int frameCount = 0;
 	Transform cam;
-	float startTime;
+	public float startTime;
 	public bool cardGo = false;
 	Renderer ren;
 
@@ -19,41 +19,43 @@ public class CardAnim : MonoBehaviour {
 		ren = GetComponent<Renderer>();
 		if (lookAtCam)
 			cam = GameObject.Find("Main Camera").transform; // do better
-		UpdateTex ();
+		UpdateTex();
 		if (randomRot)
 			transform.localEulerAngles = new Vector3(0, Random.Range(0, 360), 0);
 	}
 
-	public void CardGo () {
-		cardGo=true;
-		startTime=Time.time;
+	public void CardGo() {
+		cardGo = true;
+		startTime = Time.time;
 	}
 
-	public void CardStop () {
+	public void CardStop() {
 		frameCount = 0;
-		UpdateTex ();
+		UpdateTex();
 		cardGo = false;
 	}
 
-	void FixedUpdate () {
+	void FixedUpdate() {
 		if (cardGo) {
-			int newfc = (int) (Time.time - startTime) * FPS;
+			int newfc = (int)(Time.time - startTime) * FPS;
 			if (newfc > frameCount) {
-				frameCount=newfc;
+				frameCount = newfc;
 
 				if (frameCount >= cardFrame.Length) {
-					CardStop ();
+					CardStop();
 					return;
 				}
 				UpdateTex();
 			}
-			if (lookAtCam) transform.root.LookAt(cam.transform.position);
-			if (parentTo) transform.root.position=parentTo.position;
+			if (lookAtCam)
+				transform.root.LookAt(cam.transform.position);
+			if (parentTo)
+				transform.root.position = parentTo.position;
 		}
 	}
 
 
-	void UpdateTex () {
+	void UpdateTex() {
 		ren.material.mainTexture = cardFrame[frameCount];
 	}
 

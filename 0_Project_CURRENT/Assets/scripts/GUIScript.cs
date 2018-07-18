@@ -62,7 +62,7 @@ public class GUIScript : MonoBehaviour {
 
 	public MoveShip ship;
 	public float winDist;
-	string message = "none";
+	public string message = "none";
 	public int level;
 	private int guiWidth = 320;
 	private int guiHeight = 20;
@@ -229,7 +229,7 @@ public class GUIScript : MonoBehaviour {
 
 	public string tutText;
 
-	float curTime;
+	public float curTime;
 	string stringTime;
 
 	int i;
@@ -322,9 +322,9 @@ public class GUIScript : MonoBehaviour {
 		recordTime = PlayerPrefs.GetFloat("Level" + level + "Time", 60.00f);
 	}
 
-	void playAnim(int seconds) {
+	public void playAnim(float waitSeconds) {
 		resetVC();
-//		yield WaitForSeconds(seconds);
+//		yield WaitForSeconds(waitSeconds);
 		switchArtsVC();
 		camBlackAnim.Play("VC_anim");
 	}
@@ -418,9 +418,9 @@ public class GUIScript : MonoBehaviour {
 	void drawSelection() {
 		if (selectionOn) { 
 			if (worldNum != 6)
-				GUIplane(((Mathf.Floor(selectedLevel / 5) * 2 - 1) * 115), (83 - ((selectedLevel % 5) * 41)), 254, 68, selection[selectionState], 5, 16);
+				GUIplane(((int)(Mathf.Floor(selectedLevel / 5) * 2 - 1) * 115), (83 - ((selectedLevel % 5) * 41)), 254, 68, selection[selectionState], 5, 16);
 			else
-				GUIplane(((Mathf.Floor(selectedLevel / 5) * 2 - 1) * 115), (83 - ((selectedLevel % 5) * 41)), 254, 68, selection2[selectionState], 5, 16);
+				GUIplane(((int)(Mathf.Floor(selectedLevel / 5) * 2 - 1) * 115), (83 - ((selectedLevel % 5) * 41)), 254, 68, selection2[selectionState], 5, 16);
 			GUIplanes[5].gameObject.layer = 17;
 		}
 	}
@@ -469,17 +469,18 @@ public class GUIScript : MonoBehaviour {
 			print("play");
 			curTime = 0; // delay the curtime check one cycle for record past check
 
-			brakeScript.Location.x = -240 * aspectMult + 300;
-			jumpScript.Location.x = 240 * aspectMult + 180;
-			a1Script.Location.x = -240 * aspectMult + 260;
-			a2Script.Location.x = -240 * aspectMult + 276;
-			a3Script.Location.x = -240 * aspectMult + 292;
-			progBox1Script.Location.x = -240 * Mathf.Clamp01(aspectMult) + 320;
-			progBox2Script.Location.x = 240 * Mathf.Clamp01(aspectMult) + 160;
+			brakeScript.Location = new Vector2(-240 * aspectMult + 300, brakeScript.Location.y);
+			jumpScript.Location = new Vector2(240 * aspectMult + 180, jumpScript.Location.y);
+			a1Script.Location = new Vector2(-240 * aspectMult + 260, a1Script.Location.y);
+			a2Script.Location = new Vector2(-240 * aspectMult + 276, a2Script.Location.y);
+			a3Script.Location = new Vector2(-240 * aspectMult + 292, a3Script.Location.y);
+			progBox1Script.Location = new Vector2(-240 * Mathf.Clamp01(aspectMult) + 320, progBox1Script.Location.y);
+			progBox2Script.Location = new Vector2(240 * Mathf.Clamp01(aspectMult) + 160, progBox2Script.Location.y);
 			progBarScript.aspectMult = Mathf.Clamp01(aspectMult);
 			progBarScript.barLength = progBox2Script.Location.x - progBox1Script.Location.x;
-			jumpbar.position.x = 240 * aspectMult - 59.5f;
-			speedbar.position.x = -240 * aspectMult + 60.5f;
+			jumpbar.position = new Vector3(240 * aspectMult - 59.5f, jumpbar.position.y, 0);
+			speedbar.position = new Vector3(-240 * aspectMult + 60.5f, speedbar.position.y, 0);
+
 
 			GUItexts[0].GetComponent<Renderer>().material = fontMats[1];
 			GUItexts[4].GetComponent<Renderer>().material = fontMats[1];
@@ -489,12 +490,12 @@ public class GUIScript : MonoBehaviour {
 			GUItexts[3].anchor = TextAnchor.UpperCenter;
 			GUItexts[0].anchor = TextAnchor.UpperLeft; // shadow
 			GUItexts[4].anchor = TextAnchor.UpperCenter; // shadow
-			GUItext(-240 * aspectMult + 13, 155, 3.6f, ("Lv. " + level), 0, 0);
-			GUItext(-240 * aspectMult + 12, 156, 3.6f, ("Lv. " + level), 1, 10);
-			GUItext(240 * aspectMult - 35, 156, 3.6f, ("00.00"), 2, 10); 
-			GUItext(240 * aspectMult - 34, 155, 3.6f, ("00.00"), 4, 0); 
+			GUItext((int)(-240 * aspectMult + 13), 155, 3.6f, ("Lv. " + level), 0, 0);
+			GUItext((int)(-240 * aspectMult + 12), 156, 3.6f, ("Lv. " + level), 1, 10);
+			GUItext((int)(240 * aspectMult - 35), 156, 3.6f, ("00.00"), 2, 10); 
+			GUItext((int)(240 * aspectMult - 34), 155, 3.6f, ("00.00"), 4, 0); 
 			if (gameMaster.gamePhase > 1) {
-				GUItext(240 * aspectMult - 34, 136, 3.6f, recordTime.ToString("00.00"), 3, 0);
+				GUItext((int)(240 * aspectMult - 34), 136, 3.6f, recordTime.ToString("00.00"), 3, 0);
 				checkRecordPast();
 			}
 		}
@@ -503,9 +504,9 @@ public class GUIScript : MonoBehaviour {
 			clearGUIs(); 
 			GUIcam[1].active = false;
 
-			GUIplane(0, 0, 500 * aspectMult, 330, pauseBG, 0, 0);
+			GUIplane(0, 0, (int)(500 * aspectMult), 330, pauseBG, 0, 0);
 			// GUIbutton(0, 100, 256, 50, continueButton, 1, 10);
-			GUIbutton(-240 * aspectMult + 64, -132, 128, 55, xBut, 1, 10);
+			GUIbutton((int)(-240 * aspectMult + 64), -132, 128, 55, xBut, 1, 10);
 			GUIbutton(0, 100, 256, 50, restartButton, 2, 10);
 			GUIbutton(0, 40, 256, 50, levelSelectButton, 3, 10);
 			GUIbutton(0, -20, 256, 50, optionsButton, 4, 10);
@@ -516,8 +517,8 @@ public class GUIScript : MonoBehaviour {
 			clearGUIs(); 
 			GUIcam[1].active = false;
 
-			GUIplane(0, 0, 500 * aspectMult, 330, pauseBG, 0, 0);
-			GUIbutton(-240 * aspectMult + 64, -132, 128, 55, xBut, 1, 10);
+			GUIplane(0, 0, (int)(500 * aspectMult), 330, pauseBG, 0, 0);
+			GUIbutton((int)(-240 * aspectMult + 64), -132, 128, 55, xBut, 1, 10);
 			GUIbutton(2, 55, 345, 50, speedButton, 4, 10);
 			GUIbutton(20, 55, 60, 50, blankButton, 5, 20);
 			GUIbutton(80, 55, 60, 50, blankButton, 6, 20);
@@ -542,17 +543,17 @@ public class GUIScript : MonoBehaviour {
 			GUIcam[3].transform.position.x = 0;
 			GUIcam[4].transform.position.x = 0;
 
-			GUIplane(0, 0, 500 * aspectMult, 330, pauseBG, 0, 0);
+			GUIplane(0, 0, (int)(500 * aspectMult), 330, pauseBG, 0, 0);
 			GUIplanes[0].gameObject.layer = 18;
 			if (worldNum != 6) {
 				for (i = 0; i <= levelLimit; i++) {
-					GUIbutton(((Mathf.Floor(i / 5) * 2 - 1) * 115) + 3, (83 - ((i % 5) * 41)), 210, 36, levelBack, i, 10);
+					GUIbutton((int)((Mathf.Floor(i / 5) * 2 - 1) * 115) + 3, (83 - ((i % 5) * 41)), 210, 36, levelBack, i, 10);
 					if (gameMaster.gamePhase < 2) {
-						GUItext(((Mathf.Floor(i / 5) * 2 - 1) * 115) - 87, (96 - ((i % 5) * 41)), 5.9, levelString[i], i, 20);
+						GUItext((int)((Mathf.Floor(i / 5) * 2 - 1) * 115) - 87, (96 - ((i % 5) * 41)), 5.9f, levelString[i], i, 20);
 					} else {
 						levelTime[i] = (PlayerPrefs.GetFloat("Level" + (worldNum * 10 + i) + "Time", 99.99f)).ToString("00.00");
 						pantherFlag[i] = PlayerPrefs.GetInt("Level" + (worldNum * 10 + i) + "PantherFlag", 0);
-						GUItext(((Mathf.Floor(i / 5) * 2 - 1) * 115) - 87, (96 - ((i % 5) * 41)), 5.9f, levelString[i] + "    " + levelTime[i], i, 20);
+						GUItext((int)((Mathf.Floor(i / 5) * 2 - 1) * 115) - 87, (96 - ((i % 5) * 41)), 5.9f, levelString[i] + "    " + levelTime[i], i, 20);
 					}
 					GUItexts[i].gameObject.layer = 17;
 					GUIbuttons[i].gameObject.layer = 17;
@@ -579,15 +580,15 @@ public class GUIScript : MonoBehaviour {
 				if (gameMaster.gamePhase < 2) {
 					// gamePhase 0,1 draw artifacts
 					for (i = 0; i <= levelLimit; i++) {
-						GUIplane(((Mathf.Floor(i / 5) * 2 - 1) * 115) + 3, (83 - ((i % 5) * 41)), aIconSize, aIconSize, artifactIcon[a1[i]], 11 + (i * 3), 20);
-						GUIplane(((Mathf.Floor(i / 5) * 2 - 1) * 115) + 34, (83 - ((i % 5) * 41)), aIconSize, aIconSize, artifactIcon[a2[i]], 11 + (i * 3) + 1, 20);
-						GUIplane(((Mathf.Floor(i / 5) * 2 - 1) * 115) + 65, (83 - ((i % 5) * 41)), aIconSize, aIconSize, artifactIcon[a3[i]], 11 + (i * 3) + 2, 20);
+						GUIplane(((int)(Mathf.Floor(i / 5) * 2 - 1) * 115) + 3, (83 - ((i % 5) * 41)), aIconSize, aIconSize, artifactIcon[a1[i]], 11 + (i * 3), 20);
+						GUIplane(((int)(Mathf.Floor(i / 5) * 2 - 1) * 115) + 34, (83 - ((i % 5) * 41)), aIconSize, aIconSize, artifactIcon[a2[i]], 11 + (i * 3) + 1, 20);
+						GUIplane(((int)(Mathf.Floor(i / 5) * 2 - 1) * 115) + 65, (83 - ((i % 5) * 41)), aIconSize, aIconSize, artifactIcon[a3[i]], 11 + (i * 3) + 2, 20);
 					}
 				} else { 
 					// gamephase == 2, draw the panther icon
 					for (i = 0; i <= 9; i++) {
-						if (pantherFlag[i])
-							GUIplane(((Mathf.Floor(i / 5) * 2 - 1) * 115) - 30, (83 - ((i % 5) * 41)), 28, 28, pantherIcon[1], 11 + i, 20);
+						if (pantherFlag[i] == 1)
+							GUIplane((int)((Mathf.Floor(i / 5) * 2 - 1) * 115) - 30, (83 - ((i % 5) * 41)), 28, 28, pantherIcon[1], 11 + i, 20);
 					}
 				}	
 			} 
@@ -598,12 +599,12 @@ public class GUIScript : MonoBehaviour {
 			drawSelection();
 			GUIcam[3].GetComponent<Camera>().orthographicSize = 160 * (1 / Mathf.Clamp01(aspectMult)); // resize camera for middle buttons for 4:3
 
-			GUIplane(0, 135, 370 * Mathf.Clamp01(aspectMult), 40, titleBack, 1, 10);
-			GUIplane(0, 135, 330 * Mathf.Clamp01(aspectMult), 31, title[worldNum], 2, 20);
-			GUIbutton(-207 * Mathf.Clamp01(aspectMult), 135, 48, 40, selectL, 10, 20);
-			GUIbutton(207 * Mathf.Clamp01(aspectMult), 135, 48, 40, selectR, 11, 20);
-			GUIbutton(-240 * aspectMult + 64, -132, 128, 55, xBut, 12, 20);
-			GUIbutton(240 * aspectMult - 64, -132, 128, 55, vBut, 13, 20);
+			GUIplane(0, 135, (int)(370 * Mathf.Clamp01(aspectMult)), 40, titleBack, 1, 10);
+			GUIplane(0, 135, (int)(330 * Mathf.Clamp01(aspectMult)), 31, title[worldNum], 2, 20);
+			GUIbutton((int)(-207 * Mathf.Clamp01(aspectMult)), 135, 48, 40, selectL, 10, 20);
+			GUIbutton((int)(207 * Mathf.Clamp01(aspectMult)), 135, 48, 40, selectR, 11, 20);
+			GUIbutton((int)(-240 * aspectMult + 64), -132, 128, 55, xBut, 12, 20);
+			GUIbutton((int)(240 * aspectMult - 64), -132, 128, 55, vBut, 13, 20);
 
 		}
 		if (which == "victoryCruise") { 
@@ -613,14 +614,14 @@ public class GUIScript : MonoBehaviour {
 			GUIcam[3].GetComponent<Camera>().orthographicSize = 160;
 			GUIcam[3].transform.position.x = -120 * aspectMult;
 			GUIcam[4].transform.position.x = 120 * aspectMult;
-			GUIcam[3].GetComponent<Camera>().rect = Rect(-0.5f, 0, 1, 1);
-			GUIcam[4].GetComponent<Camera>().rect = Rect(0.5f, 0, 1, 1);
+			GUIcam[3].GetComponent<Camera>().rect = new Rect(-0.5f, 0, 1, 1);
+			GUIcam[4].GetComponent<Camera>().rect = new Rect(0.5f, 0, 1, 1);
 			GUItexts[0].GetComponent<Renderer>().material = fontMats[0];
 			GUItexts[3].GetComponent<Renderer>().material = fontMats[0];
 			GUItexts[4].GetComponent<Renderer>().material = fontMats[0];
 			//Left Top Sections
 			GUIplane(-156, -1000, 224, 39, section1, 0, 0);
-			GUItext(-225 * Mathf.Clamp01(aspectMult), -1000, 4.2f * Mathf.Clamp01(aspectMult), ("ATTEMPTS: " + ship.levelAttempts), 0, 5);
+			GUItext((int)(-225 * Mathf.Clamp01(aspectMult)), -1000, 4.2f * Mathf.Clamp01(aspectMult), ("ATTEMPTS: " + ship.levelAttempts), 0, 5);
 			GUItexts[0].anchor = TextAnchor.UpperLeft;
 			GUIplane(-156, -1000, 224, 39, section2, 1, 0);
 			// artifacts and panther
@@ -683,17 +684,17 @@ public class GUIScript : MonoBehaviour {
 			jumpbar.position.x = 240 * aspectMult - 59.5f;
 			speedbar.position.x = -240 * aspectMult + 60.5f;
 
-			GUItext(-220f * Mathf.Clamp01(aspectMult), 154, 5.2f * Mathf.Clamp01(aspectMult), "", 0, 20);
-			GUItext(-219f * Mathf.Clamp01(aspectMult), 154 - Mathf.Clamp01(aspectMult), 5.2f * Mathf.Clamp01(aspectMult), "", 1, 15);
+			GUItext((int)(-220f * Mathf.Clamp01(aspectMult)), 154, (int)(5.2f * Mathf.Clamp01(aspectMult)), "", 0, 20);
+			GUItext((int)(-219f * Mathf.Clamp01(aspectMult)), (int)(154 - Mathf.Clamp01(aspectMult)), (int)(5.2f * Mathf.Clamp01(aspectMult)), "", 1, 15);
 			GUItexts[0].GetComponent<Renderer>().material = fontMats[1];
-			GUItexts[1].GetComponent<Renderer>().material.color = Vector4(1, 0.4f, 0.6f, 1);
+			GUItexts[1].GetComponent<Renderer>().material.color = new Vector4(1, 0.4f, 0.6f, 1);
 			GUItexts[0].anchor = TextAnchor.UpperLeft;
 			GUItexts[1].anchor = TextAnchor.UpperLeft;
 			GUItexts[0].alignment = TextAlignment.Left;
 			GUItexts[1].alignment = TextAlignment.Left;
 
-			GUIplane(-1, 1000, 482f * aspectMult, 200, transWhite, 0, 0);
-			GUIplane(-1, 1000, 482f * aspectMult, 30, whiteFadeDown, 1, 5);
+			GUIplane(-1, 1000, (int)(482f * aspectMult), 200, transWhite, 0, 0);
+			GUIplane(-1, 1000, (int)(482f * aspectMult), 30, whiteFadeDown, 1, 5);
 		}
 	}
 
@@ -710,19 +711,19 @@ public class GUIScript : MonoBehaviour {
 			GUItexts[0].text = tutText;
 			GUItexts[1].text = tutText;
 			textFieldHeight = Mathf.Lerp(textFieldHeight, (lineCount) * 30, Time.deltaTime * 8);
-			GUIplanes[1].position.y = 145 - ((textFieldHeight - 10) * Mathf.Clamp01(aspectMult));
-			GUIplanes[0].position.y = GUIplanes[1].position.y + 100;
+			GUIplanes[1].position = new Vector3(GUIplanes[1].position.x, 145 - ((textFieldHeight - 10) * Mathf.Clamp01(aspectMult)), 0);
+			GUIplanes[0].position = new Vector3(GUIplanes[1].position.x, GUIplanes[1].position.y + 100, 0);
 		}
 
 		if (state == "victoryCruise") {
 			// level
-			GUIplanes[4].position.y = topGrpY;
-			GUItexts[3].transform.position.y = topGrpY - 5;
+			GUIplanes[4].position = new Vector3(GUIplanes[4].position.x, topGrpY, 0);
+			GUItexts[3].transform.position = new Vector3(GUItexts[3].transform.position.x, topGrpY - 5, 0);
+
 			// attempts
-			GUIplanes[0].position.y = topGrpY + section1Pos.y + 20;
-			GUIplanes[0].position.x = section1Pos.x - 1;
-			GUItexts[0].transform.position.y = topGrpY + section1Pos.y + 29;
-			GUItexts[0].transform.position.x = (section1Pos.x - 71) * Mathf.Clamp01(aspectMult);
+			GUIplanes[0].position.x = new Vector3(section1Pos.x - 1, topGrpY + section1Pos.y + 20, 0);
+			GUItexts[0].transform.position = new Vector3((section1Pos.x - 71) * Mathf.Clamp01(aspectMult), topGrpY + section1Pos.y + 29, 0);
+
 			//artifacts and panther
 			GUIplanes[1].position.y = topGrpY + section2Pos.y - 20;
 			GUIplanes[1].position.x = section2Pos.x - 1;
@@ -769,19 +770,19 @@ public class GUIScript : MonoBehaviour {
 		if (camBlackState != "none") {
 			blackerWidth = Mathf.Clamp(Screen.height * 2.56f * aspectMult, Screen.width, Screen.width * 4);
 			if (camBlackState == "in") {
-				GUI.DrawTexture(Rect(-blackerWidth + (camBlackWipe * blackerWidth), 0, blackerWidth, Screen.height), camBlackImage, ScaleMode.StretchToFill, true, 0);
+				GUI.DrawTexture(new Rect(-blackerWidth + (camBlackWipe * blackerWidth), 0, blackerWidth, Screen.height), camBlackImage, ScaleMode.StretchToFill, true, 0);
 				if (camBlackWipe > 0.98f)
 					camBlackState = "down";
 			} else if (camBlackState == "down") {
 					//	GUI.DrawTexture(Rect(-Screen.width/1.7, -20, Screen.width*2.13, Screen.height*1.25), camBlackImage, ScaleMode.ScaleToFit, true, 0);
-					GUI.DrawTexture(Rect(0, 0, blackerWidth, Screen.height), camBlackImage, ScaleMode.StretchToFill, true, 0);
+					GUI.DrawTexture(new Rect(0, 0, blackerWidth, Screen.height), camBlackImage, ScaleMode.StretchToFill, true, 0);
 				} else if (camBlackState == "out") {
-						GUI.DrawTexture(Rect(-blackerWidth + (camBlackWipe * blackerWidth), 0, blackerWidth, Screen.height), camBlackImage, ScaleMode.StretchToFill, true, 0);
+						GUI.DrawTexture(new Rect(-blackerWidth + (camBlackWipe * blackerWidth), 0, blackerWidth, Screen.height), camBlackImage, ScaleMode.StretchToFill, true, 0);
 						if (camBlackWipe < 0.02f)
 							camBlackState = "none";
 					}
 		} else if (state == "loading") {
-				GUI.DrawTexture(Rect(0, 0, Screen.width, Screen.height), loadingScreen);		
+				GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), loadingScreen);		
 			}
 	}
 
@@ -795,24 +796,24 @@ public class GUIScript : MonoBehaviour {
 
 		for (var r = 0; r < rays; r++) {
 			if (r == 0)
-				ray = GUIcam[1].GetComponent<Camera>().ScreenPointToRay(Vector3(x, y, 0));
+				ray = GUIcam[1].GetComponent<Camera>().ScreenPointToRay(new Vector3(x, y, 0));
 			else
-				ray = GUIcam[3].GetComponent<Camera>().ScreenPointToRay(Vector3(x, y, 0)); // shoot from different camera for levelSelect 4:3
+				ray = GUIcam[3].GetComponent<Camera>().ScreenPointToRay(new Vector3(x, y, 0)); // shoot from different camera for levelSelect 4:3
 			//Debug.DrawLine(ray.origin, ray.direction);
 			if (p > 1)
 				checkButton = 1;
-			else if (Physics.Raycast(ray.origin, ray.direction, hit))
+			else if (Physics.Raycast(ray.origin, ray.direction, out hit))
 					checkButton = 2;
 				else
 					checkButton = 0;
 
-			if (checkButton) {
+			if (checkButton != 0) {
 				if (checkButton == 2)
 					hitname = hit.transform.name;
 
 				if (state == "paused") {	
 					if (hitname == "button1" && p == 1) {
-						if (sfx)
+						if (sfx == 1)
 							GetComponent<AudioSource>().PlayOneShot(blip1);
 						if (ship.state.cruising) {
 							switchGUI("victoryCruise");
@@ -820,7 +821,7 @@ public class GUIScript : MonoBehaviour {
 						} else
 							unpause();
 					} else if (hitname == "button2" && p == 1) {
-							if (sfx)
+							if (sfx == 1)
 								GetComponent<AudioSource>().PlayOneShot(blip1);
 							unpause();
 							ship.state.crashing = true;
@@ -837,7 +838,7 @@ public class GUIScript : MonoBehaviour {
 						}
 					// level Select
 					else if (hitname == "button3" && p == 1) {
-								if (sfx)
+								if (sfx == 1)
 									GetComponent<AudioSource>().PlayOneShot(blip1);
 								if (PlayerPrefs.GetInt("FromLS", 0) == 0) {
 									if (tutorialState == 1 && level == 60)
@@ -851,39 +852,39 @@ public class GUIScript : MonoBehaviour {
 							}
 					// options
 					else if (hitname == "button4" && p == 0) {
-									if (sfx)
+									if (sfx == 1)
 										GetComponent<AudioSource>().PlayOneShot(blip1);
 									switchGUI("options");
 								}
 					// quit (menu)
 					else if (hitname == "button5" && p == 0) {
-										if (sfx)
+										if (sfx == 1)
 											GetComponent<AudioSource>().PlayOneShot(blip1);
 										//unpause();
 										loadMenu();
 									}
 				} else if (state == "options") {
 						if (hitname == "button1" && p == 1) {
-							if (sfx)
+							if (sfx == 1)
 								GetComponent<AudioSource>().PlayOneShot(blip1);
 							switchGUI("paused");
 						}
 						if (hitname == "button2" && p == 0) {
 							if (PlayerPrefs.GetInt("Sfx", 1) == 1) {
 								PlayerPrefs.SetInt("Sfx", 0);
-								ship.sfx = 0; 
+								ship.sfx = false; 
 								sfx = 0;
 								ship.engineAudio.GetComponent<AudioSource>().Stop();
 								ship.engineAudio.active = false;
 							} else {
 								PlayerPrefs.SetInt("Sfx", 1);
-								ship.sfx = 1; 
+								ship.sfx = true; 
 								sfx = 1;
 								// ship.engineAudio.Stop();
 								ship.engineAudio.active = true; 
 								ship.engineAudio.GetComponent<AudioSource>().Stop();
 							}
-							if (sfx)
+							if (sfx == 1)
 								GetComponent<AudioSource>().PlayOneShot(blip1);
 							drawHilites();
 						}
@@ -974,7 +975,7 @@ public class GUIScript : MonoBehaviour {
 								if (p == 3 || (hitname == "button10" && p == 1)) {
 									selectedLevel = 99;
 									selectionOn = false;
-									if (sfx)
+									if (sfx == 1)
 										GetComponent<AudioSource>().PlayOneShot(blip2);
 									worldNum--;
 									if (worldNum < 0)
@@ -986,7 +987,7 @@ public class GUIScript : MonoBehaviour {
 								} else if (p == 2 || (hitname == "button11" && p == 1)) {
 										selectedLevel = 99;
 										selectionOn = false;
-										if (sfx)
+										if (sfx == 1)
 											GetComponent<AudioSource>().PlayOneShot(blip2);
 										worldNum++;
 										if (worldNum > maxWorld && worldNum < 6)
@@ -998,7 +999,7 @@ public class GUIScript : MonoBehaviour {
 									} else if (hitname == "button12" && p == 1) {
 											selectedLevel = 99;
 											selectionOn = false;
-											if (sfx)
+											if (sfx == 1)
 												GetComponent<AudioSource>().PlayOneShot(blip3);
 											switchGUI("paused");
 
@@ -1030,7 +1031,7 @@ public class GUIScript : MonoBehaviour {
 				else if (state == "victoryCruise" && p == 1) {
 								if (!gameObject.GetComponent<Animation>().isPlaying) {
 									if (hitname == "button0") {
-										if (sfx)
+										if (sfx == 1)
 											GetComponent<AudioSource>().PlayOneShot(blip1);
 										switchGUI("paused");
 									} else if (hitname == "button1") {
@@ -1050,7 +1051,7 @@ public class GUIScript : MonoBehaviour {
 		else
 			switchGUI("play");
 		ship.state.paused = false;
-		if (sfx && ship.engineAudio.active && ship.state.started)
+		if (sfx == 1 && ship.engineAudio.active && ship.state.started)
 			ship.engineAudio.GetComponent<AudioSource>().Play();
 		Time.timeScale = gameMaster.gameSpeed;
 	}
@@ -1069,7 +1070,7 @@ public class GUIScript : MonoBehaviour {
 
 	void loadLevel1(string which) {
 		whichLoad = which;
-		if (sfx)
+		if (sfx == 1)
 			GetComponent<AudioSource>().PlayOneShot(gameStart);
 		ship.state.crashing = true;
 		selectable = false;
@@ -1100,7 +1101,7 @@ public class GUIScript : MonoBehaviour {
 
 	void VCcontinue() {
 		VCbuttonState = 1;
-		if (sfx)
+		if (sfx == 1)
 			GetComponent<AudioSource>().PlayOneShot(gameStart);
 //		yield WaitForSeconds(0.4);
 		camBlack("down");
@@ -1118,7 +1119,7 @@ public class GUIScript : MonoBehaviour {
 				if (curTime > timeAllowed) {
 					stringTime = "**.**";
 					if (!ship.state.crashing) {
-						ship.crash(0);
+						ship.crash(0); // why is this here? not on moveship
 						message = "time";
 					}
 				}
@@ -1138,19 +1139,19 @@ public class GUIScript : MonoBehaviour {
 
 
 		if (selectable) {	
-			if (gameMaster.device == DeviceType.iPhone) {
+			if (gameMaster.device == GameMaster.DeviceType.iPhone) {
 				foreach (Touch touch in Input.touches) { 
 					deltaPos = touch.deltaPosition;
 					if (touch.phase == TouchPhase.Began) {
 						if (!swiping) {
-							getButtonHit(Input.mousePosition.x, Input.mousePosition.y, 0);
+							getButtonHit((int)Input.mousePosition.x, (int)Input.mousePosition.y, 0);
 						}
 						beganPos = touch.position;
 						touchPhase = "Began";
 					}
 					if (touch.phase == TouchPhase.Ended) {
 						if (!swiping) {
-							getButtonHit(Input.mousePosition.x, Input.mousePosition.y, 1);
+							getButtonHit((int)Input.mousePosition.x, (int)Input.mousePosition.y, 1);
 						}
 						touchPhase = "Ended";
 						swiping = false;
@@ -1176,17 +1177,17 @@ public class GUIScript : MonoBehaviour {
 				}
 
 			} else {
-				deltaPos = lastPos - Input.mousePosition;
+				deltaPos = lastPos - (Vector2)Input.mousePosition;
 				if (Input.GetMouseButtonDown(0)) {
 					if (!swiping) {
-						getButtonHit(Input.mousePosition.x, Input.mousePosition.y, 0);
+						getButtonHit((int)Input.mousePosition.x, (int)Input.mousePosition.y, 0);
 					}
 					beganPos = Input.mousePosition;
 					touchPhase = "Began";
 				}
 				if (Input.GetMouseButtonUp(0)) {
 					if (!swiping) {
-						getButtonHit(Input.mousePosition.x, Input.mousePosition.y, 1);
+						getButtonHit((int)Input.mousePosition.x, (int)Input.mousePosition.y, 1);
 					}
 					endedPos = Input.mousePosition;
 					swiping = false;
@@ -1219,7 +1220,7 @@ public class GUIScript : MonoBehaviour {
 		getButtonHit(0, 0, swipe);
 	}
 
-	void resetVC() {
+	public void resetVC() {
 		topGrpY = -1000;
 		btmGrpY = -1000;
 		pantherFlag[0] = PlayerPrefs.GetInt("Level" + (level) + "PantherFlag", 0);
