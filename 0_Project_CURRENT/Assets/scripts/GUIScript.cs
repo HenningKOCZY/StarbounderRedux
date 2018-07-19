@@ -465,7 +465,7 @@ public class GUIScript : MonoBehaviour {
 		if (which == "play") {
 			selectable = false;
 			clearGUIs(); 
-			GUIcam[1].active = true;
+			GUIcam[1].SetActive(true);
 			print("play");
 			curTime = 0; // delay the curtime check one cycle for record past check
 
@@ -502,7 +502,7 @@ public class GUIScript : MonoBehaviour {
 		if (which == "paused") { 
 			selectable = true;
 			clearGUIs(); 
-			GUIcam[1].active = false;
+			GUIcam[1].SetActive(false);
 
 			GUIplane(0, 0, (int)(500 * aspectMult), 330, pauseBG, 0, 0);
 			// GUIbutton(0, 100, 256, 50, continueButton, 1, 10);
@@ -515,7 +515,7 @@ public class GUIScript : MonoBehaviour {
 		if (which == "options") { 
 			selectable = true;
 			clearGUIs(); 
-			GUIcam[1].active = false;
+			GUIcam[1].SetActive(false);
 
 			GUIplane(0, 0, (int)(500 * aspectMult), 330, pauseBG, 0, 0);
 			GUIbutton((int)(-240 * aspectMult + 64), -132, 128, 55, xBut, 1, 10);
@@ -540,8 +540,8 @@ public class GUIScript : MonoBehaviour {
 
 			GUIcam[3].GetComponent<Camera>().rect = new Rect(0, 0, 1, 1);
 			GUIcam[4].GetComponent<Camera>().rect = new Rect(0, 0, 1, 1);
-			GUIcam[3].transform.position.x = 0;
-			GUIcam[4].transform.position.x = 0;
+			GUIcam[3].transform.position = new Vector3(0, GUIcam[3].transform.position.y, GUIcam[3].transform.position.z);
+			GUIcam[4].transform.position = new Vector3(0, GUIcam[3].transform.position.y, GUIcam[3].transform.position.z);
 
 			GUIplane(0, 0, (int)(500 * aspectMult), 330, pauseBG, 0, 0);
 			GUIplanes[0].gameObject.layer = 18;
@@ -612,8 +612,8 @@ public class GUIScript : MonoBehaviour {
 			clearGUIs();
 
 			GUIcam[3].GetComponent<Camera>().orthographicSize = 160;
-			GUIcam[3].transform.position.x = -120 * aspectMult;
-			GUIcam[4].transform.position.x = 120 * aspectMult;
+			GUIcam[3].transform.position = new Vector3(-120 * aspectMult, GUIcam[3].transform.position.y, GUIcam[3].transform.position.z);
+			GUIcam[4].transform.position = new Vector3(-120 * aspectMult, GUIcam[4].transform.position.y, GUIcam[4].transform.position.z);
 			GUIcam[3].GetComponent<Camera>().rect = new Rect(-0.5f, 0, 1, 1);
 			GUIcam[4].GetComponent<Camera>().rect = new Rect(0.5f, 0, 1, 1);
 			GUItexts[0].GetComponent<Renderer>().material = fontMats[0];
@@ -677,12 +677,12 @@ public class GUIScript : MonoBehaviour {
 		}
 		if (which == "tutorial") {
 			clearGUIs();
-			GUIcam[1].active = true;
+			GUIcam[1].SetActive(true);
 
-			brakeScript.Location.x = -240 * aspectMult + 300;
-			jumpScript.Location.x = 240 * aspectMult + 180;
-			jumpbar.position.x = 240 * aspectMult - 59.5f;
-			speedbar.position.x = -240 * aspectMult + 60.5f;
+			brakeScript.Location = new Vector2(-240 * aspectMult + 300, brakeScript.Location.y);
+			jumpScript.Location = new Vector2(240 * aspectMult + 180, jumpScript.Location.y);
+			jumpbar.position = new Vector2(240 * aspectMult - 59.5f, jumpbar.position.y);
+			speedbar.position = new Vector2(-240 * aspectMult + 60.5f, speedbar.position.y);
 
 			GUItext((int)(-220f * Mathf.Clamp01(aspectMult)), 154, (int)(5.2f * Mathf.Clamp01(aspectMult)), "", 0, 20);
 			GUItext((int)(-219f * Mathf.Clamp01(aspectMult)), (int)(154 - Mathf.Clamp01(aspectMult)), (int)(5.2f * Mathf.Clamp01(aspectMult)), "", 1, 15);
@@ -721,49 +721,36 @@ public class GUIScript : MonoBehaviour {
 			GUItexts[3].transform.position = new Vector3(GUItexts[3].transform.position.x, topGrpY - 5, 0);
 
 			// attempts
-			GUIplanes[0].position.x = new Vector3(section1Pos.x - 1, topGrpY + section1Pos.y + 20, 0);
+			GUIplanes[0].position = new Vector3(section1Pos.x - 1, topGrpY + section1Pos.y + 20, 0);
 			GUItexts[0].transform.position = new Vector3((section1Pos.x - 71) * Mathf.Clamp01(aspectMult), topGrpY + section1Pos.y + 29, 0);
 
 			//artifacts and panther
-			GUIplanes[1].position.y = topGrpY + section2Pos.y - 20;
-			GUIplanes[1].position.x = section2Pos.x - 1;
-			GUIplanes[8].position.y = GUIplanes[1].position.y;
-			GUIplanes[8].position.x = (GUIplanes[1].position.x - 58) * Mathf.Clamp01(aspectMult);
-			GUIplanes[9].position.y = GUIplanes[1].position.y;
-			GUIplanes[9].position.x = (GUIplanes[1].position.x - 23) * Mathf.Clamp01(aspectMult);
-			GUIplanes[10].position.y = GUIplanes[1].position.y;
-			GUIplanes[10].position.x = (GUIplanes[1].position.x + 12) * Mathf.Clamp01(aspectMult);
-			GUIbuttons[2].position.y = GUIplanes[1].position.y;
-			GUIbuttons[2].position.x = (GUIplanes[1].position.x + 57) * Mathf.Clamp01(aspectMult);
+			GUIplanes[1].position = new Vector3(section2Pos.x - 1, topGrpY + section2Pos.y - 20);
+			GUIplanes[8].position = new Vector3((GUIplanes[1].position.x - 58) * Mathf.Clamp01(aspectMult), GUIplanes[1].position.y);
+			GUIplanes[9].position = new Vector3((GUIplanes[1].position.x - 23) * Mathf.Clamp01(aspectMult), GUIplanes[1].position.y);
+			GUIplanes[10].position = new Vector3((GUIplanes[1].position.x + 12) * Mathf.Clamp01(aspectMult), GUIplanes[1].position.y);
+			GUIbuttons[2].position = new Vector3((GUIplanes[1].position.x + 57) * Mathf.Clamp01(aspectMult), GUIplanes[1].position.y);
 			// time
-			GUIplanes[2].position.y = topGrpY + section1Pos.y + 20;
-			GUIplanes[2].position.x = -section1Pos.x;
-			GUItexts[1].transform.position.y = topGrpY + section1Pos.y + 29;
-			GUItexts[1].transform.position.x = (-section1Pos.x + 67) * Mathf.Clamp01(aspectMult);
+			GUIplanes[2].position = new Vector3(-section1Pos.x, topGrpY + section1Pos.y + 20);
+			GUItexts[1].transform.position = new Vector3((-section1Pos.x + 67) * Mathf.Clamp01(aspectMult), topGrpY + section1Pos.y + 29);
 			// record
-			GUIplanes[3].position.y = topGrpY + section2Pos.y - 20;
-			GUIplanes[3].position.x = -section2Pos.x;
-			GUItexts[2].transform.position.y = topGrpY + section2Pos.y - 11;
-			GUItexts[2].transform.position.x = (-section2Pos.x + 67) * Mathf.Clamp01(aspectMult);
+			GUIplanes[3].position = new Vector3(-section2Pos.x, topGrpY + section2Pos.y - 20);
+			GUItexts[2].transform.position = new Vector3((-section2Pos.x + 67) * Mathf.Clamp01(aspectMult), topGrpY + section2Pos.y - 11);
 
 			// bottom div
-			GUIplanes[6].position.y = btmGrpY;
+			GUIplanes[6].position = new Vector3(GUIplanes[6].position.x, btmGrpY);
 			//menu
-			GUIbuttons[0].position.y = btmGrpY + menuButtonPos.y;
-			GUIbuttons[0].position.x = menuButtonPos.x;
-			GUItexts[4].transform.position.y = btmGrpY + menuButtonPos.y + 4;
-			GUItexts[4].transform.position.x = menuButtonPos.x + 13;
+			GUIbuttons[0].position = new Vector3(menuButtonPos.x, btmGrpY + menuButtonPos.y);
+			GUItexts[4].transform.position = new Vector3(menuButtonPos.x + 13, btmGrpY + menuButtonPos.y + 4);
 			// dash
-			GUIplanes[5].position.y = btmGrpY + menuButtonPos.y;
-			GUIplanes[5].position.x = menuButtonPos.x + dashX - 54;
+
+			GUIplanes[5].position = new Vector3(menuButtonPos.x + dashX - 54, btmGrpY + menuButtonPos.y);
 			// next
-			GUIbuttons[1].position.y = btmGrpY + nextButtonPos.y;
-			GUIbuttons[1].position.x = nextButtonPos.x;
-			GUItexts[5].transform.position.y = btmGrpY + nextButtonPos.y + 17;
-			GUItexts[5].transform.position.x = nextButtonPos.x + 3;
+			GUIbuttons[1].position = new Vector3(nextButtonPos.x, btmGrpY + nextButtonPos.y);
+
+			GUItexts[5].transform.position = new Vector3(nextButtonPos.x + 3, btmGrpY + nextButtonPos.y + 17);
 			//arrow
-			GUIplanes[7].position.y = btmGrpY + nextButtonPos.y;
-			GUIplanes[7].position.x = nextButtonPos.x + arrowX + 84;
+			GUIplanes[7].position = new Vector3(nextButtonPos.x + arrowX + 84, btmGrpY + nextButtonPos.y);
 
 		}
 
@@ -875,13 +862,13 @@ public class GUIScript : MonoBehaviour {
 								ship.sfx = false; 
 								sfx = 0;
 								ship.engineAudio.GetComponent<AudioSource>().Stop();
-								ship.engineAudio.active = false;
+								ship.engineAudio.SetActive(false);
 							} else {
 								PlayerPrefs.SetInt("Sfx", 1);
 								ship.sfx = true; 
 								sfx = 1;
 								// ship.engineAudio.Stop();
-								ship.engineAudio.active = true; 
+								ship.engineAudio.SetActive(true); 
 								ship.engineAudio.GetComponent<AudioSource>().Stop();
 							}
 							if (sfx == 1)

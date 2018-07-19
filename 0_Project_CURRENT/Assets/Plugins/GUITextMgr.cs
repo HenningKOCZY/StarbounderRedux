@@ -11,8 +11,7 @@ public class GUITextMgr : MonoBehaviour {
 	private ArrayList pTextBuffer = new ArrayList();
 
 	/*----------------------------------------Methods----------------------------------------*/
-	public void Init ()
-	{
+	public void Init() {
 		Debug.Log("Init Text Manager");
 		GUITextObj TmpTextObj;
 		GameObject tmpGameObj;
@@ -22,8 +21,7 @@ public class GUITextMgr : MonoBehaviour {
 		
 		//Allocate initial guitext buffer
 		int Count = 0;
-		for (Count=0;Count<AllocBlockSize;Count++)
-		{
+		for (Count = 0; Count < AllocBlockSize; Count++) {
 			//Create new guitext object
 			tmpGameObj = new GameObject();
 			tmpGameObj.name = "GUIText" + Count.ToString();
@@ -35,33 +33,29 @@ public class GUITextMgr : MonoBehaviour {
 			tmpGameObj.transform.parent = gameObject.transform;
 			
 			//Add to buffer
-			TmpTextObj = (GUITextObj) tmpGameObj.GetComponent(typeof(GUITextObj));
+			TmpTextObj = (GUITextObj)tmpGameObj.GetComponent(typeof(GUITextObj));
 			TmpTextObj.GUIActive = false;
 			pTextBuffer.Add(TmpTextObj);
 		}
 	}
-	
-	public void ResetGUI ()
-	{/*
+
+	public void ResetGUI() {/*
 		//Reset gui texts
 		foreach(GUITextObj TmpObj in pTextBuffer)
 		{
 			TmpObj.Reset();
 		}*/
 	}
-	
-	public GUITextObj GetGUIText (int LayerNum)
-	{
+
+	public GUITextObj GetGUIText(int LayerNum) {
 		int Count = 0;
 		GUITextObj TmpTextObj;
 		GameObject tmpGameObj;
 		
 		//Search guitext buffer for available object
-		for (Count=0;Count<pTextBuffer.Count;Count++)
-		{
-			TmpTextObj = (GUITextObj) pTextBuffer[Count];
-			if (TmpTextObj.GUIActive == false)
-			{
+		for (Count = 0; Count < pTextBuffer.Count; Count++) {
+			TmpTextObj = (GUITextObj)pTextBuffer[Count];
+			if (TmpTextObj.GUIActive == false) {
 				//Flag the object as used
 				TmpTextObj.GUIActive = true;
 				//Set the objects layer
@@ -74,8 +68,7 @@ public class GUITextMgr : MonoBehaviour {
 		//No available object, so allocate more
 		int BuffIdx = 0;
 		int BuffSize = pTextBuffer.Count;
-		for (Count=0;Count<AllocBlockSize;Count++)
-		{
+		for (Count = 0; Count < AllocBlockSize; Count++) {
 			//Create new guitext object
 			tmpGameObj = new GameObject();
 			BuffIdx = BuffSize + Count;
@@ -88,17 +81,15 @@ public class GUITextMgr : MonoBehaviour {
 			tmpGameObj.transform.parent = gameObject.transform;
 			
 			//Add to buffer
-			TmpTextObj = (GUITextObj) tmpGameObj.GetComponent(typeof(GUITextObj));
+			TmpTextObj = (GUITextObj)tmpGameObj.GetComponent(typeof(GUITextObj));
 			TmpTextObj.GUIActive = false;
 			pTextBuffer.Add(TmpTextObj);
 		}
 		
 		//Search guitext buffer for available object
-		for (Count=0;Count<pTextBuffer.Count;Count++)
-		{
-			TmpTextObj = (GUITextObj) pTextBuffer[Count];
-			if (TmpTextObj.GUIActive == false)
-			{
+		for (Count = 0; Count < pTextBuffer.Count; Count++) {
+			TmpTextObj = (GUITextObj)pTextBuffer[Count];
+			if (TmpTextObj.GUIActive == false) {
 				//Flag the object as used
 				TmpTextObj.GUIActive = true;
 				//Set the objects layer
@@ -112,9 +103,8 @@ public class GUITextMgr : MonoBehaviour {
 	}
 
 	/*-------------------------------------Unity Methods-------------------------------------*/
-	void Awake ()
-	{
+	void Awake() {
 		//Get pointer to GUI manager
-		ptrGUIMgr = (GUIManager) GameObject.Find("GUI").GetComponent(typeof(GUIManager));
+		ptrGUIMgr = (GUIManager)GameObject.Find("GUI").GetComponent(typeof(GUIManager));
 	}
 }

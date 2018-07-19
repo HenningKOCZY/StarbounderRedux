@@ -565,7 +565,7 @@ function Update(){
 			//state.startedTime=Time.time;
 			speedUpX();
 			speedUpZ();
-			if (sfx && engineAudio.active) engineAudio.GetComponent.<AudioSource>().Play();
+			if (sfx && engineAudio.activeSelf) engineAudio.GetComponent.<AudioSource>().Play();
 		}
 	} else if (!state.crashing) {
 		state.elapsedTime+=Time.deltaTime/gameMaster.gameSpeed;
@@ -689,7 +689,7 @@ function Update(){
 			xf=0;
 			GetComponent.<Rigidbody>().velocity.x=0;
 		}
-		if(engineAudio.active){
+		if(engineAudio.activeSelf){
 			if(sfx && state.grounded && engineAudio.active && !state.paused && state.started && !state.stopDead && !state.fullStop){
 				if(!engineAudio.GetComponent.<AudioSource>().isPlaying) engineAudio.GetComponent.<AudioSource>().Play();
 				

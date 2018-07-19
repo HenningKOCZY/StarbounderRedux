@@ -631,7 +631,7 @@ function switchGUI(which: String) {
 	}
 	if (which=="tutorial") {
 		clearGUIs();
-		GUIcam[1].active=true;
+		GUIcam[1].SetActive(true);
 		
 		brakeScript.Location.x=-240*aspectMult+300;
 		jumpScript.Location.x=240*aspectMult+180;
@@ -810,7 +810,7 @@ function getButtonHit(x: int, y: int, p: int) {
 				PlayerPrefs.SetInt("Sfx", 0);
 				ship.sfx=0; sfx=0;
 				ship.engineAudio.GetComponent.<AudioSource>().Stop();
-				ship.engineAudio.active=false;
+				ship.engineAudio.SetActive(false);
 			}
 			else {
 				PlayerPrefs.SetInt("Sfx", 1);

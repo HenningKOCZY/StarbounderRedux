@@ -129,7 +129,7 @@ public class MoveCam : MonoBehaviour {
 
 			// rotate cam based on tilt
 			goalRY = Mathf.Clamp(goalRY - (ship.xf * Time.deltaTime * 3), -1, 1);//Mathf.Lerp(goalRY,Mathf.Clamp(-ship.xf,-1,1),Time.deltaTime*3);	
-			transform.localEulerAngles.y = 40 * Mathf.Sin(goalRY);
+			transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 40 * Mathf.Sin(goalRY));
 
 		}
 

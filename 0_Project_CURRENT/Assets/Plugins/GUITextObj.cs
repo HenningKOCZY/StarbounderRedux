@@ -7,28 +7,28 @@ public class GUITextObj : MonoBehaviour {
 
 	/*-----------------------------------Private Variables-----------------------------------*/
 	private GUIManager ptrGUIMgr;
-	private GameObject pObj;				//This game object
-	private GUIText pText;				//GUITexture component
-	private Animator pAnimator;			//Animator script component
+	private GameObject pObj;
+	//This game object
+	private GUIText pText;
+	//GUITexture component
+	private Animator pAnimator;
+	//Animator script component
 	private bool pActive;
 	private Vector2 pLocation;
 	
 	/*----------------------------------------Methods----------------------------------------*/
 	//Get pointer to game object
-	public GameObject GameObj
-	{
+	public GameObject GameObj {
 		get { return pObj; }
 	}
 
 	//Get pointer to GUIText
-	public GUIText TextObj
-	{
+	public GUIText TextObj {
 		get { return pText; }
 	}
 	
 	//Is this GUI element being used
-	public bool GUIActive
-	{
+	public bool GUIActive {
 		get { return pActive; }
 		set {
 			pActive = value;
@@ -36,8 +36,7 @@ public class GUITextObj : MonoBehaviour {
 	}
 	
 	//Set the text to the GUIText
-	public string Text
-	{
+	public string Text {
 		get { return pText.text; }
 		set {
 			pText.text = value;
@@ -45,8 +44,7 @@ public class GUITextObj : MonoBehaviour {
 	}
 		
 	//Set the location
-	public Vector2 Location
-	{
+	public Vector2 Location {
 		get { return pLocation; }
 		set {
 			//Set internal variable
@@ -67,8 +65,7 @@ public class GUITextObj : MonoBehaviour {
 	}
 	
 	//Set X location only
-	public float LocX
-	{
+	public float LocX {
 		get { return pLocation.x; }
 		set {
 			//Set internal variable
@@ -81,8 +78,7 @@ public class GUITextObj : MonoBehaviour {
 	}
 	
 	//Set Y location only
-	public float LocY
-	{
+	public float LocY {
 		get { return pLocation.y; }
 		set {
 			//Set internal variable
@@ -103,8 +99,7 @@ public class GUITextObj : MonoBehaviour {
 	}
 	
 	//Set z order of object
-	public float GUIDepth
-	{
+	public float GUIDepth {
 		get { return pObj.transform.position.z; }
 		set {
 			pObj.transform.position = new Vector3(0, 0, value);
@@ -112,8 +107,7 @@ public class GUITextObj : MonoBehaviour {
 	}
 	
 	//Set text material
-	public Material TextMaterial
-	{
+	public Material TextMaterial {
 		get { return pText.material; }
 		set {
 			pText.material = value;
@@ -121,17 +115,15 @@ public class GUITextObj : MonoBehaviour {
 	}
 	
 	//Set visibility
-	public bool Enabled
-	{
-		get { return pObj.active; }
+	public bool Enabled {
+		get { return pObj.activeSelf; }
 		set {
-			pObj.active = value;
+			pObj.SetActive(value);
 		}
 	}
 	
 	//Set text formatting
-	public void SetFormat (Font pFont, TextAlignment pAlign, TextAnchor pAnchor, float pSpacing, float pTabSize)
-	{
+	public void SetFormat(Font pFont, TextAlignment pAlign, TextAnchor pAnchor, float pSpacing, float pTabSize) {
 		pText.font = pFont;
 		pText.alignment = pAlign;
 		pText.anchor = pAnchor;
@@ -140,57 +132,47 @@ public class GUITextObj : MonoBehaviour {
 	}
 	
 	//Reset GUI to default state
-	public void Reset ()
-	{
+	public void Reset() {
 		//Stop all animation
 		pAnimator.StopAnimation();
 		pAnimator.ClearAnimation();
 		
 		//Reset variables and turn off component
 		pActive = false;
-		gameObject.active = false;
+		gameObject.SetActive(false);
 	}
 	
 	//Check if mouse was clicked on this
-	public bool CheckHit (Vector3 Coords)
-	{
-		if (pText.HitTest(Coords) == true)
-		{
+	public bool CheckHit(Vector3 Coords) {
+		if (pText.HitTest(Coords) == true) {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
 
 	//Mode To
-	public void AnimateTo (float Duration, GameObject CallbackObj, string CallbackMsg, object CallbackParams, params object[] args)
-	{
+	public void AnimateTo(float Duration, GameObject CallbackObj, string CallbackMsg, object CallbackParams, params object[] args) {
 		//Wrapper function
 		pAnimator.AnimateTo(this, Duration, CallbackObj, CallbackMsg, CallbackParams, args);
 	}
 
 	//Mode From
-	public void AnimateFrom (float Duration, GameObject CallbackObj, string CallbackMsg, object CallbackParams, params object[] args)
-	{
+	public void AnimateFrom(float Duration, GameObject CallbackObj, string CallbackMsg, object CallbackParams, params object[] args) {
 		//Wrapper function
 		pAnimator.AnimateFrom(this, Duration, CallbackObj, CallbackMsg, CallbackParams, args);
 	}
 	
 	//Mode By
-	public void AnimateBy (float Duration, GameObject CallbackObj, string CallbackMsg, object CallbackParams, params object[] args)
-	{
+	public void AnimateBy(float Duration, GameObject CallbackObj, string CallbackMsg, object CallbackParams, params object[] args) {
 		//Wrapper function
 		pAnimator.AnimateBy(this, Duration, CallbackObj, CallbackMsg, CallbackParams, args);
 	}
 
 	//Start animation sequence
-	public void StartAnimation (Ani.Animate AnimateMode, GameObject CallbackObj, object CallbackMsg, object CallbackParams)
-	{
+	public void StartAnimation(Ani.Animate AnimateMode, GameObject CallbackObj, object CallbackMsg, object CallbackParams) {
 		//Wrapper function
-		switch (AnimateMode)
-		{
+		switch (AnimateMode) {
 			case Ani.Animate.OneShot:
 				pAnimator.StartAnimation(Ani.Animate.OneShot, CallbackObj, CallbackMsg, CallbackParams);
 				break;
@@ -201,31 +183,28 @@ public class GUITextObj : MonoBehaviour {
 	}
 	
 	//Stop animation sequence
-	public void StopAnimation ()
-	{
+	public void StopAnimation() {
 		//Wrapper function
 		pAnimator.StopAnimation();
 	}
 	
 	//Clear animation queue
-	public void ClearAnimation ()
-	{
+	public void ClearAnimation() {
 		//Wrapper function
 		pAnimator.ClearAnimation();
 	}
 
 	/*-------------------------------------Unity Methods-------------------------------------*/
-	void Awake ()
-	{
+	void Awake() {
 		//Get pointer to GUI manager
-		ptrGUIMgr = (GUIManager) GameObject.Find("GUI").GetComponent(typeof(GUIManager));
+		ptrGUIMgr = (GUIManager)GameObject.Find("GUI").GetComponent(typeof(GUIManager));
 		pObj = gameObject;
-		pText = (GUIText) gameObject.GetComponent(typeof(GUIText));
-		pAnimator = (Animator) gameObject.GetComponent(typeof(Animator));
+		pText = (GUIText)gameObject.GetComponent(typeof(GUIText));
+		pAnimator = (Animator)gameObject.GetComponent(typeof(Animator));
 		pActive = false;
 		pLocation = new Vector2(0f, 0f);
 		
 		//Turn off this text object
-		gameObject.active = false;
+		gameObject.SetActive(false);
 	}
 }

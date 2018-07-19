@@ -36,3 +36,5 @@ sysinfo.txt
 *.unitypackage
 
 2_work/
+
+*.mat
