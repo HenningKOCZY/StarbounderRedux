@@ -54,12 +54,12 @@ public class MoveShip : MonoBehaviour {
 	Transform camTrans;
 	public GUIScript gui;
 	public GameMaster gameMaster;
-	float Zspeed;
+	public float Zspeed;
 	float Xspeed = 0;
 	float maxXspeed = 28;
 	float maxZSpeed = 70;
 	float minZSpeed = 40;
-	float minZBrake = 40;
+	public float minZBrake = 40;
 	bool brakeOverride = false;
 	public float grav;
 	float defGrav;
@@ -106,7 +106,7 @@ public class MoveShip : MonoBehaviour {
 	private float blackerPause;
 
 	private float zForce;
-	int shipNum;
+	public int shipNum;
 	bool brakes = true;
 	private float gateDist = 5.5f;
 	Material explosionMaterial;
