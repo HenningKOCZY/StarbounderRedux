@@ -28,7 +28,7 @@ GameObject:
   - component: {fileID: 400002}
   - component: {fileID: 3300000}
   - component: {fileID: 2300000}
-  - component: {fileID: 11400000}
+  - component: {fileID: 114066006311378080}
   m_Layer: 0
   m_Name: plane
   m_TagString: Untagged
@@ -155,27 +155,6 @@ MeshFilter:
 --- !u!1002 &3300001
 EditorExtensionImpl:
   serializedVersion: 6
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a18418196554540018736c4d62d53410, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  number: 0
-  atlasDiv: 4
-  gatePhase: 1
-  ship: {fileID: 0}
-  shipScript: {fileID: 0}
-  flip: 0
-  mesh: {fileID: 0}
-  vertices: []
-  uvs: []
-  frameCnt: 0
 --- !u!1002 &11400001
 EditorExtensionImpl:
   serializedVersion: 6
@@ -193,3 +172,14 @@ Prefab:
 --- !u!1002 &100100001
 EditorExtensionImpl:
   serializedVersion: 6
+--- !u!114 &114066006311378080
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62618324a2ff16b4ab661c8676f7f436, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

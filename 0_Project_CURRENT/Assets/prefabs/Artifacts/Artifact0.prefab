@@ -9,7 +9,7 @@ GameObject:
   m_Component:
   - component: {fileID: 400000}
   - component: {fileID: 13500000}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Artifact0
   m_TagString: artifact
   m_Icon: {fileID: 0}

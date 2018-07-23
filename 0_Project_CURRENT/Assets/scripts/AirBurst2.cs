@@ -7,9 +7,9 @@ public class AirBurst2 : MonoBehaviour {
 	public float yPos;
 	public CardAnim airBurstScript;
 
-	void Update () {
+	void Update() {
 		if (airBurstScript.cardGo) {
-			transform.position = new Vector3 (transform.position.x , yPos+1, transform.position.z );	
+			transform.position = new Vector3(transform.position.x, yPos + 1, transform.position.z);	
 			
 		}
 	}

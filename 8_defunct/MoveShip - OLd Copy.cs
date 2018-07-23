@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveShip : MonoBehaviour {
+public class MoveShipOLD : MonoBehaviour {
 
 	GameObject shipObj;
 	Transform sub;
@@ -321,7 +321,23 @@ public class MoveShip : MonoBehaviour {
 	}
 
 
-	IEnumerator adjustYV2() { // this is for panther
+	//	void adjustyv2() {
+	//		float timer = 0.8f;
+	//		float startY = state.lv.y;
+	//		state.landing = true;
+	//
+	//		while (timer > 0 && state.landing) {
+	//			timer -= Time.deltaTime;
+	//			yv2 = startY * timer*10;
+	//			yield return null;
+	//		}
+	//
+	//		state.landing = false;
+	//		sub.localPosition = new Vector3(sub.localPosition.x, sub.localPosition.y, 0);
+	//	}
+
+
+	IEnumerator adjustYV2() {
 		float timer = 0.08f;
 		float startY = state.lv.y;
 		state.landing = true;
@@ -335,461 +351,8 @@ public class MoveShip : MonoBehaviour {
 	}
 
 
-	//	void OldFixedUpdate() {
-	//
-	//		rbx = rb.velocity.x;
-	//		rby = rb.velocity.y;
-	//		rbz = rb.velocity.z;
-	//
-	//		// inputs
-	//		if (!state.crashing && !state.winning) {
-	//
-	//			if (gm.device == GameMaster.DeviceType.iPhone) {
-	//				if (state.started) {
-	//					//xf = -(Input.acceleration.y*3*((Mathf.Abs(Input.acceleration.y)+0.6)*.75));
-	//					xf = -(Input.acceleration.y * 2);
-	//					brakes = false;
-	//					yf = false;
-	//				}
-	//				if (!state.paused) {
-	//					for (int i = 0; i < Input.touchCount; ++i) {
-	//						if (Input.GetTouch(i).position.x > Screen.width - (Screen.width / 4)) {
-	//							if (Input.GetTouch(i).phase == TouchPhase.Began || Input.GetTouch(i).phase != TouchPhase.Ended) {
-	//								yf = true;
-	//							} else
-	//								yf = false;
-	//							//if (jumpTouches == 0) yf = false;
-	//						} else if (Input.GetTouch(i).position.x < Screen.width / 4) {
-	//								if (Input.GetTouch(i).phase != TouchPhase.Ended) {
-	//									brakes = true;
-	//								} else
-	//									brakes = false;
-	//							}
-	//					}
-	//				}
-	//			} else { // computer ctrls
-	//				yf = Input.GetButton("Fire1");
-	//				if (state.started) {
-	//					xf = Input.GetAxis("Horizontal");
-	//					xfRaw = Input.GetAxisRaw("Horizontal");
-	//				}
-	//				if (!state.cruising) {
-	//					qf = Input.GetButton("jumpAhead");
-	//					if (Input.GetAxisRaw("Vertical") > 0)
-	//						brakes = false;
-	//					else
-	//						brakes = true;
-	//				}
-	//			}
-	//			if (brakeOverride)
-	//				brakes = false;
-	//		}
-	//
-	//		if (!yf) {
-	//			state.jbClear = true;
-	//		}
-	//		if (!qf) {
-	//			qbClear = true;
-	//		}
-	//		if (qf && qbClear && !state.cruising)
-	//			resetRepoShip();
-	//
-	//
-	//		state.jumpTimer -= Time.deltaTime;
-	//
-	//		if (shipNum != 10) {
-	//			// gravity and hop limiting. rb now (what the fuck was that?>
-	//			if (!state.cruising && !state.crashing)
-	//				rby -= (grav * Time.deltaTime);
-	//			actualY = rby;
-	//			if (state.jumpTimer < 0 && rby > jumpforce)
-	//				rby = jumpforce;
-	//			if (state.jumpTimer < -0.5f && rby > 1)
-	//				rby = 1;
-	//			// fall off the bottom
-	//			if (rb.position.y < -25.5f && !state.crashing)
-	//				crash(0);
-	//
-	//			// jumps
-	//			if (yf && state.jbClear && !state.paused) {
-	//				if (state.jumps == 1) { // double jump
-	//					if (rc == 0) {
-	//						jump(2);
-	//						state.jumps = 2;
-	//					} else {
-	//						jump(2);
-	//						state.jumps = 1;
-	//					}
-	//				} else if (state.jumps == 0 && !state.cruising) { // jump
-	//						jump(1);
-	//						state.jumps = 1;
-	//					}
-	//
-	//			}
-	//
-	//			// store some vars from this update cycle for use in the next
-	//			// raycheckDown(2);
-	//
-	//			if (state.grounded && deltaY > 0.01f && deltaY < 0.3f) {
-	//				rby = Mathf.Clamp(rby, -20.0f, 0.0f);
-	//			}
-	//
-	//			if (state.landed) {
-	//				state.jumps = 0;
-	//				state.landed = false;
-	//				jumpValueTar = 0;
-	//			}
-	//		} else { //panther code
-	//			if (state.fullStop != true) {
-	//				if (state.xDisabled == 1)
-	//					xf = Mathf.Clamp(xf, 0.6f, 4.0f);
-	//				else if (state.xDisabled == -1)
-	//						xf = Mathf.Clamp(xf, -4.0f, -0.6f);
-	//				collLeft = Mathf.Clamp(collLeft - Time.deltaTime, 0, sideJumpTolerance);
-	//				collRight = Mathf.Clamp(collRight - Time.deltaTime, 0, sideJumpTolerance);
-	//
-	//				if (!state.stopDead) {
-	//
-	//					// forward speed, slow down after crash, and progress
-	//					if (!state.cruising && !state.stunned) { // && state.started) {
-	//						if (!brakes)
-	//							targetSpeed += ((maxZSpeed - targetSpeed + 20) / 2) * Time.deltaTime * 4.5f;
-	//						else
-	//							targetSpeed -= ((targetSpeed + 50) / 4) * (Time.deltaTime * 4.5f);
-	//
-	//						// boost speed, slow down when in air, but clamp it
-	//						//					if (state.boosting) {
-	//						//						maxZSpeed=Mathf.Clamp(maxZSpeed-35.0*Time.deltaTime, 65, ultraMaxZSpeed);
-	//						//						targetSpeed=maxZSpeed;
-	//						//						if (maxZSpeed<=defPantherMaxZ) {
-	//						//							state.boosting=false;
-	//						//							maxZSpeed=defPantherMaxZ;
-	//						//						}
-	//						//					}
-	//						if (!state.grounded) {
-	//							maxZSpeed = Mathf.Clamp(maxZSpeed - (pantherSlowInAirSpeed * Time.deltaTime), pantherSlowInAirLimit, ultraMaxZSpeed);
-	//						}
-	//						targetSpeed = Mathf.Clamp(targetSpeed, minZSpeed, maxZSpeed);
-	//					}
-	//
-	//
-	//				} //end stopdead if
-	//
-	//				state.progress = transform.position.z;
-	//
-	//				// gravity and hop limiting
-	//				if (!state.cruising && !state.crashing)
-	//					rby -= grav * Time.deltaTime;
-	//				actualY = rby;
-	//				if (state.jumpTimer < 0 && rby > jumpforce * jumpMult)
-	//					rby = jumpforce * jumpMult;
-	//				if (state.jumpTimer < -0.5f && rby > 1)
-	//					rby = 1;
-	//				// fall off the bottom
-	//				if (rb.position.y < -25.5f && !state.crashing)
-	//					crash(0);
-	//
-	//				// jumps
-	//				if ((yf && state.jbClear) && !state.paused && !state.cruising && !state.stunned) {
-	//					if (!state.grounded) {
-	//						int rcb = raycheckDown(2);
-	//						if (rcb > 0) {
-	//							//takeoffZ = rigidbody.position.z;
-	//							jump(1);
-	//						} else {
-	//							int rcf = raycheckFront();
-	//							if (rcf > 0) {
-	//								jump(6);
-	//							} else if (collLeft > 0.001f) {
-	//									jump(3);
-	//								} else if (collRight > 0.001f) {
-	//										jump(4);
-	//									} else if (state.jumps == 1)
-	//											jump(2);
-	//						}
-	//					} else {
-	//						// ** new
-	//						//takeoffZ = rigidbody.position.z;
-	//						jump(1);
-	//					}
-	//				}
-	//
-	//
-	//				// store some vars from this update cycle for use in the next
-	//
-	//				if (state.landed) {
-	//					state.jumps = 0;
-	//					state.landed = false;
-	//				}
-	//				if (!state.crashing && !state.stunned && !state.winning) {
-	//					rbz = targetSpeed;
-	//				} else
-	//					rbz = Mathf.Lerp(rbz, 0.0f, Time.deltaTime * 6);
-	//				//if (state.boostTimer>0) { var xf2Adj: float = 1-(state.boostTimer/boostTime); }
-	//				// else xf2Adj=1.0;
-	//				xf2 = Mathf.Lerp(xf2, Mathf.Clamp((xf * -20) - rbx, -50, 50), Time.deltaTime * 8);
-	//			}
-	//		}
-	//
-	//		//raycheckSide(0);
-	//		//raycheckSide(1);
-	//		//raycheckFront();
-	//		//raycheckDown(1);
-	//		rb.velocity = new Vector3(rbx, rby, rbz);
-	//		state.lv = rb.velocity;
-	//		deltaY = Mathf.Abs(state.lastY - rb.position.y);
-	//		state.lastY = rb.position.y;
-	//
-	//		if (state.crashing && !restarted) {
-	//			if (splode.transform.position.y < cam.transform.position.y)
-	//				cam.goalHeight = splode.transform.position.y;
-	//		} else if (state.winning) {
-	//				cam.goalHeight = warpPath.transform.position.y;
-	//			} else if (!state.cruising) {
-	//					// cam goals
-	//					if (cam.goalHeight < transform.position.y - cam.sensitivity)
-	//						cam.goalHeight += 1.0f;
-	//					else if (cam.goalHeight > transform.position.y)
-	//							cam.goalHeight = transform.position.y;
-	//				}
-	//
-	//
-	//
-	//	}
-
-
-	//
-	//	void OldUpdate() {
-	//		guiUpdate();
-	//
-	////		float rbx = rb.velocity.x;
-	////		float rby = rb.velocity.y;
-	////		float rbz = rb.velocity.z;
-	//
-	//		if (gm.worldNum == 1 && !state.cruising)
-	//			if (!topSurface)
-	//				level10Init();
-	//
-	//		if (shipNum != 10) {
-	//			// forward speed, slow down after crash, and progress
-	//			if (!state.stopDead) {
-	//				if (!state.cruising) {// && state.started) {
-	//					if (!brakes)
-	//						targetSpeed += ((maxZSpeed - targetSpeed + 20) / 2) * Time.deltaTime * 2;
-	//					else
-	//						targetSpeed -= ((targetSpeed + 50) / 4) * Time.deltaTime * 4;
-	//					targetSpeed = Mathf.Clamp(targetSpeed, minZSpeed, maxZSpeed);
-	//				}
-	//				zForce = rbz / maxZSpeed;
-	//			}
-	//			state.progress = transform.position.z;
-	//
-	//			if (!state.crashing && !state.winning) {
-	//				rbz = targetSpeed;
-	//
-	//			} else
-	//				rbz = Mathf.Lerp(rb.velocity.z, 0.0f, Time.deltaTime * 6);
-	//			xf2 = Mathf.Lerp(xf2, (xf * -20) - rbx, Time.deltaTime * 10);
-	//
-	//			// start the motion of the ship and the clock when brakes released
-	//			if (!state.started) {
-	//				state.elapsedTime = 0;
-	//				if (!brakes) {
-	//					xf = 0;
-	//					state.started = true;
-	//					//state.startedTime=Time.time;
-	//					speedUpX();
-	//					StartCoroutine(speedUpZ());
-	//					if (sfx && engineAudio.activeSelf)
-	//						engineAudio.GetComponent<AudioSource>().Play();
-	//				}
-	//			} else if (!state.crashing) {
-	//					state.elapsedTime += Time.deltaTime / gm.gameSpeed;
-	//					//state.elapsedTime=((Time.time-state.startedTime)/gm.gameSpeed)+state.progressedTime;
-	//				}
-	//
-	//			if (!state.crashing && !state.cruising) {
-	//
-	//				// check gateways
-	//				if (transform.position.z > winDist && winDist > 0)
-	//					checkGates();
-	//
-	//			}
-	//
-	//
-	//
-	//			// spacecraft tilt and pitch 
-	//			float yPos = Mathf.Abs(rbx * 0.01f) + 0.8f;
-	//			float yRot = -xf2 * 0.5f;
-	//			float zRot = xf2;
-	//
-	//
-	//			// pitch up down and when to free fall/ take away a jump 
-	//			if (state.jumps > 0) {
-	//				xRot = Mathf.Lerp(xRot, -1.5f * rby, Time.deltaTime * xRotSpeed);
-	//
-	//			} else if (rby < -10) {
-	//					if (gm.worldNum == 1)
-	//						level10off();
-	//					xRot = 0;
-	//					xRotSpeed = 4;
-	//					state.jumps = 1;
-	//					state.grounded = false;
-	//				}
-	//			zForce = rbz / maxZSpeed;
-	//			sub.eulerAngles = new Vector3(xRot, yRot, zRot);
-	//			sub.localPosition = new Vector3(0, yPos, 0);
-	//
-	//			if (!state.cruising)
-	//				rbx = Mathf.Lerp(rb.velocity.x, xf * Xspeed, Time.deltaTime * state.handling);
-	//
-	//			if (sfx && state.started) {
-	//				engineAudio.GetComponent<AudioSource>().pitch = (targetSpeed / ultraMaxZSpeed + 0.2f) * 1.4f;
-	//				engineAudio.GetComponent<AudioSource>().volume = 1 - (Mathf.Abs(((targetSpeed / ultraMaxZSpeed) * 2) - 1.1f));
-	//			}
-	//		}
-	//				
-	//		// else panther code below vv
-	//		else {
-	//			if (!state.fullStop) {
-	//				anim["run"].speed = Mathf.Clamp(0.1f + targetSpeed / 60f, 0.75f, 10);
-	//				anim["lStep"].speed = Mathf.Clamp(0.1f + Mathf.Abs(xf2) / 30f, 0.8f, 10);
-	//				anim["rStep"].speed = Mathf.Clamp(0.1f + Mathf.Abs(xf2) / 30f, 0.8f, 10);
-	//				if (targetSpeed < 8)
-	//					if (xf2 < -2)
-	//						anim.CrossFade("rStep", 0.2f);
-	//					else if (xf2 > 2)
-	//							anim.CrossFade("lStep", 0.2f);
-	//						else
-	//							anim.CrossFade("idle", 0.2f);
-	//				else
-	//					anim.CrossFade("run");
-	//
-	//				// start the motion of the ship and the clock when brakes released
-	//				if (!state.started) {
-	//					//state.elapsedTime=0;
-	//					if (!brakes) {
-	//						xf = 0;
-	//						state.started = true;
-	//						//state.startedTime=Time.time;
-	//						speedUpX();
-	//						StartCoroutine(speedUpZ());
-	//					}
-	//				} else if (!state.crashing) {
-	//						state.elapsedTime += Time.deltaTime / gm.gameSpeed;
-	//					}
-	//					
-	//				if (!state.crashing && !state.cruising && !state.winning) {
-	//					// check gateways
-	//					if (transform.position.z > winDist && winDist > 0)
-	//						checkGates();
-	//				}
-	//					
-	//				// spacecraft tilt and pitch 
-	//				float yRot = (Mathf.Atan2(-xf2, targetSpeed + 1) * Mathf.Rad2Deg) * Mathf.Clamp(((targetSpeed * 1.2f) / defPantherMaxZ), 0, 1);
-	//				float zRot = xf2 * 0.5f;
-	//
-	//				float yPos = Mathf.Abs(rbx * 0.01f) + 0.8f;
-	//				float zPos = 0;
-	//
-	//
-	//				// pitch up down and when to free fall/ take away a jump
-	//				if (state.jumps > 0 || state.landing) {
-	//					// xRot = Mathf.Lerp(xRot, -1.7*rigidbody.velocity.y, Time.deltaTime*xRotSpeed); 
-	//					if (!state.landing)
-	//						yv2 = rby;
-	//					//else print(yv2);
-	//					xRot = Mathf.Lerp(xRot, -1.7f * yv2, Time.deltaTime * xRotSpeed); 
-	//					if (state.fJumping) {
-	//						xRot = Mathf.Clamp(xRot, 0, 90);
-	//						zPos = Mathf.Clamp(xRot * -0.02f, -2, 0);
-	//					} else {
-	//						xRot = Mathf.Clamp(xRot, -70, 90);
-	//						zPos = Mathf.Clamp(xRot * -0.02f, -2, 0);
-	//					}
-	//				} else if (rby < -10) {
-	//						xRotSpeed = 6;
-	//						xRot = 0;
-	//						state.jumps = 1;
-	//						state.grounded = false;
-	//						state.landing = false;
-	//						anim.Rewind("jump");
-	//						anim.CrossFade("jump");
-	//						if (gm.worldNum == 1)
-	//							level10off();
-	//					}
-	//
-	//				sub.localPosition = new Vector3(0, yPos, zPos);
-	//				sub.eulerAngles = new Vector3(xRot, yRot, zRot);
-	//
-	//				if (!state.cruising)
-	//					rb.velocity = Vector3.Lerp(rb.velocity, new Vector3(xf * Xspeed, rby, rbz), Time.deltaTime * state.handling);
-	//
-	//			} else {
-	//				anim.CrossFade("idle", 0.2f);
-	//				xf = 0;
-	//				rb.velocity = new Vector3(0, rby, rbz);
-	//			}
-	//			if (engineAudio.activeSelf) {
-	//				if (sfx && state.grounded && engineAudio.activeSelf && !state.paused && state.started && !state.stopDead && !state.fullStop) {
-	//					if (!engineAudio.GetComponent<AudioSource>().isPlaying)
-	//						engineAudio.GetComponent<AudioSource>().Play();
-	//
-	//					if ((targetSpeed / ultraMaxZSpeed) > 0.7f)
-	//						engineAudio.GetComponent<AudioSource>().clip = sound.engineSound[2];
-	//					else
-	//						engineAudio.GetComponent<AudioSource>().clip = sound.engineSound[1];
-	//					//engineAudio.audio.pitch = (targetSpeed/ultraMaxZSpeed)*1.2;
-	//					//engineAudio.audio.volume = .6;
-	//					//engineAudio.audio.volume = Mathf.Clamp(2-((targetSpeed/ultraMaxZSpeed)*2),.09,1);
-	//				} else {
-	//					if (engineAudio.GetComponent<AudioSource>().isPlaying)
-	//						engineAudio.GetComponent<AudioSource>().Stop();
-	//				}
-	//			}
-	//		}
-	//
-	////		rb.velocity = new Vector3(rbx, rby, rbz);
-	//
-	//		if (!state.paused) {
-	//			if (gm.device == GameMaster.DeviceType.iPhone) {	
-	//				foreach (Touch touch in Input.touches) {  
-	//					if (touch.position.x > Screen.width / 4 && touch.position.x < Screen.width - (Screen.width / 4)) {   
-	//						if (Mathf.Abs(touch.deltaPosition.y) > 10) {
-	//							//Application.LoadLevel(0);	
-	//						            	
-	//							if (!state.paused && !state.cruising && !state.crashing) { 
-	//								Time.timeScale = 0; 
-	//								state.paused = true; 
-	//								gui.switchGUI("paused"); 
-	//								if (sfx && engineAudio.activeSelf)
-	//									engineAudio.GetComponent<AudioSource>().Stop(); 
-	//								//gui.inputWait(.5); 
-	//							}
-	//							//	else { Time.timeScale=1.0; state.paused=false; paused=false; 
-	//							//}
-	//						}
-	//					}
-	//				}
-	//			} else {
-	//				if (Input.GetButton("pause")) {
-	//					if (!state.paused && !state.cruising && !state.crashing) { 
-	//						Time.timeScale = 0.0f; 
-	//						state.paused = true; 
-	//						gui.switchGUI("paused"); 
-	//						if (sfx && engineAudio.activeSelf)
-	//							engineAudio.GetComponent<AudioSource>().Stop();
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
-	//
-
-
 	void FixedUpdate() {
 
-		guiUpdate();
 		rbx = rb.velocity.x;
 		rby = rb.velocity.y;
 		rbz = rb.velocity.z;
@@ -797,167 +360,202 @@ public class MoveShip : MonoBehaviour {
 		// inputs	
 		if (!state.crashing && !state.winning) {
 
-			yf = Input.GetButton("Fire1");
-			if (state.started) {
-				xf = Input.GetAxis("Horizontal");
-				xfRaw = Input.GetAxisRaw("Horizontal");
-			}
-			if (!state.cruising) {
-				qf = Input.GetButton("jumpAhead");
-				if (Input.GetAxisRaw("Vertical") > 0 || brakeOverride)
+			if (gm.device == GameMaster.DeviceType.iPhone) {
+				if (state.started) {
+					//xf = -(Input.acceleration.y*3*((Mathf.Abs(Input.acceleration.y)+0.6)*.75));
+					xf = -(Input.acceleration.y * 2);
 					brakes = false;
-				else
-					brakes = true;
+					yf = false;
+				}
+				if (!state.paused) {
+					for (int i = 0; i < Input.touchCount; ++i) {
+						if (Input.GetTouch(i).position.x > Screen.width - (Screen.width / 4)) {
+							if (Input.GetTouch(i).phase == TouchPhase.Began || Input.GetTouch(i).phase != TouchPhase.Ended) {
+								yf = true;
+							} else
+								yf = false;
+							//if (jumpTouches == 0) yf = false;       			
+						} else if (Input.GetTouch(i).position.x < Screen.width / 4) {
+								if (Input.GetTouch(i).phase != TouchPhase.Ended) {
+									brakes = true;
+								} else
+									brakes = false;
+							}
+					}
+				}
+			} else { // computer ctrls
+				yf = Input.GetButton("Fire1");
+				if (state.started) {
+					xf = Input.GetAxis("Horizontal");
+					xfRaw = Input.GetAxisRaw("Horizontal");
+				}
+				if (!state.cruising) {
+					qf = Input.GetButton("jumpAhead");
+					if (Input.GetAxisRaw("Vertical") > 0)
+						brakes = false;
+					else
+						brakes = true;
+				}
 			}
-
-			if (!yf) {
-				state.jbClear = true;
-			}
-			if (!qf) {
-				qbClear = true;
-			}
-			if (qf && qbClear && !state.cruising)
-				resetRepoShip();
+			if (brakeOverride)
+				brakes = false;
 		}
 
-		// velocity z
-		if (!state.stopDead) {
-			if (!state.cruising) {// && state.started) {
-				if (!brakes)
-					targetSpeed += ((maxZSpeed - targetSpeed + 20) / 2) * Time.deltaTime * 2;
-				else
-					targetSpeed -= ((targetSpeed + 50) / 4) * Time.deltaTime * 4;
-				targetSpeed = Mathf.Clamp(targetSpeed, minZSpeed, maxZSpeed);
-			}
+		if (!yf) {
+			state.jbClear = true;
 		}
+		if (!qf) {
+			qbClear = true;
+		}
+		if (qf && qbClear && !state.cruising)
+			resetRepoShip();
 
-		state.progress = transform.position.z;
+
 		state.jumpTimer -= Time.deltaTime;
 
-		if (!state.crashing && !state.winning) {
-			rbz = targetSpeed;
-		} else
-			rbz = Mathf.Lerp(rb.velocity.z, 0.0f, Time.deltaTime * 6);
+		if (shipNum != 10) {	
+			// gravity and hop limiting. rb now (what the fuck was that?>
+			if (!state.cruising && !state.crashing)
+				rby -= (grav * Time.deltaTime);
+			actualY = rby;
+			if (state.jumpTimer < 0 && rby > jumpforce)
+				rby = jumpforce;
+			if (state.jumpTimer < -0.5f && rby > 1)
+				rby = 1;
+			// fall off the bottom
+			if (rb.position.y < -25.5f && !state.crashing)
+				crash(0);
 
-		zForce = rbz / maxZSpeed; //ratio for display?
+			// jumps
+			if (yf && state.jbClear && !state.paused) {
+				if (state.jumps == 1) { // double jump
+					if (rc == 0) {
+						jump(2);
+						state.jumps = 2;
+					} else {
+						jump(2);
+						state.jumps = 1;
+					}
+				} else if (state.jumps == 0 && !state.cruising) { // jump
+						jump(1);
+						state.jumps = 1;
+					}
 
-
-		// start the motion of the ship and the clock when brakes released
-		if (!state.started) {
-			state.elapsedTime = 0;
-			if (!brakes) {
-				xf = 0;
-				state.started = true;
-				//state.startedTime=Time.time;
-				speedUpX();
-				StartCoroutine(speedUpZ());
-				if (sfx && engineAudio.activeSelf)
-					engineAudio.GetComponent<AudioSource>().Play();
 			}
-		} else if (!state.crashing) {
-				state.elapsedTime += Time.deltaTime / gm.gameSpeed;
+
+			// store some vars from this update cycle for use in the next
+			// raycheckDown(2);
+
+			if (state.grounded && deltaY > 0.01f && deltaY < 0.3f) {
+				rby = Mathf.Clamp(rby, -20.0f, 0.0f);
 			}
 
-		if (!state.crashing && !state.cruising) {
-			// check gateways
-			if (transform.position.z > winDist && winDist > 0)
-				checkGates();
-		}
-
-
-
-		// gravity 
-		if (!state.cruising && !state.crashing)
-			rby -= (grav * Time.deltaTime);
-
-		// hop limiting? What is this?
-		//		actualY = rby;
-		//		if (state.jumpTimer < 0 && rby > jumpforce)
-		//			rby = jumpforce;
-		//		if (state.jumpTimer < -0.5f && rby > 1)
-		//			rby = 1;
-
-
-		// set side to side vel
-		if (!state.cruising)
-			rbx = Mathf.Lerp(rbx, xf * Xspeed, Time.deltaTime * state.handling);
-
-		// for tilting
-		xf2 = Mathf.Lerp(xf2, (xf * -20) - rbx, Time.deltaTime * 10);
-
-
-		// spacecraft tilt
-		float yPos = Mathf.Abs(rbx * 0.01f) + 0.8f;
-		float yRot = -xf2 * 0.5f;
-		float zRot = xf2;
-
-
-		// spacecraft pitch up down on jumps and fall 
-		if (state.jumps > 0) {
-			xRot = Mathf.Lerp(xRot, -1.5f * rby, Time.deltaTime * xRotSpeed);
-		} else {
-			if (rby < -10) { // free fall over the edge / take away a jump 
-				if (gm.worldNum == 1)
-					level10off();
-				xRot = 0;
-				xRotSpeed = 4;
-				state.jumps = 1;
-				state.grounded = false;
+			if (state.landed) {
+				state.jumps = 0;
+				state.landed = false;
+				jumpValueTar = 0;
 			}
-		}
+		} else { //panther code
+			if (state.fullStop != true) {
+				if (state.xDisabled == 1)
+					xf = Mathf.Clamp(xf, 0.6f, 4.0f);
+				else if (state.xDisabled == -1)
+						xf = Mathf.Clamp(xf, -4.0f, -0.6f);
+				collLeft = Mathf.Clamp(collLeft - Time.deltaTime, 0, sideJumpTolerance);
+				collRight = Mathf.Clamp(collRight - Time.deltaTime, 0, sideJumpTolerance);
+
+				if (!state.stopDead) {
+
+					// forward speed, slow down after crash, and progress
+					if (!state.cruising && !state.stunned) { // && state.started) {
+						if (!brakes)
+							targetSpeed += ((maxZSpeed - targetSpeed + 20) / 2) * Time.deltaTime * 4.5f;
+						else
+							targetSpeed -= ((targetSpeed + 50) / 4) * (Time.deltaTime * 4.5f);
+
+						// boost speed, slow down when in air, but clamp it
+						//					if (state.boosting) {
+						//						maxZSpeed=Mathf.Clamp(maxZSpeed-35.0*Time.deltaTime, 65, ultraMaxZSpeed);
+						//						targetSpeed=maxZSpeed;
+						//						if (maxZSpeed<=defPantherMaxZ) {
+						//							state.boosting=false;
+						//							maxZSpeed=defPantherMaxZ;
+						//						}
+						//					}
+						if (!state.grounded) {
+							maxZSpeed = Mathf.Clamp(maxZSpeed - (pantherSlowInAirSpeed * Time.deltaTime), pantherSlowInAirLimit, ultraMaxZSpeed);
+						}
+						targetSpeed = Mathf.Clamp(targetSpeed, minZSpeed, maxZSpeed);
+					}
 
 
-		// engine sound
-		if (sfx && state.started) {
-			engineAudio.GetComponent<AudioSource>().pitch = (targetSpeed / ultraMaxZSpeed + 0.2f) * 1.4f;
-			engineAudio.GetComponent<AudioSource>().volume = 1 - (Mathf.Abs(((targetSpeed / ultraMaxZSpeed) * 2) - 1.1f));
-		}
+				} //end stopdead if
 
+				state.progress = transform.position.z;
 
-		// jumps
-		if (yf && state.jbClear && !state.paused) {
-			if (state.jumps == 1) { // double jump
-				if (rc == 0) {
-					jump(2);
-					state.jumps = 2;
-				} else {
-					jump(2);
-					state.jumps = 1;
+				// gravity and hop limiting
+				if (!state.cruising && !state.crashing)
+					rby -= grav * Time.deltaTime;
+				actualY = rby;
+				if (state.jumpTimer < 0 && rby > jumpforce * jumpMult)
+					rby = jumpforce * jumpMult;
+				if (state.jumpTimer < -0.5f && rby > 1)
+					rby = 1;
+				// fall off the bottom
+				if (rb.position.y < -25.5f && !state.crashing)
+					crash(0);
+
+				// jumps
+				if ((yf && state.jbClear) && !state.paused && !state.cruising && !state.stunned) {
+					if (!state.grounded) {
+						int rcb = raycheckDown(2);
+						if (rcb > 0) {
+							//takeoffZ = rigidbody.position.z;	
+							jump(1);
+						} else {
+							int rcf = raycheckFront();
+							if (rcf > 0) {
+								jump(6);
+							} else if (collLeft > 0.001f) {
+									jump(3);
+								} else if (collRight > 0.001f) {
+										jump(4);
+									} else if (state.jumps == 1)
+											jump(2);
+						}
+					} else {	
+						// ** new
+						//takeoffZ = rigidbody.position.z;	
+						jump(1);
+					}
 				}
-			} else if (state.jumps == 0 && !state.cruising) { // jump
-					jump(1);
-					state.jumps = 1;
+
+
+				// store some vars from this update cycle for use in the next
+
+				if (state.landed) {
+					state.jumps = 0;
+					state.landed = false;
 				}
+				if (!state.crashing && !state.stunned && !state.winning) {
+					rbz = targetSpeed;
+				} else
+					rbz = Mathf.Lerp(rbz, 0.0f, Time.deltaTime * 6);
+				//if (state.boostTimer>0) { var xf2Adj: float = 1-(state.boostTimer/boostTime); }
+				// else xf2Adj=1.0;
+				xf2 = Mathf.Lerp(xf2, Mathf.Clamp((xf * -20) - rbx, -50, 50), Time.deltaTime * 8);
+			}
 		}
 
-		// store some vars from this update cycle for use in the next
-		if (state.grounded && deltaY > 0.01f && deltaY < 0.3f) {
-			rby = Mathf.Clamp(rby, -20.0f, 0.0f);
-		}
-
-		if (state.landed) {
-			state.jumps = 0;
-			state.landed = false;
-			jumpValueTar = 0;
-		}
-
-		// assign forces and store
+		//raycheckSide(0);
+		//raycheckSide(1);
+		//raycheckFront();
+		//raycheckDown(1);
 		rb.velocity = new Vector3(rbx, rby, rbz);
 		state.lv = rb.velocity;
 		deltaY = Mathf.Abs(state.lastY - rb.position.y);
 		state.lastY = rb.position.y;
 
-		// rotate and place the sub
-		sub.eulerAngles = new Vector3(xRot, yRot, zRot);
-		sub.localPosition = new Vector3(0, yPos, 0);
-
-
-		// fall off the bottom death
-		if (rb.position.y < -25.5f && !state.crashing)
-			crash(0);
-		
-
-		// cam goal height adjustment
 		if (state.crashing && !restarted) {
 			if (splode.transform.position.y < cam.transform.position.y)
 				cam.goalHeight = splode.transform.position.y;	
@@ -971,14 +569,211 @@ public class MoveShip : MonoBehaviour {
 							cam.goalHeight = transform.position.y;	
 				}
 
-		// pausing
+	
+
+	}
+
+
+
+	void Update() {	
+		guiUpdate();
+
+//		float rbx = rb.velocity.x;
+//		float rby = rb.velocity.y;
+//		float rbz = rb.velocity.z;
+
+		if (gm.worldNum == 1 && !state.cruising)
+			if (!topSurface)
+				level10Init();
+
+		if (shipNum != 10) {
+			// forward speed, slow down after crash, and progress
+			if (!state.stopDead) {
+				if (!state.cruising) {// && state.started) {
+					if (!brakes)
+						targetSpeed += ((maxZSpeed - targetSpeed + 20) / 2) * Time.deltaTime * 2;
+					else
+						targetSpeed -= ((targetSpeed + 50) / 4) * Time.deltaTime * 4;
+					targetSpeed = Mathf.Clamp(targetSpeed, minZSpeed, maxZSpeed);
+				}
+				zForce = rbz / maxZSpeed;
+			}
+			state.progress = transform.position.z;
+
+			if (!state.crashing && !state.winning) {
+				rbz = targetSpeed;
+
+			} else
+				rbz = Mathf.Lerp(rb.velocity.z, 0.0f, Time.deltaTime * 6);
+			xf2 = Mathf.Lerp(xf2, (xf * -20) - rbx, Time.deltaTime * 10);
+
+			// start the motion of the ship and the clock when brakes released
+			if (!state.started) {
+				state.elapsedTime = 0;
+				if (!brakes) {
+					xf = 0;
+					state.started = true;
+					//state.startedTime=Time.time;
+					speedUpX();
+					StartCoroutine(speedUpZ());
+					if (sfx && engineAudio.activeSelf)
+						engineAudio.GetComponent<AudioSource>().Play();
+				}
+			} else if (!state.crashing) {
+					state.elapsedTime += Time.deltaTime / gm.gameSpeed;
+					//state.elapsedTime=((Time.time-state.startedTime)/gm.gameSpeed)+state.progressedTime;
+				}
+
+			if (!state.crashing && !state.cruising) {
+
+				// check gateways
+				if (transform.position.z > winDist && winDist > 0)
+					checkGates();
+
+			}
+
+
+
+			// spacecraft tilt and pitch 
+			float yPos = Mathf.Abs(rbx * 0.01f) + 0.8f;
+			float yRot = -xf2 * 0.5f;
+			float zRot = xf2;
+
+
+			// pitch up down and when to free fall/ take away a jump 
+			if (state.jumps > 0) {
+				xRot = Mathf.Lerp(xRot, -1.5f * rby, Time.deltaTime * xRotSpeed);
+
+			} else if (rby < -10) {
+					if (gm.worldNum == 1)
+						level10off();
+					xRot = 0;
+					xRotSpeed = 4;
+					state.jumps = 1;
+					state.grounded = false;
+				}
+			zForce = rbz / maxZSpeed;
+			sub.eulerAngles = new Vector3(xRot, yRot, zRot);
+			sub.localPosition = new Vector3(0, yPos, 0);
+
+			if (!state.cruising)
+				rbx = Mathf.Lerp(rb.velocity.x, xf * Xspeed, Time.deltaTime * state.handling);
+
+			if (sfx && state.started) {
+				engineAudio.GetComponent<AudioSource>().pitch = (targetSpeed / ultraMaxZSpeed + 0.2f) * 1.4f;
+				engineAudio.GetComponent<AudioSource>().volume = 1 - (Mathf.Abs(((targetSpeed / ultraMaxZSpeed) * 2) - 1.1f));
+			}
+		}
+				
+		// else panther code below vv
+		else {
+			if (!state.fullStop) {
+				anim["run"].speed = Mathf.Clamp(0.1f + targetSpeed / 60f, 0.75f, 10);
+				anim["lStep"].speed = Mathf.Clamp(0.1f + Mathf.Abs(xf2) / 30f, 0.8f, 10);
+				anim["rStep"].speed = Mathf.Clamp(0.1f + Mathf.Abs(xf2) / 30f, 0.8f, 10);
+				if (targetSpeed < 8)
+					if (xf2 < -2)
+						anim.CrossFade("rStep", 0.2f);
+					else if (xf2 > 2)
+							anim.CrossFade("lStep", 0.2f);
+						else
+							anim.CrossFade("idle", 0.2f);
+				else
+					anim.CrossFade("run");
+
+				// start the motion of the ship and the clock when brakes released
+				if (!state.started) {
+					//state.elapsedTime=0;
+					if (!brakes) {
+						xf = 0;
+						state.started = true;
+						//state.startedTime=Time.time;
+						speedUpX();
+						StartCoroutine(speedUpZ());
+					}
+				} else if (!state.crashing) {
+						state.elapsedTime += Time.deltaTime / gm.gameSpeed;
+					}
+					
+				if (!state.crashing && !state.cruising && !state.winning) {
+					// check gateways
+					if (transform.position.z > winDist && winDist > 0)
+						checkGates();
+				}
+					
+				// spacecraft tilt and pitch 
+				float yRot = (Mathf.Atan2(-xf2, targetSpeed + 1) * Mathf.Rad2Deg) * Mathf.Clamp(((targetSpeed * 1.2f) / defPantherMaxZ), 0, 1);
+				float zRot = xf2 * 0.5f;
+
+				float yPos = Mathf.Abs(rbx * 0.01f) + 0.8f;
+				float zPos = 0;
+
+
+				// pitch up down and when to free fall/ take away a jump
+				if (state.jumps > 0 || state.landing) {
+					// xRot = Mathf.Lerp(xRot, -1.7*rigidbody.velocity.y, Time.deltaTime*xRotSpeed); 
+					if (!state.landing)
+						yv2 = rby;
+					//else print(yv2);
+					xRot = Mathf.Lerp(xRot, -1.7f * yv2, Time.deltaTime * xRotSpeed); 
+					if (state.fJumping) {
+						xRot = Mathf.Clamp(xRot, 0, 90);
+						zPos = Mathf.Clamp(xRot * -0.02f, -2, 0);
+					} else {
+						xRot = Mathf.Clamp(xRot, -70, 90);
+						zPos = Mathf.Clamp(xRot * -0.02f, -2, 0);
+					}
+				} else if (rby < -10) {
+						xRotSpeed = 6;
+						xRot = 0;
+						state.jumps = 1;
+						state.grounded = false;
+						state.landing = false;
+						anim.Rewind("jump");
+						anim.CrossFade("jump");
+						if (gm.worldNum == 1)
+							level10off();
+					}
+
+				sub.localPosition = new Vector3(0, yPos, zPos);
+				sub.eulerAngles = new Vector3(xRot, yRot, zRot);
+
+				if (!state.cruising)
+					rb.velocity = Vector3.Lerp(rb.velocity, new Vector3(xf * Xspeed, rby, rbz), Time.deltaTime * state.handling);
+
+			} else {
+				anim.CrossFade("idle", 0.2f);
+				xf = 0;
+				rb.velocity = new Vector3(0, rby, rbz);
+			}
+			if (engineAudio.activeSelf) {
+				if (sfx && state.grounded && engineAudio.activeSelf && !state.paused && state.started && !state.stopDead && !state.fullStop) {
+					if (!engineAudio.GetComponent<AudioSource>().isPlaying)
+						engineAudio.GetComponent<AudioSource>().Play();
+
+					if ((targetSpeed / ultraMaxZSpeed) > 0.7f)
+						engineAudio.GetComponent<AudioSource>().clip = sound.engineSound[2];
+					else
+						engineAudio.GetComponent<AudioSource>().clip = sound.engineSound[1];
+					//engineAudio.audio.pitch = (targetSpeed/ultraMaxZSpeed)*1.2;
+					//engineAudio.audio.volume = .6;
+					//engineAudio.audio.volume = Mathf.Clamp(2-((targetSpeed/ultraMaxZSpeed)*2),.09,1);
+				} else {
+					if (engineAudio.GetComponent<AudioSource>().isPlaying)
+						engineAudio.GetComponent<AudioSource>().Stop();
+				}
+			}
+		}
+
+//		rb.velocity = new Vector3(rbx, rby, rbz);
+
 		if (!state.paused) {
 			if (gm.device == GameMaster.DeviceType.iPhone) {	
 				foreach (Touch touch in Input.touches) {  
 					if (touch.position.x > Screen.width / 4 && touch.position.x < Screen.width - (Screen.width / 4)) {   
 						if (Mathf.Abs(touch.deltaPosition.y) > 10) {
 							//Application.LoadLevel(0);	
-
+						            	
 							if (!state.paused && !state.cruising && !state.crashing) { 
 								Time.timeScale = 0; 
 								state.paused = true; 
@@ -1005,6 +800,7 @@ public class MoveShip : MonoBehaviour {
 			}
 		}
 	}
+
 
 
 
@@ -1070,144 +866,122 @@ public class MoveShip : MonoBehaviour {
 		//shipLight10s.animation.Play("10_light_off");
 	}
 
-	void jump(int which) {
+
+	void jump(int which) { // 1: single  2: doubleJump  3: left wall jump  4: right wall jump  5: panther boost 6: front wall jump
+		//print("which = "+which);
 		state.jbClear = false;
 		state.grounded = false;
 		state.landing = false;
 		state.handling = airHandling;
 
+//		float rby = 0;
+//		float rbx = rb.velocity.x;
+
 		rb.position += new Vector3(0f, 0.4f, 0f);
+		xRot = 0;
+		xRotSpeed = 25;
+		if (which == 1) {
+			playSound("jump");
+			if (gm.worldNum == 1)
+				level10off();		
+		} else {
+			playSound("jump2");
+		}
 
+		if (shipNum == 10) {
+			if (which == 1) { 
+				// for inclines
+				if (actualY > 0) {
+					jumpMult = pantherSJumpMult + (actualY * 0.05f);
+					print("incline Jump! +" + (actualY * 0.05f));
+				} else {
+					jumpMult = pantherSJumpMult; 
+				}
+				rby = jumpforce * jumpMult; 
+				maxZSpeed -= pantherSJumpPenalty;
+				anim.Stop("jump");
+				anim.Play("jump"); 	
+				state.jumps = 1; 
+			} else if (which == 2) {
+					anim.Stop("doubleJump"); 
+					anim.Play("doubleJump"); 
+					jumpMult = pantherDJumpMult; 
+					maxZSpeed -= pantherDJumpPenalty; 
+					rby = jumpforce * pantherDJumpMult; 
+					state.jumps = 2;
+				} else if (which == 4) {
+						maxZSpeed = defPantherMaxZ;
+						jumpMult = 1.3f;
+						rby = jumpforce * jumpMult;
+						anim.Play("rJump");
+						collRight = 0;
+						disableX(-1);
+						rb.position += Vector3.left;
+						rbx = -25 + (8 * xfRaw);
+						//print(-25+(8*xfRaw));
+						xf2 = 40;
+						//xf=0;
+						state.jumps = 1;
+					} else if (which == 3) {
 
-		jumpMult = 1.04f;
-		rby = jumpforce * jumpMult;
+							maxZSpeed = defPantherMaxZ;
+							jumpMult = 1.3f;
+							rby = jumpforce * jumpMult;
+							anim.Play("lJump");
+							collLeft = 0;
+							disableX(1);
+							rb.position += Vector3.left;
+							rbx = 25 + (8 * xfRaw);
+							//print(25+(8*xfRaw));
+							xf2 = -40;
+							//xf=0;
+							state.jumps = 1;
+						} 
+			/*
+		else if (which==5) {
+			jumpMult=1.0;
+			//anim.Play("boost"); 
+			anim.CrossFade("boost", 0.1); 
+			//speedUpX();
+			rigidbody.velocity.y=jumpforce*0.25;
+			maxZSpeed=defPantherMaxZ+boostZ;
+			state.jumps=2;
+		}*/
+			else if (which == 6) {
+								state.fJumping = true;
+								jumpMult = 2.0f;
+								anim.Stop("fJump"); 
+								anim.Play("fJump");
+								rby = jumpforce * jumpMult; 
+								state.jumps = 1;
+								//rigidbody.position.z-=1.0;
+								//rigidbody.velocity.z=-30;
+								bounceBack();
+							}
+		} else { // for normaL ships
+			// for inclines
+			if (actualY > 0 && state.grounded) {
+				jumpMult = 1.04f + (actualY * 0.07f);
+				print("incline Jump! +" + (actualY * 0.07f));
+			} else
+				jumpMult = 1.04f; 
+			rby = jumpforce * jumpMult;
+		}
+
+//		rb.velocity = new Vector3(rbx, rby, rb.velocity.z);
 
 		if (which > 0 && which <= 2) {
 			jumpCards(which, Time.time);
 		}
 		state.jumpTimer = 0.06f;
+
 	}
-
-
-
-
-	//
-	//
-	//
-	//	void jumpOld(int which) { // 1: single  2: doubleJump  3: left wall jump  4: right wall jump  5: panther boost 6: front wall jump
-	//
-	//		state.jbClear = false;
-	//		state.grounded = false;
-	//		state.landing = false;
-	//		state.handling = airHandling;
-	//
-	////		float rby = 0;
-	////		float rbx = rb.velocity.x;
-	//
-	//		rb.position += new Vector3(0f, 0.4f, 0f);
-	//		xRot = 0;
-	//		xRotSpeed = 25;
-	//		if (which == 1) {
-	//			playSound("jump");
-	//			if (gm.worldNum == 1)
-	//				level10off();		
-	//		} else {
-	//			playSound("jump2");
-	//		}
-	//
-	//		if (shipNum == 10) {
-	//			if (which == 1) { 
-	//				// for inclines
-	//				if (actualY > 0) {
-	//					jumpMult = pantherSJumpMult + (actualY * 0.05f);
-	//					print("incline Jump! +" + (actualY * 0.05f));
-	//				} else {
-	//					jumpMult = pantherSJumpMult; 
-	//				}
-	//				rby = jumpforce * jumpMult; 
-	//				maxZSpeed -= pantherSJumpPenalty;
-	//				anim.Stop("jump");
-	//				anim.Play("jump"); 	
-	//				state.jumps = 1; 
-	//			} else if (which == 2) {
-	//					anim.Stop("doubleJump"); 
-	//					anim.Play("doubleJump"); 
-	//					jumpMult = pantherDJumpMult; 
-	//					maxZSpeed -= pantherDJumpPenalty; 
-	//					rby = jumpforce * pantherDJumpMult; 
-	//					state.jumps = 2;
-	//				} else if (which == 4) {
-	//						maxZSpeed = defPantherMaxZ;
-	//						jumpMult = 1.3f;
-	//						rby = jumpforce * jumpMult;
-	//						anim.Play("rJump");
-	//						collRight = 0;
-	//						disableX(-1);
-	//						rb.position += Vector3.left;
-	//						rbx = -25 + (8 * xfRaw);
-	//						//print(-25+(8*xfRaw));
-	//						xf2 = 40;
-	//						//xf=0;
-	//						state.jumps = 1;
-	//					} else if (which == 3) {
-	//
-	//							maxZSpeed = defPantherMaxZ;
-	//							jumpMult = 1.3f;
-	//							rby = jumpforce * jumpMult;
-	//							anim.Play("lJump");
-	//							collLeft = 0;
-	//							disableX(1);
-	//							rb.position += Vector3.left;
-	//							rbx = 25 + (8 * xfRaw);
-	//							//print(25+(8*xfRaw));
-	//							xf2 = -40;
-	//							//xf=0;
-	//							state.jumps = 1;
-	//						} 
-	//			/*
-	//		else if (which==5) {
-	//			jumpMult=1.0;
-	//			//anim.Play("boost"); 
-	//			anim.CrossFade("boost", 0.1); 
-	//			//speedUpX();
-	//			rigidbody.velocity.y=jumpforce*0.25;
-	//			maxZSpeed=defPantherMaxZ+boostZ;
-	//			state.jumps=2;
-	//		}*/
-	//			else if (which == 6) {
-	//								state.fJumping = true;
-	//								jumpMult = 2.0f;
-	//								anim.Stop("fJump"); 
-	//								anim.Play("fJump");
-	//								rby = jumpforce * jumpMult; 
-	//								state.jumps = 1;
-	//								//rigidbody.position.z-=1.0;
-	//								//rigidbody.velocity.z=-30;
-	//								bounceBack();
-	//							}
-	//		} else { // for normaL ships
-	//			// for inclines
-	//			if (actualY > 0 && state.grounded) {
-	//				jumpMult = 1.04f + (actualY * 0.07f);
-	//				print("incline Jump! +" + (actualY * 0.07f));
-	//			} else
-	//				jumpMult = 1.04f; 
-	//			rby = jumpforce * jumpMult;
-	//		}
-	//
-	////		rb.velocity = new Vector3(rbx, rby, rb.velocity.z);
-	//
-	//		if (which > 0 && which <= 2) {
-	//			jumpCards(which, Time.time);
-	//		}
-	//		state.jumpTimer = 0.06f;
-	//
-	//	}
 
 	void jumpCards(int which, float startTime) { // which 2 means mirror the card in x
 		if (which == 2)
 			airBurstScript.transform.localScale = new Vector3(airBurstScript.transform.localScale.x * -1, airBurstScript.transform.localScale.y, airBurstScript.transform.localScale.z);
-		airBurstScript.CardGo();
+		airBurstScript.cardGo = true;
+		airBurstScript.startTime = startTime;
 		//print("ship y = "+shipObj.transform.position.y);
 		airBurstScript2.yPos = shipObj.transform.position.y;
 	}
@@ -1221,21 +995,22 @@ public class MoveShip : MonoBehaviour {
 		warpPathAniObj.GetComponent<Animation>().Play("warpPath");
 
 		for (int i = 0; i < 2; i++) {
-			elecBurstScript[i].CardGo();
+			elecBurstScript[i].cardGo = true;
+			elecBurstScript[i].startTime = Time.time;
 		}
 
 	}
 
 
 
-	IEnumerator ArtiBurst(Vector3 pos) { // makes cam flare when artifact is collected
+	void ArtiBurst(Vector3 pos) { // makes cam flare when artifact is collected
 		if (sfx)
 			GetComponent<AudioSource>().PlayOneShot(sound.artSound);
 		artBurst.transform.position = pos;
 		artBurst.transform.parent = camTrans;
-		artBurstScript.CardGo();
-		yield return new WaitForSeconds(1f);
-
+		artBurstScript.startTime = Time.time;
+		artBurstScript.cardGo = true;
+//		yield WaitForSeconds(1);
 		artBurst.transform.parent = null;
 		artBurst.transform.position = new Vector3(0, 0, -100);
 
@@ -1249,8 +1024,8 @@ public class MoveShip : MonoBehaviour {
 		}
 		if (!state.grounded) {
 			if (state.lv.y < -1) { // used to be state.lv.y
-//				print(collision.gameObject.name);
-//				print("vel y: " + state.lv.y + "    enter..");
+				print(collision.gameObject.name);
+				print("vel y: " + state.lv.y + "    enter..");
 				checkLanding();
 			}
 		}
@@ -1282,22 +1057,21 @@ public class MoveShip : MonoBehaviour {
 
 
 	public void checkLanding() {
-
+		print("landingCheck");
 		cc = raycheckDown(1);	
 		if (cc > 0 || fakeCC == true) {
 			state.fJumping = false;
 			state.jumps = 0;
 			state.landed = true;
 			state.grounded = true;
+			print("start landing");
 			airBurstScript.CardStop();
 			state.handling = defaultHandling;
 			playSound("land");
-
 			if (shipNum != 10) {
 				anim.Play("hop2");
 				anim.PlayQueued("idle");
-				xRot = 0;
-//				sub.localEulerAngles = new Vector3(0, sub.localEulerAngles.y, sub.localEulerAngles.z);
+				sub.localEulerAngles = new Vector3(0, sub.localEulerAngles.y, sub.localEulerAngles.z);
 			} else {
 				if (maxZSpeed < defPantherMaxZ)
 					maxZSpeed = defPantherMaxZ;
@@ -1310,8 +1084,7 @@ public class MoveShip : MonoBehaviour {
 				anim.PlayQueued("run");
 			}
 
-//			rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-			rby = 0;
+			rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
 			if (!state.cruising)
 				cam.goalHeight = state.lastY;
 		}
@@ -1339,46 +1112,42 @@ public class MoveShip : MonoBehaviour {
 
 
 	void OnTriggerEnter(Collider collision) {
-		Transform ct = collision.transform;
-
-		if (ct.name == "camDropBox")
+		if (collision.gameObject.name == "camDropBox")
 			state.tunnel = true;
-		if (ct.name == "camDropBox2")
+		if (collision.gameObject.name == "camDropBox2")
 			state.tunnel2 = true;
-		if (ct.tag == "artifact" && ct.position.z > 0) { // >0 necessary to stop double collisions and therefore playing the second at -100, for some reason
-			print(ct.name);
-			// set off burst
-			StartCoroutine(ArtiBurst(ct.position));
-			ct.position = new Vector3(ct.position.x, ct.position.y, -100); // "disappear" the artifact out of the way
-			// update guis
-			if (ct.name == "artifact1") {
+		if (collision.gameObject.tag == "artifact" && collision.transform.position.z > 0) { // >0 necessary to stop double collisions and therefore playing the second at -100, for some reason
+			ArtiBurst(collision.transform.position);
+			collision.transform.position = new Vector3(collision.transform.position.x, collision.transform.position.y, -100);
+			if (collision.gameObject.name == "artifact1") {
 				if (gui.a1state == 0)
 					artCount += 100;
 				gui.a1state = 1;
 				a1.UV = new Vector2(480, 0);
-			} else if (ct.name == "artifact2") {
-					if (gui.a2state == 0)
-						artCount += 10;
-					gui.a2state = 1;
-					a2.UV = new Vector2(480, 0);
-				} else if (ct.name == "artifact3") {
-						if (gui.a3state == 0)
-							artCount += 1;
-						gui.a3state = 1;
-						a3.UV = new Vector2(480, 0);
-					} else if (ct.name == "artifact0") { // special for tutorial
-							gui.a1state++;
-						}
+			}
+			if (collision.gameObject.name == "artifact2") {
+				if (gui.a2state == 0)
+					artCount += 10;
+				gui.a2state = 1;
+				a2.UV = new Vector2(480, 0);
+			}
+			if (collision.gameObject.name == "artifact3") {
+				if (gui.a3state == 0)
+					artCount += 1;
+				gui.a3state = 1;
+				a3.UV = new Vector2(480, 0);
+			} else if (collision.gameObject.name == "artifact0") { // special for tutorial
+					gui.a1state++;
+				}
 		}
 	}
 
 	void OnTriggerExit(Collider collision) {
-		Transform ct = collision.transform;
 		if (!state.crashing) {
-			if (ct.name == "camDropBox")
+			if (collision.gameObject.name == "camDropBox")
 				state.tunnel = false;
-			else if (ct.name == "camDropBox2")
-					state.tunnel2 = false;
+			if (collision.gameObject.name == "camDropBox2")
+				state.tunnel2 = false;
 		}
 	}
 
@@ -1488,7 +1257,9 @@ public class MoveShip : MonoBehaviour {
 			splode.transform.position = rb.position;
 			//		splodeParticles.GetComponent.<ParticleEmitter>().emit = true;
 			splodeScript.lookAtCam = true;
-			splodeScript.CardGo();
+			splodeScript.cardGo = true;
+			//splodeScript.FPS=30*(1/gm.gameSpeed);
+			splodeScript.startTime = Time.time;
 			secs = 1.55f;
 		}
 		levelAttempts++;
@@ -1709,7 +1480,7 @@ public class MoveShip : MonoBehaviour {
 	}
 
 	public void repoShip() {
-//		print("repoShip");
+		print("repoShip");
 		xf = 0;
 		grav = 0;
 		targetSpeed = 0;
@@ -1724,7 +1495,7 @@ public class MoveShip : MonoBehaviour {
 
 
 	public void resetRepoShip() {
-//		print("reset repoShip");
+		print("reset repoShip");
 		qbClear = false;
 		xf = 0;
 		grav = 0;

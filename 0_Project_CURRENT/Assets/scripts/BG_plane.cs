@@ -7,7 +7,7 @@ public class BG_plane : MonoBehaviour {
 	public Transform cam;
 	//var BGobjs: Transform[];
 	GameObject currBG;
-	Color[] levelFog;
+	public Color[] levelFog;
 	//var artifactColor: Color[];
 	//var artifactBurstMat: Material;
 	//var ren: Renderer;
@@ -16,11 +16,8 @@ public class BG_plane : MonoBehaviour {
 
 
 	void Update() {
-//		transform.position.z = cam.position.z;
-//		transform.position.x = cam.position.x*0.8f;
-//		transform.position.y = cam.position.y*0.7f;
+
 		transform.position = new Vector3(cam.position.x * 0.8f, cam.position.y * 0.7f, cam.position.z);
-		//transform.position.y = cam.position.y;
 		//transform.localRotation.y = cam.position.x*-0.001;
 	}
 
@@ -30,7 +27,7 @@ public class BG_plane : MonoBehaviour {
 		//artifactBurstMat.SetColor("_TintColor", artifactColor[worldNum]);
 
 		if (currBG)
-			DestroyImmediate(currBG, true);
+			Destroy(currBG);
 		RenderSettings.fogColor = levelFog[worldNum];
 
 		currBG = Instantiate(Resources.Load("BG/BGobj" + worldNum), Vector3.zero, Quaternion.identity) as GameObject;

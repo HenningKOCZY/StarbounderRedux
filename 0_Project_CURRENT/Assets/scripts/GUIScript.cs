@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class GUIScript : MonoBehaviour {
 
+	public GameMaster gm;
+	public MoveShip ship;
+
 	string touchPhase = "None";
-	bool nextGo = true;
+	public bool nextGo = true;
 	Vector2 deltaPos;
 	Vector2 lastPos;
 	Vector2 beganPos;
@@ -14,18 +17,18 @@ public class GUIScript : MonoBehaviour {
 
 	bool swiping = false;
 
-	Texture2D[] pantherIcon;
+	public Texture2D[] pantherIcon;
 	public int[] pantherFlag;
-	Texture2D section1;
-	Texture2D section2;
-	Texture2D menuButton;
-	Texture2D dash;
-	Texture2D nextButton;
-	Texture2D arrow;
-	Texture2D bottomDivider;
-	Texture2D levelReadout;
-	float topGrpY = -100;
-	float btmGrpY = 100;
+	public Texture2D section1;
+	public Texture2D section2;
+	public Texture2D menuButton;
+	public Texture2D dash;
+	public Texture2D nextButton;
+	public Texture2D arrow;
+	public Texture2D bottomDivider;
+	public Texture2D levelReadout;
+	float topGrpY = 1000;
+	float btmGrpY = -1000;
 	Vector2 btmDividerPos;
 	Vector2 section1Pos;
 	Vector2 section2Pos;
@@ -35,40 +38,39 @@ public class GUIScript : MonoBehaviour {
 	Vector2 nextButtonPos;
 	float dashX;
 	float arrowX;
-	Texture2D[] VCartIcon;
+	public Texture2D[] VCartIcon;
 
 	int cinemaState;
-	string[] cinString;
+	public string[] cinString;
 	int cinLevel = 0;
 	public int tutorialState;
-	string[] tutString;
+	public string[] tutString;
 	int tutLevel = 0;
 	string whichLoad;
-	Texture2D bgImage;
+	public Texture2D bgImage;
 
 	// var speedImage : Texture2D;
-	Texture2D destImage;
-	Texture2D camBlackImage;
-	Texture2D shipIcon;
+	public Texture2D destImage;
+	public Texture2D camBlackImage;
+	public Texture2D shipIcon;
 	//var artifactContainer: GameObject;
-	Texture2D[] brakeStates;
+	//	public Texture2D[] brakeStates;
 
-	Texture2D transWhite;
-	Texture2D whiteFadeDown;
+	public Texture2D transWhite;
+	public Texture2D whiteFadeDown;
 
 	public Texture2D crashMessage;
 	public Texture2D winMessage;
 	public Texture2D timeMessage;
 
-	public MoveShip ship;
 	public float winDist;
 	public string message = "none";
 	public int level;
 	private int guiWidth = 320;
 	private int guiHeight = 20;
-	float timeAllowed;
+	public float timeAllowed = 99;
 	private string camBlackState = "down";
-	Animation camBlackAnim;
+	public Animation camBlackAnim;
 	float camBlackWipe = 0;
 	private float blackerWidth = 512.0f;
 
@@ -82,69 +84,65 @@ public class GUIScript : MonoBehaviour {
 	public int lineCount = -1;
 	float textFieldHeight = 0;
 
-	Texture2D levelBack;
-	Texture2D levelBack1;
-	Texture2D titleBack;
-	Texture2D loadingScreen;
+	public Texture2D levelBack;
+	public Texture2D levelBack1;
+	public Texture2D titleBack;
+	public Texture2D loadingScreen;
 
 	public string state = "play";
 
-	Texture2D cruiseGUI;
-	Texture2D cruiseGUItext;
-
-	Texture2D pauseBG;
-
-	Texture2D playDown;
-
-	Texture2D restartButton;
-	Texture2D levelSelectButton;
-	Texture2D optionsButton;
-	Texture2D quitButton;
-
-	Texture2D speedButton;
-	Texture2D musicButton;
-	Texture2D sfxButton;
-	Texture2D blankButton;
-	Texture2D[] highlight;
+	public Texture2D cruiseGUI;
+	public Texture2D cruiseGUItext;
+	public Texture2D pauseBG;
+	public Texture2D playDown;
+	public Texture2D restartButton;
+	public Texture2D levelSelectButton;
+	public Texture2D optionsButton;
+	public Texture2D quitButton;
+	public Texture2D speedButton;
+	public Texture2D musicButton;
+	public Texture2D sfxButton;
+	public Texture2D blankButton;
+	public Texture2D[] highlight;
 
 	//var continueState : int = 0;
 	//var restartState : int = 0;
 	//var levelSelectState : int = 0;
 	//var quitState : int = 0;
 
-	AudioClip blip1;
-	AudioClip blip2;
-	AudioClip blip3;
-	AudioClip gameStart;
+	public AudioClip blip1;
+	public AudioClip blip2;
+	public AudioClip blip3;
+	public AudioClip gameStart;
 
 	public int sfx;
 	public int gameSpeed;
 
-	Texture2D worldTitle;
-	Texture2D selectL;
-	Texture2D selectR;
-	Texture2D[] num;
-	Texture2D[] artifactIcon;
+	public Texture2D[] worldTitle;
+	public Texture2D selectL;
+	public Texture2D selectR;
+	public Texture2D[] num;
+	public Texture2D[] artifactIcon;
 
-	Texture2D[] title;
-	Texture2D xBut;
-	Texture2D vBut;
+	public Texture2D[] title;
+	public Texture2D xBut;
+	public Texture2D vBut;
 
 	int maxLevel;
 	public int worldNum;
 	int maxWorld;
 	public int levelNum;
-	float recordTime;
+	public float recordTime;
 
 	int VCbuttonState = 0;
 
 	bool LSgo = false;
-	int[] lsLevel;
-	string[] levelString;
+	int[] lsLevel = new int[10];
+	public string[] levelString = new string[10];
 	string levelString2;
-	int[] a1;
-	int[] a2;
-	int[] a3;
+	int[] a1 = new int[10];
+	int[] a2 = new int[10];
+	int[] a3 = new int[10];
 	string[] levelTime;
 
 	public int a1state;
@@ -154,15 +152,15 @@ public class GUIScript : MonoBehaviour {
 	int a2oldState;
 	int a3oldState;
 	int artBurstAni = 0;
-	Texture2D[] artBurst;
+	public Texture2D[] artBurst;
 	bool a1go = false;
 	bool a2go = false;
 	bool a3go = false;
 	int fixedCounter = 0;
 	int levelLimit;
 	string guiState;
-	Texture2D[] selection;
-	Texture2D[] selection2;
+	public Texture2D[] selection;
+	public Texture2D[] selection2;
 	bool selectionOn = false;
 	int selectionX;
 	int selectionY;
@@ -170,57 +168,58 @@ public class GUIScript : MonoBehaviour {
 	int selectionState = 0;
 	bool selectable = false;
 	bool selectionFlicker = false;
-	GameMaster gameMaster;
+
 	float pauseEndTime;
 	float pauseEndTime2;
 	bool loadLevelGo;
 	int counter = 0;
 	Color normColor;
 
-	GUISkin mySkin;
-	GUISkin mySkin18;
-	GUISkin mySkin2;
-	GUISkin mySkin3shad;
-	GUISkin mySkin3;
-	GUISkin mySkin4;
-	GUISkin mySkin4Shad;
-	GUISkin[] VCcolor;
-	GUISkin mySkin19;
-	GUISkin mySkin49;
-	GUISkin mySkin36;
-	GUISkin mySkin23;
-	GUISkin mySkin30;
+	public GUISkin mySkin;
+	public GUISkin mySkin18;
+	public GUISkin mySkin2;
+	public GUISkin mySkin3shad;
+	public GUISkin mySkin3;
+	public GUISkin mySkin4;
+	public GUISkin mySkin4Shad;
+	public GUISkin[] VCcolor;
 
-	Material[] fontMats;
-	Transform[] GUIplanes;
-	Transform[] GUIbuttons;
+	public GUISkin mySkin19;
+	public GUISkin mySkin49;
+	public GUISkin mySkin36;
+	public GUISkin mySkin23;
+	public GUISkin mySkin30;
+
+	public Material[] fontMats;
+	List<Transform> GUIplanes = new List<Transform>();
+	List<Transform> GUIbuttons = new List<Transform>();
 	int GUIbuttonCount = 0;
-	public TextMesh[] GUItexts;
+	List<TextMesh> GUItexts = new List<TextMesh>();
 	private string hitname;
 	private RaycastHit hit;
 	private Ray ray;
 	//ray we create when we touch the screen
-	GameObject[] GUIcam;
-	GameObject GUIplanePF;
-	GameObject GUIplaneOverPF;
-	GameObject GUItextPF;
-	GameObject GUIbuttonPF;
-	AnimationClip[] GUIanimClips;
+	public GameObject[] GUIcam;
+	public GameObject GUIplanePF;
+	public GameObject GUIplaneOverPF;
+	public GameObject GUItextPF;
+	public GameObject GUIbuttonPF;
+	public AnimationClip[] GUIanimClips;
 	public float aspectMult = 1.0f;
 	// ratio of aspect ratios
 	private float yAdj = 1.0f;
 	// scale adjustment
 
-	GUIQuadObj brakeScript;
-	GUIQuadObj jumpScript;
-	GUIQuadObj a1Script;
-	GUIQuadObj a2Script;
-	GUIQuadObj a3Script;
-	GUIQuadObj progBox1Script;
-	GUIQuadObj progBox2Script;
-	GUI_progbar progBarScript;
-	Transform speedbar;
-	Transform jumpbar;
+	public GUIQuadObj brakeScript;
+	public GUIQuadObj jumpScript;
+	public GUIQuadObj a1Script;
+	public GUIQuadObj a2Script;
+	public GUIQuadObj a3Script;
+	public GUIQuadObj progBox1Script;
+	public GUIQuadObj progBox2Script;
+	public GUI_progbar progBarScript;
+	public Transform speedbar;
+	public Transform jumpbar;
 
 	private int aIconSize = 26;
 	int row1offsetX = 45;
@@ -231,8 +230,6 @@ public class GUIScript : MonoBehaviour {
 
 	public float curTime;
 	string stringTime;
-
-	int i;
 
 
 	void Start() {
@@ -260,24 +257,24 @@ public class GUIScript : MonoBehaviour {
 		GUIcam[4] = GameObject.Find("GUICameras/GUICameraL4");
 
 		// texts
-		parent = transform.Find("GUItexts");
+		parent = transform.GetChild(0);
 		for (int i = 0; i < 10; i++) {
 			the = Instantiate(GUItextPF, Vector3.zero, Quaternion.identity) as GameObject;
 			the.transform.parent = parent;
 			the.transform.localPosition = new Vector3(0, -1000, 0);
-			GUItexts[i] = the.gameObject.GetComponent<TextMesh>();
+			GUItexts.Add(the.GetComponent<TextMesh>());
 			the.name = ("text" + i);
 		}
 		// planes
-		parent = transform.Find("GUIplanes");
-		for (i = 0; i < 44; i++) {
+		parent = transform.GetChild(1);
+		for (int i = 0; i < 44; i++) {
 			if (i < 41)
 				the = Instantiate(GUIplanePF, Vector3.zero, Quaternion.identity) as GameObject;
 			else
 				the = Instantiate(GUIplaneOverPF, Vector3.zero, Quaternion.identity) as GameObject;
 			the.transform.parent = parent;
 			the.transform.localPosition = new Vector3(0, -1000, 0);
-			GUIplanes[i] = the.transform;
+			GUIplanes.Add(the.transform);
 			the.transform.localEulerAngles = new Vector3(90, 180, 0);
 			if (i < 11 || i >= 41) {
 				the.name = ("plane" + i);
@@ -286,13 +283,13 @@ public class GUIScript : MonoBehaviour {
 			}
 		}
 		// buttons
-		parent = transform.Find("GUIbuttons");
+		parent = transform.GetChild(2);
 
 		for (int i = 0; i < 14; i++) {
 			the = Instantiate(GUIplanePF, Vector3.zero, Quaternion.identity) as GameObject;
 			the.transform.parent = parent;
 			the.transform.localPosition = new Vector3(0, -1000, 0);
-			GUIbuttons[i] = the.transform;
+			GUIbuttons.Add(the.transform);
 			the.transform.localEulerAngles = new Vector3(90, 180, 0);
 			the.name = ("button" + i);
 			BoxCollider bc = the.AddComponent<BoxCollider>();
@@ -316,7 +313,7 @@ public class GUIScript : MonoBehaviour {
 	}
 
 	public void updateLevel() {
-		level = gameMaster.level;
+		level = gm.level;
 		if (level >= 60)
 			switchGUI("tutorial");
 		recordTime = PlayerPrefs.GetFloat("Level" + level + "Time", 60.00f);
@@ -325,21 +322,19 @@ public class GUIScript : MonoBehaviour {
 	public void playAnim(float waitSeconds) {
 		resetVC();
 //		yield WaitForSeconds(waitSeconds);
-		switchArtsVC();
+		StartCoroutine(switchArtsVC());
 		camBlackAnim.Play("VC_anim");
 	}
 
-	void checkRecordPast() { // checks and switches record time to red if time is passed
-		//	print("check Record started: cur="+curTime+" record="+recordTime);
-		GUItexts[3].GetComponent<Renderer>().material.color = new Vector4(1, 1, 1, 0.5f);
-		while (state == "play" && curTime < recordTime) { // kill the coroutine if no longer in play. It will restart again when switched back
-//			yield;
-		}
-		if (state == "play") {
-			//		print("check Record met!");
-			GUItexts[3].GetComponent<Renderer>().material.color = new Vector4(1, 0.2f, 0, 0.5f);
-		}
-	}
+	//	void checkRecordPast() { // checks and switches record time to red if time is passed
+	//		GUItexts[3].GetComponent<Renderer>().material.color = new Vector4(1, 1, 1, 0.5f);
+	//		while (state == "play" && curTime < recordTime) { // kill the coroutine if no longer in play. It will restart again when switched back
+	////			yield;
+	//		}
+	//		if (state == "play") {
+	//			GUItexts[3].GetComponent<Renderer>().material.color = new Vector4(1, 0.2f, 0, 0.5f);
+	//		}
+	//	}
 
 	void clearGUIs() {
 		foreach (Transform x in GUIplanes) {
@@ -385,13 +380,14 @@ public class GUIScript : MonoBehaviour {
 			levelLimit = 9;
 		// if (ship.state.cruising) levelLimit--;
 
-		for (i = 0; i <= levelLimit; i++) {				
+		for (int i = 0; i <= levelLimit; i++) {				
 			levelString[i] = "" + worldNum + i;
 
-			var artCount = PlayerPrefs.GetInt("Level" + (worldNum * 10 + i) + "ArtCount", 000);
+			int artCount = PlayerPrefs.GetInt("Level" + (levelString[i]) + "ArtCount", 000);
 			a1[i] = (int)Mathf.Floor(artCount / 100);	
 			a2[i] = (int)Mathf.Floor((artCount % 100) / 10);
 			a3[i] = (int)artCount % 10;
+
 
 			if (selectedLevel == 99 && worldNum != Mathf.Floor(level / 10)) {
 				if (artCount < 111) {
@@ -438,18 +434,18 @@ public class GUIScript : MonoBehaviour {
 		GUIplane(80, 54, 195, 75, highlight[gameSpeed + 1], 43, 16);
 	}
 
-	void switchArtsVC() { // switch this to coroutine
+	IEnumerator switchArtsVC() { // switch this to coroutine
 		// switch textures at set times, but always check to make sure still in victoryCruise. waitForSeconds always means the function keeps going on its own.
-//		yield WaitForSeconds (1.0f);
+		yield return new WaitForSeconds(1.0f);
 		if (state == "victoryCruise")
 			GUIplanes[8].GetComponent<Renderer>().material.mainTexture = artifactIcon[a1state];
-//		yield WaitForSeconds(0.1);
+		yield return new WaitForSeconds(0.1f);
 		if (state == "victoryCruise")
 			GUIplanes[9].GetComponent<Renderer>().material.mainTexture = artifactIcon[a2state];
-//		yield WaitForSeconds(0.1);
+		yield return new WaitForSeconds(0.1f);
 		if (state == "victoryCruise")
 			GUIplanes[10].GetComponent<Renderer>().material.mainTexture = artifactIcon[a3state];
-//		yield WaitForSeconds(0.1);
+		yield return new WaitForSeconds(0.1f);
 		if (state == "victoryCruise")
 			GUIbuttons[2].GetComponent<Renderer>().material.mainTexture = pantherIcon[pantherFlag[0]];
 
@@ -466,7 +462,6 @@ public class GUIScript : MonoBehaviour {
 			selectable = false;
 			clearGUIs(); 
 			GUIcam[1].SetActive(true);
-			print("play");
 			curTime = 0; // delay the curtime check one cycle for record past check
 
 			brakeScript.Location = new Vector2(-240 * aspectMult + 300, brakeScript.Location.y);
@@ -494,9 +489,9 @@ public class GUIScript : MonoBehaviour {
 			GUItext((int)(-240 * aspectMult + 12), 156, 3.6f, ("Lv. " + level), 1, 10);
 			GUItext((int)(240 * aspectMult - 35), 156, 3.6f, ("00.00"), 2, 10); 
 			GUItext((int)(240 * aspectMult - 34), 155, 3.6f, ("00.00"), 4, 0); 
-			if (gameMaster.gamePhase > 1) {
+			if (gm.gamePhase > 1) {
 				GUItext((int)(240 * aspectMult - 34), 136, 3.6f, recordTime.ToString("00.00"), 3, 0);
-				checkRecordPast();
+//				checkRecordPast();
 			}
 		}
 		if (which == "paused") { 
@@ -546,9 +541,9 @@ public class GUIScript : MonoBehaviour {
 			GUIplane(0, 0, (int)(500 * aspectMult), 330, pauseBG, 0, 0);
 			GUIplanes[0].gameObject.layer = 18;
 			if (worldNum != 6) {
-				for (i = 0; i <= levelLimit; i++) {
+				for (int i = 0; i <= levelLimit; i++) {
 					GUIbutton((int)((Mathf.Floor(i / 5) * 2 - 1) * 115) + 3, (83 - ((i % 5) * 41)), 210, 36, levelBack, i, 10);
-					if (gameMaster.gamePhase < 2) {
+					if (gm.gamePhase < 2) {
 						GUItext((int)((Mathf.Floor(i / 5) * 2 - 1) * 115) - 87, (96 - ((i % 5) * 41)), 5.9f, levelString[i], i, 20);
 					} else {
 						levelTime[i] = (PlayerPrefs.GetFloat("Level" + (worldNum * 10 + i) + "Time", 99.99f)).ToString("00.00");
@@ -560,14 +555,14 @@ public class GUIScript : MonoBehaviour {
 					GUItexts[i].anchor = TextAnchor.UpperLeft;
 				}
 			} else {
-				for (i = 0; i < tutorialState; i++) {
+				for (int i = 0; i < tutorialState; i++) {
 					GUIbutton(-115 + 3, (83 - ((i % 5) * 41)), 210, 36, levelBack1, i, 10);
 					GUItext((-115 - 87), (96 - ((i % 5) * 41)), 5.9f, tutString[i], i, 20);
 					GUItexts[i].anchor = TextAnchor.UpperLeft;
 					GUItexts[i].gameObject.layer = 17;
 					GUIbuttons[i].gameObject.layer = 17;
 				}
-				for (i = 0; i < cinemaState; i++) {
+				for (int i = 0; i < cinemaState; i++) {
 					GUIbutton(115 + 3, (83 - ((i % 5) * 41)), 210, 36, levelBack1, i + 5, 10);
 					GUItext((115 - 87), (96 - ((i % 5) * 41)), 5.9f, cinString[i], i + 5, 20);
 					GUItexts[i + 5].anchor = TextAnchor.UpperLeft;
@@ -577,22 +572,22 @@ public class GUIScript : MonoBehaviour {
 			}
 
 			if (worldNum != 6) {		
-				if (gameMaster.gamePhase < 2) {
+				if (gm.gamePhase < 2) {
 					// gamePhase 0,1 draw artifacts
-					for (i = 0; i <= levelLimit; i++) {
+					for (int i = 0; i <= levelLimit; i++) {
 						GUIplane(((int)(Mathf.Floor(i / 5) * 2 - 1) * 115) + 3, (83 - ((i % 5) * 41)), aIconSize, aIconSize, artifactIcon[a1[i]], 11 + (i * 3), 20);
 						GUIplane(((int)(Mathf.Floor(i / 5) * 2 - 1) * 115) + 34, (83 - ((i % 5) * 41)), aIconSize, aIconSize, artifactIcon[a2[i]], 11 + (i * 3) + 1, 20);
 						GUIplane(((int)(Mathf.Floor(i / 5) * 2 - 1) * 115) + 65, (83 - ((i % 5) * 41)), aIconSize, aIconSize, artifactIcon[a3[i]], 11 + (i * 3) + 2, 20);
 					}
 				} else { 
 					// gamephase == 2, draw the panther icon
-					for (i = 0; i <= 9; i++) {
+					for (int i = 0; i <= 9; i++) {
 						if (pantherFlag[i] == 1)
 							GUIplane((int)((Mathf.Floor(i / 5) * 2 - 1) * 115) - 30, (83 - ((i % 5) * 41)), 28, 28, pantherIcon[1], 11 + i, 20);
 					}
 				}	
 			} 
-			for (i = 11; i < 41; i++)
+			for (int i = 11; i < 41; i++)
 				GUIplanes[i].gameObject.layer = 17;
 
 
@@ -817,10 +812,10 @@ public class GUIScript : MonoBehaviour {
 //						yield WaitForSeconds(0.1);
 							//ship.state.crashing=true;
 							if (ship.state.cruising)
-								gameMaster.level--;
-							if (gameMaster.level == -1)
-								gameMaster.level = 59;
-							PlayerPrefs.SetInt("Level", gameMaster.level);
+								gm.level--;
+							if (gm.level == -1)
+								gm.level = 59;
+							PlayerPrefs.SetInt("Level", gm.level);
 							ship.reset(3);
 						}
 					// level Select
@@ -885,28 +880,28 @@ public class GUIScript : MonoBehaviour {
 						}
 						if (hitname == "button5" && p == 0) {
 							gameSpeed = 0; 
-							gameMaster.updateGameSpeed(gameSpeed);
+							gm.updateGameSpeed(gameSpeed);
 							drawHilites();
 						} else if (hitname == "button6" && p == 0) {
 								gameSpeed = 1; 
-								gameMaster.updateGameSpeed(gameSpeed);
+								gm.updateGameSpeed(gameSpeed);
 								drawHilites();
 							} else if (hitname == "button7" && p == 0) {
 									gameSpeed = 2; 
-									gameMaster.updateGameSpeed(gameSpeed);
+									gm.updateGameSpeed(gameSpeed);
 									drawHilites();
 								} else if (hitname == "button4" && p == 0) {
 										print("Hit: " + gameSpeed);
 										gameSpeed++;
 										if (gameSpeed > 2)
 											gameSpeed = 0;
-										gameMaster.updateGameSpeed(gameSpeed);
+										gm.updateGameSpeed(gameSpeed);
 										drawHilites();
 									}
 					} else if (state == "levelSelect") {
 							if (r == 1) {
 								if (worldNum != 6) {
-									for (i = 0; i <= levelLimit; i++) {					
+									for (int i = 0; i <= levelLimit; i++) {					
 										if (hitname == ("button" + i) && p == 1) {				
 											if (selectedLevel == i) {
 												loadLevel1("level");
@@ -918,7 +913,7 @@ public class GUIScript : MonoBehaviour {
 										}
 									}
 								} else { //worldNum == 6;
-									for (i = 0; i < tutorialState; i++) {
+									for (int i = 0; i < tutorialState; i++) {
 										if (hitname == ("button" + i) && p == 1) {
 											if (selectedLevel == i) {
 												tutLevel = 60 + i;
@@ -931,7 +926,7 @@ public class GUIScript : MonoBehaviour {
 											}
 										}
 									}
-									for (i = 5; i < cinemaState + 5; i++) {
+									for (int i = 5; i < cinemaState + 5; i++) {
 										if (hitname == ("button" + i) && p == 1) {					
 											if (selectedLevel == i) {
 												PlayerPrefs.SetInt("FromLS", 1);
@@ -1023,7 +1018,7 @@ public class GUIScript : MonoBehaviour {
 										switchGUI("paused");
 									} else if (hitname == "button1") {
 											VCcontinue();
-										} else if (hitname == "button2" && pantherFlag[0] == 1 && gameMaster.shipNum == 10) {
+										} else if (hitname == "button2" && pantherFlag[0] == 1 && gm.shipNum == 10) {
 												print("do a panther growl!");
 											}		
 								}
@@ -1040,7 +1035,7 @@ public class GUIScript : MonoBehaviour {
 		ship.state.paused = false;
 		if (sfx == 1 && ship.engineAudio.active && ship.state.started)
 			ship.engineAudio.GetComponent<AudioSource>().Play();
-		Time.timeScale = gameMaster.gameSpeed;
+		Time.timeScale = gm.gameSpeed;
 	}
 
 
@@ -1068,13 +1063,12 @@ public class GUIScript : MonoBehaviour {
 
 	void loadLevel2(string which) {
 		if (which == "level")
-			gameMaster.setLevel(worldNum * 10 + selectedLevel);
+			gm.setLevel(worldNum * 10 + selectedLevel);
 		else if (which == "tutorial") {
-				gameMaster.setLevel(tutLevel);
+				gm.setLevel(tutLevel);
 				if (selectedLevel == 1)
 					PlayerPrefs.SetInt("ShipNum", 10);
 			}
-		print("which = " + which);
 		print("selected level = " + worldNum * 10 + selectedLevel);
 		switchGUI("loading");
 		Time.timeScale = 1;
@@ -1126,7 +1120,7 @@ public class GUIScript : MonoBehaviour {
 
 
 		if (selectable) {	
-			if (gameMaster.device == GameMaster.DeviceType.iPhone) {
+			if (gm.device == GameMaster.DeviceType.iPhone) {
 				foreach (Touch touch in Input.touches) { 
 					deltaPos = touch.deltaPosition;
 					if (touch.phase == TouchPhase.Began) {

@@ -4,41 +4,44 @@ using UnityEngine;
 
 public class PantherFlagScript : MonoBehaviour {
 
+	public GameMaster gm;
+	public MoveShip ship;
+
 	Material projectorMat;
 	Material bubbleLightsMat;
-	Transform projectorObj;
-	Transform projectorRaysObj;
-	Transform shadowObj;
-	GameMaster gameMaster;
-	MoveShip ship;
-	Material hologramMat;
+	public Transform projectorObj;
+	public Transform projectorRaysObj;
+	public Transform shadowObj;
+	public Material hologramMat;
 
 	public int on = 0;
 	bool turnOn = false;
 	bool flyIn = false;
 	Vector4 projectorMatColor;
 	Vector4 hologramColor;
-	Transform hologramGrp;
-	GameObject hologramObj;
-	GameObject pFlag;
-	Transform bubble;
-	GameObject basey;
-	Transform shipTrans;
-	Transform shipSub;
-	float stoppedMoment;
+	public Transform hologramGrp;
+	public GameObject hologramObj;
+	public GameObject pFlag;
+	public Transform bubble;
+	public GameObject basey;
+	public Transform shipTrans;
+	public Transform shipSub;
+	float stoppedMoment = 0;
 	bool reposShip = false;
 	Vector3 shipTransPos;
 	bool allowRelease = false;
-	AudioClip platformDescend;
+	public AudioClip platformDescend;
+	public AudioSource pantherAudio;
 
 	void Start() {
 		InitFlag();	
 	}
 
 	public void InitFlag() {	
-		on = PlayerPrefs.GetInt(("Level" + gameMaster.level + "PantherFlag"), 0);
-		bubble.gameObject.GetComponent<Renderer>().materials[1].SetTexture("_Shad", Resources.Load<Texture>("ship/world" + gameMaster.worldNum + " Refl"));
-		basey.GetComponent<Renderer>().material.SetTexture("_Shad", Resources.Load<Texture>("ship/world" + gameMaster.worldNum + " Refl"));
+		on = PlayerPrefs.GetInt(("Level" + gm.level + "PantherFlag"), 0);
+		bubble.gameObject.GetComponent<Renderer>().materials[1].SetTexture("_Shad", Resources.Load<Texture>("ship/world" + gm.worldNum + " Refl"));
+		basey.GetComponent<Renderer>().material.SetTexture("_Shad", Resources.Load<Texture>("ship/world" + gm.worldNum + " Refl"));
+		pantherAudio = basey.GetComponent<AudioSource>();
 		projectorMat = projectorObj.GetComponent<Renderer>().material;
 		bubbleLightsMat = bubble.gameObject.GetComponent<Renderer>().materials[0];
 		hologramGrp.localPosition = new Vector3(hologramGrp.localPosition.x, 1, hologramGrp.localPosition.z);
@@ -52,7 +55,7 @@ public class PantherFlagScript : MonoBehaviour {
 			bubble.position = new Vector3(0, 0, -400);
 		}
 
-		if (gameMaster.shipNum == 10) {
+		if (gm.shipNum == 10) {
 			if (on == 0) {
 				projectorMatColor = new Vector4(1, 0.1f, 0.2f, 1);
 				projectorMat.SetColor("_TintColor", projectorMatColor);
@@ -75,7 +78,7 @@ public class PantherFlagScript : MonoBehaviour {
 
 			} else {
 				if (ship.sfx)
-					basey.GetComponent<AudioSource>().Play();
+					pantherAudio.Play();
 				projectorMatColor = new Vector4(0.28f, 0.55f, 1, 1);
 				projectorMat.SetColor("_TintColor", projectorMatColor);
 
@@ -92,7 +95,7 @@ public class PantherFlagScript : MonoBehaviour {
 				shadowObj.GetComponent<Animation>().Play();
 			}
 			if (ship.state.cruising || !ship.sfx || ship.state.paused)
-				basey.GetComponent<AudioSource>().Stop();
+				pantherAudio.Stop();
 		}
 	}
 
@@ -120,7 +123,7 @@ public class PantherFlagScript : MonoBehaviour {
 //					yield WaitForSeconds(.6);
 			allowRelease = true;
 //					yield WaitForSeconds(.7);
-			basey.GetComponent<AudioSource>().Play();
+			pantherAudio.Play();
 		}
 	}
 
@@ -130,12 +133,12 @@ public class PantherFlagScript : MonoBehaviour {
 	}
 
 	void Update() {
-		if (gameMaster.shipNum == 10) {
+		if (gm.shipNum == 10) {
 			if (on == 1) {
-				if (!ship.state.paused && !ship.state.cruising && !basey.GetComponent<AudioSource>().isPlaying && ship.sfx) {
-					basey.GetComponent<AudioSource>().Play();
-				} else if ((ship.state.paused || ship.state.cruising || !ship.sfx) && basey.GetComponent<AudioSource>().isPlaying)
-						basey.GetComponent<AudioSource>().Stop();
+				if (!ship.state.paused && !ship.state.cruising && !pantherAudio.isPlaying && ship.sfx) {
+					pantherAudio.Play();
+				} else if ((ship.state.paused || ship.state.cruising || !ship.sfx) && pantherAudio.isPlaying)
+						pantherAudio.Stop();
 			}
 		}
 	}
@@ -148,7 +151,7 @@ public class PantherFlagScript : MonoBehaviour {
 	}
 
 	void LateUpdate() {
-		if (gameMaster.shipNum == 10) {
+		if (gm.shipNum == 10) {
 			if (reposShip) {
 				shipTrans.position = Vector3.Lerp(shipTrans.position, new Vector3(bubble.position.x, bubble.position.y + 0.65f, bubble.position.z), Time.deltaTime * 10);
 				shipSub.localRotation = Quaternion.Slerp(shipSub.rotation, gameObject.transform.rotation, Time.deltaTime * 10);

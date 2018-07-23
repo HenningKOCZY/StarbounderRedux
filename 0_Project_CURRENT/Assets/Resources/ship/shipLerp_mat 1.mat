@@ -23,9 +23,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DecalTex:
-        m_Texture: {fileID: 2800000, guid: b818a7a192d0c42c1a0d3befddc9306f, type: 3}
+        m_Texture: {fileID: 2800000, guid: b48d217da3d5b483ab07cd90b24fedb5, type: 3}
         m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0.56249994, y: 0}
+        m_Offset: {x: 0.4128367, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -55,7 +55,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MultTex:
-        m_Texture: {fileID: 2800000, guid: b672b8270dbe9418eab6e10e048fde7b, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9961d70c874754e3aa55a663e2496239, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -71,9 +71,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Shad:
-        m_Texture: {fileID: 2800000, guid: 3ce4ed8f4726343bdb4f7f05e8a22d03, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Texture: {fileID: 2800000, guid: 743675bdef7a04a7389f2dea8b69a675, type: 3}
+        m_Scale: {x: 1, y: 0.94}
+        m_Offset: {x: 0, y: 0.01}
     - _Texture0:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -111,11 +111,11 @@ Material:
     - _ZWrite: 1
     - __dirty: 1
     m_Colors:
-    - _BaseColor: {r: 0.2, g: 0.2, b: 0.2, a: 0.5}
+    - _BaseColor: {r: 0.09708989, g: 0.086069345, b: 0.058517963, a: 0.5}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Emission: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _PatColor: {r: 0.6, g: 0, b: 0.18, a: 0.6}
+    - _PatColor: {r: 0.6, g: 0.09844967, b: 0.19212428, a: 0.6}
     - _SpecColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
     - _TintColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
 --- !u!1002 &2100001

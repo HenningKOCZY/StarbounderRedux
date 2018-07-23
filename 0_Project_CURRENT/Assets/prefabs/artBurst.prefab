@@ -8,7 +8,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 400000}
-  - component: {fileID: 11400000}
+  - component: {fileID: 114538904818374642}
   m_Layer: 0
   m_Name: artBurst
   m_TagString: Untagged
@@ -124,7 +124,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: c7c6af318a054884196b001e102a4a10, type: 2}
+  - {fileID: 2100000, guid: 249c88d7c36874418b81e0b36a846752, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -157,20 +157,6 @@ MeshFilter:
 --- !u!1002 &3300001
 EditorExtensionImpl:
   serializedVersion: 6
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df2d4e5458607734aa8dcce2cee82d06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slowdown: 0.5
-  ship: {fileID: 0}
-  cam: {fileID: 0}
 --- !u!1002 &11400001
 EditorExtensionImpl:
   serializedVersion: 6
@@ -202,11 +188,9 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 849382ecd527145f9aef1c1a7a88e53f, type: 3}
   - {fileID: 2800000, guid: f2fca73120d8647878f3bb0b217049c3, type: 3}
   - {fileID: 2800000, guid: f2fca73120d8647878f3bb0b217049c3, type: 3}
-  parentTo: {fileID: 0}
   randomRot: 1
   lookAtCam: 0
   FPS: 20
-  frameCnt: 0
   startTime: 0
   cardGo: 0
 --- !u!1002 &11400003
@@ -241,3 +225,17 @@ Prefab:
 --- !u!1002 &100100001
 EditorExtensionImpl:
   serializedVersion: 6
+--- !u!114 &114538904818374642
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b1fa27637a7eab4d85f05f4f191d677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ship: {fileID: 0}
+  cam: {fileID: 0}
+  slowdown: 0.5

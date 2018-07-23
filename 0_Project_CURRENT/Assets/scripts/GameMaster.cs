@@ -6,7 +6,6 @@ public class GameMaster : MonoBehaviour {
 	public enum DeviceType {
 		Computer,
 		iPhone
-
 		}
 
 	public DeviceType device;
@@ -14,14 +13,18 @@ public class GameMaster : MonoBehaviour {
 	public enum DiagMode {
 		Player,
 		Programmer
-
 		}
 
 	public DiagMode diagMode;
 
-	GameObject pantherFlag;
+	public BG_plane bgScript;
+	public GUIScript gui;
+	public MoveShip ship;
+	public MoveCam cam;
+	public GameObject pantherFlag;
 	public PantherFlagScript pantherFlagScript;
 	GameObject musicSource;
+
 	public int level;
 	bool clearData;
 	bool setData;
@@ -43,44 +46,39 @@ public class GameMaster : MonoBehaviour {
 	public Vector3[] resetPos;
 	public int rPointCounter = 0;
 	public int shipNum;
-	GameObject currLevel;
+	public GameObject currLevel;
 	GameObject which;
-	Material topMat;
-	Material sideMat;
-	Material sideFadeMat;
-	Material frontFadeMat;
-	Material frontMat;
-	Color[] topColor;
-	Color[] topSpec;
-	Color[] sideColor;
-	Color[] frontColor;
+	public Material topMat;
+	public Material sideMat;
+	public Material sideFadeMat;
+	public Material frontFadeMat;
+	public Material frontMat;
+	public Color[] topColor;
+	public Color[] topSpec;
+	public Color[] sideColor;
+	public Color[] frontColor;
 	Light levelLight;
-	Color[] levelLightColor;
-
-	public BG_plane bgScript;
-	GUIScript gui;
-	MoveShip ship;
-	MoveCam cam;
+	public Color[] levelLightColor;
 
 	GameObject pauseMenuPF;
 	private GameObject pauseMenuObj;
-	Transform[] newCubePF;
-	Transform gatewayPF;
-	Material gatewayMat;
-	Transform artifactPF;
-	Material artMat1;
-	Material artMat2;
-	Material artMat3;
+	public Transform[] newCubePF;
+	public Transform gatewayPF;
+	public Material gatewayMat;
+	public Transform artifactPF;
+	public Material artMat1;
+	public Material artMat2;
+	public Material artMat3;
 	//var artColor: Color[];
-	ArtifactColor[] artBurstColorScript;
+	public ArtifactColor[] artBurstColorScript;
 	int artCount;
 	public int checkpoint = 0;
 
 	//var elecBurstMats: Material[];
-	Color[] burstColor;
+	public Color[] burstColor;
 
-	PhysicMaterial topPhysMaterial;
-	PhysicMaterial sidesPhysMaterial;
+	public PhysicMaterial topPhysMaterial;
+	public PhysicMaterial sidesPhysMaterial;
 
 	private float shrinkSides = 0.3f;
 	private float boosterR;
@@ -89,7 +87,7 @@ public class GameMaster : MonoBehaviour {
 
 	public Transform[] gateways;
 	int music = 1;
-	string[] worldTrackName;
+	public string[] worldTrackName;
 
 	float oldRecord;
 	TutScript tutScript;
@@ -326,7 +324,7 @@ public class GameMaster : MonoBehaviour {
 	public void killLevel() {
 		if (pantherFlag) {
 			pantherFlag.transform.position = new Vector3(0, 0, -100);
-			pantherFlagScript.GetComponent<AudioSource>().Stop();
+			pantherFlagScript.pantherAudio.Stop();
 		}
 		//print("killLevel");
 		Destroy(currLevel);
@@ -338,13 +336,12 @@ public class GameMaster : MonoBehaviour {
 	void replaceCubes(GameObject currLevel) {
 		//print("replaceCubes");
 		List<Transform> cubes = new List<Transform>();
-		int i = 0;
+
 		int gs = 0;
 		rPointCounter = 0;
 		// dupe array prevents endless for in loop when you parent new stuff back or Destroy under currLevel
 		foreach (Transform cube in currLevel.transform) {
-			cubes[i] = cube;
-			i++;
+			cubes.Add(cube);
 		}
 		int artNum = 0;
 		int a1 = (int)Mathf.Floor(artCount / 100);	

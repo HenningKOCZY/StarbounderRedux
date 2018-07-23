@@ -13,7 +13,7 @@ public class FrontColl : MonoBehaviour {
 	void OnTriggerStay(Collider other) {
 		if (ship.shipNum == 10) {
 			if (other.tag != "kill" && other.name != "camDropBox" && other.name != "camDropBox2" && other.name != "endLoop") {
-				if (ship.state.jumpTimer < -0.2)
+				if (ship.state.jumpTimer < -0.2f)
 					ship.stopDead();
 			}
 		} else {

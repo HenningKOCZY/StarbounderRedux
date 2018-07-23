@@ -7,8 +7,8 @@ public class Music : MonoBehaviour {
 	int music;
 	int level;
 	public int worldNum;
-	string[] worldTrackName;
-	string[] sceneTrackName;
+	public string[] worldTrackName;
+	public string[] sceneTrackName;
 
 	void Awake() {
 		DontDestroyOnLoad(transform.gameObject);
