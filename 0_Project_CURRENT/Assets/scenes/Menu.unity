@@ -7102,6 +7102,7 @@ GameObject:
   - component: {fileID: 1439}
   - component: {fileID: 1490}
   - component: {fileID: 1436}
+  - component: {fileID: 875}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -13283,6 +13284,24 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6363bba448bf64e60a763433f9ddf81b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _threshold: 1
+  _softKnee: 0
+  _radius: 4
+  _intensity: 0.5
+  _highQuality: 1
+  _antiFlicker: 1
+  _shader: {fileID: 4800000, guid: 5a711a01011934ebcb58ef5ad52159d6, type: 3}
 --- !u!23 &884
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -27601,7 +27620,7 @@ MonoBehaviour:
   nextShip: 0
   shipGo: 0
   shads:
-  - {fileID: 2800000, guid: 743675bdef7a04a7389f2dea8b69a675, type: 3}
+  - {fileID: 2800000, guid: 79a233ff6f2c1244f990098296c99449, type: 3}
   - {fileID: 2800000, guid: 9f2075b97ee204312a7ec324db432fa6, type: 3}
   - {fileID: 2800000, guid: 2e15f2fd4b8444da1a8f15054c51fbc9, type: 3}
   - {fileID: 2800000, guid: 53629145798184c3c9e4ec944da107c3, type: 3}
@@ -27941,7 +27960,7 @@ MonoBehaviour:
   base: {fileID: 431}
   boosters: {fileID: 429}
   pattern: {fileID: 430}
-  shipMat: {fileID: 2100000, guid: 5e8b78c7b7a96459999049651d4c6c87, type: 2}
+  shipMat: {fileID: 2100000, guid: 6944b8c2f3331894584822162541b9dd, type: 2}
   blackMat: {fileID: 0}
   baseColor: {r: 0, g: 0, b: 0, a: 0}
   rBase: {fileID: 427}
@@ -27990,7 +28009,7 @@ MonoBehaviour:
   tarThumbPreview: 0
   patternInput: 1
   burstMat: {fileID: 2100000, guid: df46b0ee9528f4728a08e90b7647c43b, type: 2}
-  boostMat: {fileID: 2100000, guid: 5bc94d9c3a54d4a88aec4e57a219bf9d, type: 2}
+  boostMat: {fileID: 2100000, guid: c0ac30fc58fad5d45a7943c3a3d1fd07, type: 2}
   flareMat: {fileID: 2100000, guid: df5bc9cef1b124fd5bfffe50e09657af, type: 2}
   lightProjMat: {fileID: 2100000, guid: a9cdb98423c19412bbac43b1fb623c48, type: 2}
   boosterColor: {r: 0, g: 0, b: 0, a: 0}
@@ -28051,7 +28070,7 @@ MonoBehaviour:
   - {fileID: 392}
   - {fileID: 12}
   bg:
-  - {fileID: 2800000, guid: dba06b2b57f12482ba58f9b5d0ce2736, type: 3}
+  - {fileID: 2800000, guid: b41ecace8b020d64ea564b27fc73908a, type: 3}
   - {fileID: 2800000, guid: 3474193cfa5d443439836bd755a5a7e7, type: 3}
   - {fileID: 2800000, guid: ec32b136bd8774dc8aa243d8fbb6dccb, type: 3}
   - {fileID: 2800000, guid: 066c48306dde64f469be217e75b92498, type: 3}

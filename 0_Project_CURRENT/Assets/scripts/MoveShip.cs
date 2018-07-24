@@ -1928,7 +1928,7 @@ public class MoveShip : MonoBehaviour {
 						GetComponent<AudioSource>().PlayOneShot(sound.metalHit);
 					} else if (which == "explode") {
 							rando = Random.Range(0, 2);
-							GetComponent<AudioSource>().PlayOneShot(sound.explosion[rando]);
+							//GetComponent<AudioSource>().PlayOneShot(sound.explosion[rando]);
 						} else if (which == "win") {
 								GetComponent<AudioSource>().PlayOneShot(sound.winGate);
 							} else if (which == "vc") {

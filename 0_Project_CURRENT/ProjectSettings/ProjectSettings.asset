@@ -47,7 +47,7 @@ PlayerSettings:
   defaultScreenWidthWeb: 480
   defaultScreenHeightWeb: 320
   m_StereoRenderingPath: 0
-  m_ActiveColorSpace: 0
+  m_ActiveColorSpace: 1
   m_MTRendering: 1
   m_StackTraceTypes: 010000000100000001000000010000000100000001000000
   iosShowActivityIndicatorOnLoading: -1
@@ -571,7 +571,8 @@ PlayerSettings:
   webGLUseEmbeddedResources: 0
   webGLCompressionFormat: 1
   webGLLinkerTarget: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: AMPLIFY_SHADER_EDITOR
   platformArchitecture: {}
   scriptingBackend: {}
   il2cppCompilerConfiguration: {}

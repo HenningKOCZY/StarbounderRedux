@@ -19,14 +19,14 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: b48d217da3d5b483ab07cd90b24fedb5, type: 3}
+        m_Texture: {fileID: 2800000, guid: b0f098ea311e042e1b086613515bbb39, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Shininess: 0.7
     m_Colors:
     - _Color: {r: 0, g: 0, b: 0, a: 1}
-    - _Emission: {r: 0.5, g: 0.08204139, b: 0.16010356, a: 0.5}
+    - _Emission: {r: 0.5, g: 0, b: 0.5, a: 0.5}
     - _SpecColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1002 &2100001
 EditorExtensionImpl:

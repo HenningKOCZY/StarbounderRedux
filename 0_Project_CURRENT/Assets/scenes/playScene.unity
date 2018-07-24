@@ -14,7 +14,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 1
+  m_Fog: 0
   m_FogColor: {r: 1, g: 1, b: 1, a: 1}
   m_FogMode: 1
   m_FogDensity: 0.01
@@ -545,7 +545,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &53
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,7 +562,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &54
 GameObject:
   m_ObjectHideFlags: 0
@@ -940,6 +940,7 @@ GameObject:
   - component: {fileID: 227}
   - component: {fileID: 204}
   - component: {fileID: 222}
+  - component: {fileID: 86}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -958,6 +959,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54a15a1f6e7f29845b04a838a37e66ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &86
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 84}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6363bba448bf64e60a763433f9ddf81b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _threshold: 1
+  _softKnee: 0
+  _radius: 3
+  _intensity: 1
+  _highQuality: 1
+  _antiFlicker: 1
+  _shader: {fileID: 4800000, guid: 5a711a01011934ebcb58ef5ad52159d6, type: 3}
 --- !u!4 &101 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 42ec326a52603481a8d51327f52ff86f, type: 2}
@@ -1611,13 +1630,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 84}
-  m_LocalRotation: {x: 0.1305262, y: 0, z: 0, w: 0.9914449}
+  m_LocalRotation: {x: 0.06975647, y: 0, z: 0, w: 0.9975641}
   m_LocalPosition: {x: 0, y: 8.5, z: -14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 161}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 8, y: 0, z: 0}
 --- !u!20 &167
 Camera:
   m_ObjectHideFlags: 0
@@ -1635,7 +1654,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 2
-  far clip plane: 450
+  far clip plane: 1300
   field of view: 40
   orthographic: 0
   orthographic size: 100
@@ -3238,7 +3257,6 @@ MonoBehaviour:
   randomRot: 0
   lookAtCam: 0
   FPS: 30
-  startTime: 0
   cardGo: 0
 --- !u!114 &261
 MonoBehaviour:
@@ -3773,6 +3791,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ship: {fileID: 264}
   gm: {fileID: 262}
+  cam_xRo_Default: 10
   goalHeight: 0
   sensitivity: 4
   cam: {fileID: 167}
