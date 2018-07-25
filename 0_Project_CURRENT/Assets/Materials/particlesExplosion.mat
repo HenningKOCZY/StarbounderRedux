@@ -29,7 +29,7 @@ Material:
     - _Color: {r: 0.4, g: 1.1420001, b: 1.4, a: 1}
     - _Emission: {r: 0, g: 0.18766665, b: 0.5, a: 1}
     - _SpecColor: {r: 0, g: 0, b: 0, a: 0}
-    - _TintColor: {r: 0.27053097, g: 1, b: 0.25, a: 1}
+    - _TintColor: {r: 0.25, g: 0.47500002, b: 1, a: 1}
 --- !u!1002 &2100001
 EditorExtensionImpl:
   serializedVersion: 6

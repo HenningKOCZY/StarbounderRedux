@@ -3289,7 +3289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fca1a653bec4e70459d5d6c68e29b2da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  device: 0
+  device: 1
   diagMode: 1
   bgScript: {fileID: 261}
   gui: {fileID: 263}
