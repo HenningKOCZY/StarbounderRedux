@@ -23,9 +23,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DecalTex:
-        m_Texture: {fileID: 2800000, guid: b818a7a192d0c42c1a0d3befddc9306f, type: 3}
+        m_Texture: {fileID: 2800000, guid: b0f098ea311e042e1b086613515bbb39, type: 3}
         m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0.54459804, y: 0}
+        m_Offset: {x: 0.62982935, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -111,11 +111,11 @@ Material:
     - _ZWrite: 1
     - __dirty: 1
     m_Colors:
-    - _BaseColor: {r: 0.49739486, g: 0.5, b: 0.5, a: 0.5}
+    - _BaseColor: {r: 0, g: 0, b: 0, a: 0.5}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Emission: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _PatColor: {r: 0.6, g: 0.04008705, b: 0, a: 0.6}
+    - _PatColor: {r: 0.6, g: 0, b: 0.6, a: 0.6}
     - _SpecColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
     - _TintColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
 --- !u!1002 &2100001

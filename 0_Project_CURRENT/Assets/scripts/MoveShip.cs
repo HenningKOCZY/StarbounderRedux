@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveShip : MonoBehaviour {
+    public float accelerometerSensitivity = 2.0f;
 
 	GameObject shipObj;
 	Transform sub;
@@ -794,34 +795,83 @@ public class MoveShip : MonoBehaviour {
 		rby = rb.velocity.y;
 		rbz = rb.velocity.z;
 
-		// inputs	
-		if (!state.crashing && !state.winning) {
+        
+        if (!state.crashing && !state.winning)
+        {
+            if (gm.device == GameMaster.DeviceType.iPhone)
+            {
+                // inputs (merged from OldFixedUpdate)
+                if (state.started)
+                {
+                    //acceleration.x now used for side tilts in both landscape or portrait.
+                    //used to be -accerlation.y for side tilting when in landscape, and x when in portrait
+                    xf = Input.acceleration.x * accelerometerSensitivity; 
+                    brakes = false;
+                    yf = false;
+                }
+                if (!state.paused)
+                {
+                    for (int i = 0; i < Input.touchCount; ++i)
+                    {
+                        if (Input.GetTouch(i).position.x > Screen.width - (Screen.width / 4))
+                        {
+                            if (Input.GetTouch(i).phase == TouchPhase.Began || Input.GetTouch(i).phase != TouchPhase.Ended)
+                            {
+                                yf = true;
+                            }
+                            else
+                                yf = false;
+                            //if (jumpTouches == 0) yf = false;
+                        }
+                        else if (Input.GetTouch(i).position.x < Screen.width / 4)
+                        {
+                            if (Input.GetTouch(i).phase != TouchPhase.Ended)
+                            {
+                                brakes = true;
+                            }
+                            else
+                                brakes = false;
+                        }
+                    }
+                }
+            }
+            else
+            { // computer ctrls
+                //inputs (new)
+                yf = Input.GetButton("Fire1");
+                if (state.started)
+                {
+                    xf = Input.GetAxis("Horizontal");
+                    xfRaw = Input.GetAxisRaw("Horizontal");
+                }
+                if (!state.cruising)
+                {
+                    qf = Input.GetButton("jumpAhead");
+                    if (Input.GetAxisRaw("Vertical") > 0 || brakeOverride)
+                        brakes = false;
+                    else
+                        brakes = true;
+                } 
+            }
+            if (brakeOverride)
+                brakes = false;
+        }
 
-			yf = Input.GetButton("Fire1");
-			if (state.started) {
-				xf = Input.GetAxis("Horizontal");
-				xfRaw = Input.GetAxisRaw("Horizontal");
-			}
-			if (!state.cruising) {
-				qf = Input.GetButton("jumpAhead");
-				if (Input.GetAxisRaw("Vertical") > 0 || brakeOverride)
-					brakes = false;
-				else
-					brakes = true;
-			}
+        //inputs (new)
+        if (!yf)
+        {
+            state.jbClear = true;
+        }
+        if (!qf)
+        {
+            qbClear = true;
+        }
+        if (qf && qbClear && !state.cruising)
+            resetRepoShip();
 
-			if (!yf) {
-				state.jbClear = true;
-			}
-			if (!qf) {
-				qbClear = true;
-			}
-			if (qf && qbClear && !state.cruising)
-				resetRepoShip();
-		}
 
-		// velocity z
-		if (!state.stopDead) {
+        // velocity z
+        if (!state.stopDead) {
 			if (!state.cruising) {// && state.started) {
 				if (!brakes)
 					targetSpeed += ((maxZSpeed - targetSpeed + 20) / 2) * Time.deltaTime * 2;

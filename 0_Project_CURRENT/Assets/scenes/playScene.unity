@@ -3289,8 +3289,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fca1a653bec4e70459d5d6c68e29b2da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  device: 1
-  diagMode: 0
+  device: 0
+  diagMode: 1
   bgScript: {fileID: 261}
   gui: {fileID: 263}
   ship: {fileID: 264}
@@ -3298,7 +3298,7 @@ MonoBehaviour:
   pantherFlag: {fileID: 42}
   pantherFlagScript: {fileID: 241}
   level: 27
-  setData: 1
+  setData: 0
   sd:
     GamePhase: 0
     ShipNum: 3
@@ -3675,6 +3675,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 253847cdb6309d5438f0df5b35079bfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  accelerometerSensitivity: 2
   anim: {fileID: 224}
   anim2: {fileID: 223}
   shad: {fileID: 226}
