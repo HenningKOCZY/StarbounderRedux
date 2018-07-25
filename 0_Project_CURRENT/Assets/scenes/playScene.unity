@@ -74,7 +74,7 @@ LightmapSettings:
     m_AlbedoBoost: 1
     m_TemporalCoherenceThreshold: 1
     m_EnvironmentLightingMode: 0
-    m_EnableBakedLightmaps: 1
+    m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
     serializedVersion: 10
@@ -3289,8 +3289,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fca1a653bec4e70459d5d6c68e29b2da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  device: 0
-  diagMode: 1
+  device: 1
+  diagMode: 0
   bgScript: {fileID: 261}
   gui: {fileID: 263}
   ship: {fileID: 264}
@@ -3298,6 +3298,13 @@ MonoBehaviour:
   pantherFlag: {fileID: 42}
   pantherFlagScript: {fileID: 241}
   level: 27
+  setData: 1
+  sd:
+    GamePhase: 0
+    ShipNum: 3
+    MaxLevel: 9
+    Level: 9
+    gameSpeed: 3
   worldNum: 0
   gamePhase: 1
   gameSpeed: 0
