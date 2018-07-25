@@ -27,8 +27,9 @@ public class GameMaster : MonoBehaviour {
 
 	public int level;
 	bool clearData;
-	bool setData;
+	public bool setData;
 
+	[System.Serializable]
 	public class SetDataState {
 		public int GamePhase;
 		public int ShipNum;
