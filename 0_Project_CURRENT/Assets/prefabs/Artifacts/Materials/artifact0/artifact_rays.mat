@@ -30,7 +30,11 @@ Material:
     - _EmisColor: {r: 0.2, g: 0.2, b: 0.2, a: 0}
     - _Emission: {r: 0.49411765, g: 0.33858758, b: 0, a: 1}
     - _SpecColor: {r: 0, g: 0, b: 0, a: 1}
+<<<<<<< HEAD
     - _TintColor: {r: 1, g: 0.525766, b: 0.25, a: 1}
+=======
+    - _TintColor: {r: 0.25, g: 0.5926182, b: 1, a: 1}
+>>>>>>> origin/Craig02
 --- !u!1002 &2100001
 EditorExtensionImpl:
   serializedVersion: 6

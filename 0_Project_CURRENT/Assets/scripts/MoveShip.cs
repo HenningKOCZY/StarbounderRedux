@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveShip : MonoBehaviour {
+    public float accelerometerSensitivity = 2.0f;
 
 	GameObject shipObj;
 	Transform sub;
@@ -794,34 +795,83 @@ public class MoveShip : MonoBehaviour {
 		rby = rb.velocity.y;
 		rbz = rb.velocity.z;
 
-		// inputs	
-		if (!state.crashing && !state.winning) {
+        
+        if (!state.crashing && !state.winning)
+        {
+            if (gm.device == GameMaster.DeviceType.iPhone)
+            {
+                // inputs (merged from OldFixedUpdate)
+                if (state.started)
+                {
+                    //acceleration.x now used for side tilts in both landscape or portrait.
+                    //used to be -accerlation.y for side tilting when in landscape, and x when in portrait
+                    xf = Input.acceleration.x * accelerometerSensitivity; 
+                    brakes = false;
+                    yf = false;
+                }
+                if (!state.paused)
+                {
+                    for (int i = 0; i < Input.touchCount; ++i)
+                    {
+                        if (Input.GetTouch(i).position.x > Screen.width - (Screen.width / 4))
+                        {
+                            if (Input.GetTouch(i).phase == TouchPhase.Began || Input.GetTouch(i).phase != TouchPhase.Ended)
+                            {
+                                yf = true;
+                            }
+                            else
+                                yf = false;
+                            //if (jumpTouches == 0) yf = false;
+                        }
+                        else if (Input.GetTouch(i).position.x < Screen.width / 4)
+                        {
+                            if (Input.GetTouch(i).phase != TouchPhase.Ended)
+                            {
+                                brakes = true;
+                            }
+                            else
+                                brakes = false;
+                        }
+                    }
+                }
+            }
+            else
+            { // computer ctrls
+                //inputs (new)
+                yf = Input.GetButton("Fire1");
+                if (state.started)
+                {
+                    xf = Input.GetAxis("Horizontal");
+                    xfRaw = Input.GetAxisRaw("Horizontal");
+                }
+                if (!state.cruising)
+                {
+                    qf = Input.GetButton("jumpAhead");
+                    if (Input.GetAxisRaw("Vertical") > 0 || brakeOverride)
+                        brakes = false;
+                    else
+                        brakes = true;
+                } 
+            }
+            if (brakeOverride)
+                brakes = false;
+        }
 
-			yf = Input.GetButton("Fire1");
-			if (state.started) {
-				xf = Input.GetAxis("Horizontal");
-				xfRaw = Input.GetAxisRaw("Horizontal");
-			}
-			if (!state.cruising) {
-				qf = Input.GetButton("jumpAhead");
-				if (Input.GetAxisRaw("Vertical") > 0 || brakeOverride)
-					brakes = false;
-				else
-					brakes = true;
-			}
+        //inputs (new)
+        if (!yf)
+        {
+            state.jbClear = true;
+        }
+        if (!qf)
+        {
+            qbClear = true;
+        }
+        if (qf && qbClear && !state.cruising)
+            resetRepoShip();
 
-			if (!yf) {
-				state.jbClear = true;
-			}
-			if (!qf) {
-				qbClear = true;
-			}
-			if (qf && qbClear && !state.cruising)
-				resetRepoShip();
-		}
 
-		// velocity z
-		if (!state.stopDead) {
+        // velocity z
+        if (!state.stopDead) {
 			if (!state.cruising) {// && state.started) {
 				if (!brakes)
 					targetSpeed += ((maxZSpeed - targetSpeed + 20) / 2) * Time.deltaTime * 2;
@@ -898,7 +948,7 @@ public class MoveShip : MonoBehaviour {
 		} else {
 			if (rby < -10) { // free fall over the edge / take away a jump 
 				if (gm.worldNum == 1)
-					level10off();
+					//level10off();
 				xRot = 0;
 				xRotSpeed = 4;
 				state.jumps = 1;
@@ -1291,7 +1341,7 @@ public class MoveShip : MonoBehaviour {
 			state.grounded = true;
 			airBurstScript.CardStop();
 			state.handling = defaultHandling;
-			playSound("land");
+			//playSound("land");
 
 			if (shipNum != 10) {
 				anim.Play("hop2");
@@ -1317,7 +1367,7 @@ public class MoveShip : MonoBehaviour {
 		}
 		if (gm.worldNum == 1)
 			if (state.grounded == true)
-				level10on();
+				//level10on();
 		cc = 0;
 		fakeCC = false;
 	}
@@ -1409,10 +1459,10 @@ public class MoveShip : MonoBehaviour {
 		if (Physics.Raycast(new Vector3(pos.x - xRad, pos.y + yRad, pos.z - zRad), -Vector3.up, out hit, rayDist))
 			if (hit.collider.tag != "Kill")
 				count++;
-
-		if (gm.worldNum == 1)
-			if (count > 0)
-				level10on();
+        //World 1 Ground Flicker
+		//if (gm.worldNum == 1)
+		//	if (count > 0)
+		//		level10on();
 
 		return count;
 	}
@@ -1484,7 +1534,7 @@ public class MoveShip : MonoBehaviour {
 		brakes = true;
 
 		if (type == 0) {	
-			playSound("explode");
+			//playSound("explode");
 			splode.transform.position = rb.position;
 			//		splodeParticles.GetComponent.<ParticleEmitter>().emit = true;
 			splodeScript.lookAtCam = true;
@@ -1524,7 +1574,7 @@ public class MoveShip : MonoBehaviour {
 		else
 			newRecord = false;
 		// print ("Level: "+level+"   Time: "+gui.curTime);
-		playSound("win");
+		//playSound("win");
 		cam.mode = MoveCam.Mode.Stop;
 		state.winning = true;
 		if (sfx && engineAudio.activeSelf)
@@ -1610,7 +1660,7 @@ public class MoveShip : MonoBehaviour {
 		gui.switchGUI("victoryCruise");
 		RenderSettings.fogStartDistance = 10;
 		RenderSettings.fogEndDistance = 300;
-		playSound("vc");
+		//playSound("vc");
 		anim.Stop();
 		state.winning = false;
 		state.cruising = true;
@@ -1874,7 +1924,7 @@ public class MoveShip : MonoBehaviour {
 	public void stopDead() {
 		if (!state.stopDead) {
 			print("Stoppin'....Dead");
-			playSound("land");
+			//playSound("land");
 
 			state.stopDead = true;
 			rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, 0);
@@ -1928,7 +1978,7 @@ public class MoveShip : MonoBehaviour {
 						GetComponent<AudioSource>().PlayOneShot(sound.metalHit);
 					} else if (which == "explode") {
 							rando = Random.Range(0, 2);
-							GetComponent<AudioSource>().PlayOneShot(sound.explosion[rando]);
+							//GetComponent<AudioSource>().PlayOneShot(sound.explosion[rando]);
 						} else if (which == "win") {
 								GetComponent<AudioSource>().PlayOneShot(sound.winGate);
 							} else if (which == "vc") {
