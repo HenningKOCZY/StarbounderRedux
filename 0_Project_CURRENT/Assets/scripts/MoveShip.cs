@@ -948,7 +948,7 @@ public class MoveShip : MonoBehaviour {
 		} else {
 			if (rby < -10) { // free fall over the edge / take away a jump 
 				if (gm.worldNum == 1)
-					level10off();
+					//level10off();
 				xRot = 0;
 				xRotSpeed = 4;
 				state.jumps = 1;
@@ -1341,7 +1341,7 @@ public class MoveShip : MonoBehaviour {
 			state.grounded = true;
 			airBurstScript.CardStop();
 			state.handling = defaultHandling;
-			playSound("land");
+			//playSound("land");
 
 			if (shipNum != 10) {
 				anim.Play("hop2");
@@ -1367,7 +1367,7 @@ public class MoveShip : MonoBehaviour {
 		}
 		if (gm.worldNum == 1)
 			if (state.grounded == true)
-				level10on();
+				//level10on();
 		cc = 0;
 		fakeCC = false;
 	}
@@ -1459,10 +1459,10 @@ public class MoveShip : MonoBehaviour {
 		if (Physics.Raycast(new Vector3(pos.x - xRad, pos.y + yRad, pos.z - zRad), -Vector3.up, out hit, rayDist))
 			if (hit.collider.tag != "Kill")
 				count++;
-
-		if (gm.worldNum == 1)
-			if (count > 0)
-				level10on();
+        //World 1 Ground Flicker
+		//if (gm.worldNum == 1)
+		//	if (count > 0)
+		//		level10on();
 
 		return count;
 	}
@@ -1534,7 +1534,7 @@ public class MoveShip : MonoBehaviour {
 		brakes = true;
 
 		if (type == 0) {	
-			playSound("explode");
+			//playSound("explode");
 			splode.transform.position = rb.position;
 			//		splodeParticles.GetComponent.<ParticleEmitter>().emit = true;
 			splodeScript.lookAtCam = true;
@@ -1574,7 +1574,7 @@ public class MoveShip : MonoBehaviour {
 		else
 			newRecord = false;
 		// print ("Level: "+level+"   Time: "+gui.curTime);
-		playSound("win");
+		//playSound("win");
 		cam.mode = MoveCam.Mode.Stop;
 		state.winning = true;
 		if (sfx && engineAudio.activeSelf)
@@ -1660,7 +1660,7 @@ public class MoveShip : MonoBehaviour {
 		gui.switchGUI("victoryCruise");
 		RenderSettings.fogStartDistance = 10;
 		RenderSettings.fogEndDistance = 300;
-		playSound("vc");
+		//playSound("vc");
 		anim.Stop();
 		state.winning = false;
 		state.cruising = true;
@@ -1924,7 +1924,7 @@ public class MoveShip : MonoBehaviour {
 	public void stopDead() {
 		if (!state.stopDead) {
 			print("Stoppin'....Dead");
-			playSound("land");
+			//playSound("land");
 
 			state.stopDead = true;
 			rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, 0);
