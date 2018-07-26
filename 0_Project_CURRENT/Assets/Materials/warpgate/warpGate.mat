@@ -19,7 +19,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
+<<<<<<< HEAD
         m_Texture: {fileID: 2800000, guid: fd5ff65e79f4a4fc28e50224837be561, type: 3}
+=======
+        m_Texture: {fileID: 2800000, guid: 49f027eed712243c7a11be5982484215, type: 3}
+>>>>>>> origin/Craig02
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
