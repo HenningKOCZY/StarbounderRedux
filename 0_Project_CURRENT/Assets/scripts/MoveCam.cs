@@ -8,6 +8,7 @@ public class MoveCam : MonoBehaviour {
 	public GameMaster gm;
 
 	Transform target;
+    public float cam_xRo_Default = 10;
 	public float goalHeight = 0;
 	public float sensitivity = 4;
 	float defaultLerpSpeed = 6;
@@ -186,7 +187,7 @@ public class MoveCam : MonoBehaviour {
 				}
 				lerpSpeed = defaultLerpSpeed;
 				cam.transform.localPosition = new Vector3(0, 8, -13.5f);
-				cam.transform.localRotation = Quaternion.Euler(15, 0, 0);
+				cam.transform.localRotation = Quaternion.Euler(cam_xRo_Default, 0, 0);
 //						float sp = gm.startPos.y + 5f;
 				float sp = 5f;
 				transform.position = new Vector3(Mathf.Clamp(ship.transform.position.x, -10, 10), sp, 0);
@@ -214,7 +215,7 @@ public class MoveCam : MonoBehaviour {
 				}
 				anim.Play("cameraTitle");
 				transform.localEulerAngles = Vector3.zero;
-				cam.transform.localRotation = Quaternion.Euler(15, 0, 0);
+				cam.transform.localRotation = Quaternion.Euler(cam_xRo_Default, 0, 0);
 				cam.fieldOfView = 35;
 				titleObj = Instantiate(titlePF, Vector3.zero, Quaternion.identity) as Transform;
 				titleArtifactObj = Instantiate(titleArtifactPFs[gm.worldNum], Vector3.zero, Quaternion.identity) as Transform;

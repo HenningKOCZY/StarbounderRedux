@@ -97,6 +97,8 @@ public class GameMaster : MonoBehaviour {
 
 
 	void Awake() {
+        Application.targetFrameRate = 60;
+
 		if (GameObject.Find("MusicSource") == null) {
 			musicSource = Instantiate(Resources.Load<GameObject>("MusicSource"), Vector3.zero, Quaternion.identity) as GameObject;
 		}
