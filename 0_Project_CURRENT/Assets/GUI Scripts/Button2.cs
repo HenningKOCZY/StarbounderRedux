@@ -16,7 +16,7 @@ public class Button2 : MonoBehaviour {
 		thisObj.StartFPS(1, 13, 10f, GUIQuadObj.FrameMode.ForwardLoop);
 	}
 	
-	void onGUIDown (Touch pTouch)
+	void onGUIDown (iPhoneTouch pTouch)
 	{
 		Debug.Log(gameObject.name + " Down");
 	}

@@ -887,7 +887,7 @@ public class MoveShip : MonoBehaviour {
 
 
 		// spacecraft tilt
-		float yPos = Mathf.Abs(rbx * 0.01f) + 0.5f;
+		float yPos = Mathf.Abs(rbx * 0.01f) + 0.8f;
 		float yRot = -xf2 * 0.5f;
 		float zRot = xf2;
 

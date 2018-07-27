@@ -3238,6 +3238,7 @@ MonoBehaviour:
   randomRot: 0
   lookAtCam: 0
   FPS: 30
+  startTime: 0
   cardGo: 0
 --- !u!114 &261
 MonoBehaviour:
@@ -3279,13 +3280,6 @@ MonoBehaviour:
   pantherFlag: {fileID: 42}
   pantherFlagScript: {fileID: 241}
   level: 27
-  setData: 1
-  sd:
-    GamePhase: 0
-    ShipNum: 3
-    MaxLevel: 26
-    Level: 24
-    gameSpeed: 2
   worldNum: 0
   gamePhase: 1
   gameSpeed: 0

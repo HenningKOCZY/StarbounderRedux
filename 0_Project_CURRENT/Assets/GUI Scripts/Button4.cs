@@ -11,12 +11,12 @@ public class Button4 : MonoBehaviour {
 	{
 	}
 		
-	void onGUIDown (Touch pTouch)
+	void onGUIDown (iPhoneTouch pTouch)
 	{
 		Debug.Log(gameObject.name + " Down");
 	}
 
-	void onGUIUp (Touch pTouch)
+	void onGUIUp (iPhoneTouch pTouch)
 	{
 		Debug.Log(gameObject.name + " Up");
 	}

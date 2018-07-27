@@ -48,12 +48,12 @@ public class Button3 : MonoBehaviour {
 		thisObj.Depth = tmpDepth; 
 	}
 	
-	void onGUIDown (Touch pTouch)
+	void onGUIDown (iPhoneTouch pTouch)
 	{
 		Debug.Log(gameObject.name + " Down");
 	}
 
-	void onGUIUp (Touch pTouch)
+	void onGUIUp (iPhoneTouch pTouch)
 	{
 		Debug.Log(gameObject.name + " Up");
 	}

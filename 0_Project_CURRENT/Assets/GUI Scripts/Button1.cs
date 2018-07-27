@@ -71,7 +71,7 @@ public class Button1 : MonoBehaviour {
 		thisObj.Tint = tmpTint; 
 	}
 	
-	void onGUIDown (Touch pTouch)
+	void onGUIDown (iPhoneTouch pTouch)
 	{
 		Debug.Log(gameObject.name + " Down");
 	}
