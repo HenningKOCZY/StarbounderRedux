@@ -3001,7 +3001,7 @@ function colorBoosters(){
 	if (nextShip!=10 || gamePhase>=2) {
 		boosterColor = Vector4(boosterR,boosterG,boosterB,1);
 		
-		boostMat.SetColor("_Emission",Vector4(((1-boosterColor.r)/2+boosterColor.r),((1-boosterColor.g)/2+boosterColor.g),((1-boosterColor.b)/2+boosterColor.b),1));
+		boostMat.SetColor("_Tint",boosterColor);
 		
 		burstMat.SetColor("_Emission",Vector4(((1-boosterColor.r)/2.5+boosterColor.r),((1-boosterColor.g)/2.5+boosterColor.g),((1-boosterColor.b)/2.5+boosterColor.b),1));
 			
@@ -3010,7 +3010,7 @@ function colorBoosters(){
 	}else{			
 		boosterColor = Vector4(boosterR,boosterG,boosterB,1);
 
-		boostMat.SetColor("_Emission",Vector4(0,0,0,1));
+		boostMat.SetColor("_Tint",Vector4(0,0,0,1));
 	
 		burstMat.SetColor("_Emission",Vector4(0,0,0,1));
 			
