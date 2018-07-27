@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveCam : MonoBehaviour {
+public class MoveCam : MonoBehaviour
+{
 
 	public MoveShip ship;
 	public GameMaster gm;
 
 	Transform target;
-    public float cam_xRo_Default = 10;
+	public float cam_xRo_Default = 10;
 	public float goalHeight = 0;
 	public float sensitivity = 4;
 	float defaultLerpSpeed = 6;
@@ -16,13 +17,13 @@ public class MoveCam : MonoBehaviour {
 	public Camera cam;
 	public Animation anim;
 
-	public enum Mode {
+	public enum Mode
+	{
 		Play,
 		Stop,
 		Win,
 		Title}
-
-		;
+	;
 
 	public Mode mode = Mode.Play;
 
@@ -75,7 +76,8 @@ public class MoveCam : MonoBehaviour {
 
 	float diff = 0.0f;
 
-	void Start() {
+	void Start ()
+	{
 		lerpSpeed = defaultLerpSpeed;
 		target = ship.transform;
 		//	iPhoneKeyboard.autorotateToPortrait = false; 
@@ -85,24 +87,25 @@ public class MoveCam : MonoBehaviour {
 	}
 
 
-	void FixedUpdate() {
+	void FixedUpdate ()
+	{
 		float x = 0;
 		float y = 0;
 		float z = 0;
 
 		if (goalHeight != transform.position.y) {
-			diff = Mathf.Clamp(Mathf.Abs(goalHeight - transform.position.y), 1, 8);
+			diff = Mathf.Clamp (Mathf.Abs (goalHeight - transform.position.y), 1, 8);
 			y = transform.position.y + (((goalHeight - transform.position.y) * 0.1f) * Time.deltaTime * 40 * diff);
 		}
 
 		if (mode == Mode.Stop) {
-			z = Mathf.Lerp(transform.position.z, goalZ, Time.deltaTime * lerpSpeed);
+			z = Mathf.Lerp (transform.position.z, goalZ, Time.deltaTime * lerpSpeed);
 		} else {
 			z = target.position.z;
-			x = Mathf.Lerp(transform.position.x, target.position.x, Time.deltaTime * camXLerpSpeed);
+			x = Mathf.Lerp (transform.position.x, target.position.x, Time.deltaTime * camXLerpSpeed);
 		}
 
-		transform.position = new Vector3(x, y, z);
+		transform.position = new Vector3 (x, y, z);
 		
 		lv = transform.position - lp;
 		lp = transform.position;		
@@ -110,120 +113,122 @@ public class MoveCam : MonoBehaviour {
 
 
 
-	void LateUpdate() {	
+	void LateUpdate ()
+	{	
 
 		if (mode != Mode.Stop) {
-			cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 34 + (ship.targetSpeed * 0.08f) + (1.2f * diff), Time.deltaTime * 2f);
+			cam.fieldOfView = Mathf.Lerp (cam.fieldOfView, 34 + (ship.targetSpeed * 0.08f) + (1.2f * diff), Time.deltaTime * 2f);
 		} else {
-			cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 35, Time.deltaTime * 1.2f);
+			cam.fieldOfView = Mathf.Lerp (cam.fieldOfView, 35, Time.deltaTime * 1.2f);
 		}
 
 		if (mode == Mode.Title) {
 			if (gm.device == GameMaster.DeviceType.iPhone) {	
 				foreach (Touch touch in Input.touches) {
 					if (touch.phase == TouchPhase.Began) {
-						ship.reset(3);
+						ship.reset (3);
 					}
 				}
 			} else { // computer CTRLs
-				if ((Input.GetMouseButtonDown(0)) || (Input.GetButtonDown("Fire1"))) {
-					ship.reset(3);
+				if ((Input.GetMouseButtonDown (0)) || (Input.GetButtonDown ("Fire1"))) {
+					ship.reset (3);
 				}
 			}
 		} else if (mode == Mode.Win) {
-				cam.transform.LookAt(new Vector3(lookTarget.position.x, 3, lookTarget.position.z) + new Vector3(-goalRY, 0.9f, 0));
-				cam.transform.localPosition = new Vector3(cam.transform.localPosition.x, 4.3f, -7);
+			cam.transform.LookAt (new Vector3 (lookTarget.position.x, 3, lookTarget.position.z) + new Vector3 (-goalRY, 0.9f, 0));
+			cam.transform.localPosition = new Vector3 (cam.transform.localPosition.x, 4.3f, -7);
 
-				// rotate cam based on tilt
-				goalRY = Mathf.Clamp(goalRY - (ship.xf * Time.deltaTime * 3), -1, 1); //Mathf.Lerp(goalRY,Mathf.Clamp(-ship.xf,-1,1),Time.deltaTime*3);	
-				transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 40 * Mathf.Sin(goalRY));
+			// rotate cam based on tilt
+			goalRY = Mathf.Clamp (goalRY - (ship.xf * Time.deltaTime * 3), -1, 1); //Mathf.Lerp(goalRY,Mathf.Clamp(-ship.xf,-1,1),Time.deltaTime*3);	
+			transform.localEulerAngles = new Vector3 (transform.localEulerAngles.x, 40 * Mathf.Sin (goalRY));
 
-			} else if (mode == Mode.Play) {
-					// drop cams for going in tunnels
+		} else if (mode == Mode.Play) {
+			// drop cams for going in tunnels
 
-					if (ship.state.tunnel) {
-						yPos = 4.4f;
-						zPos = -13;
-						xAngle = 7;
-						yLerp = 4;
-						zLerp = 3;
-						xLerp = zLerp;
-					} else if (ship.state.tunnel2) {
-							yPos = 3;
-							zPos = -13;
-							xAngle = 3;
-							yLerp = 4;
-							zLerp = 3;
-							xLerp = zLerp;
-						} else {
-							yPos = 6; //+(0.1*(cam.fieldOfView-35));
-							zPos = -14;
-							xAngle = 10;
-							yLerp = 1;
-							zLerp = 1;
-							xLerp = zLerp;
-						}
+			if (ship.state.tunnel) {
+				yPos = 4.4f;
+				zPos = -13;
+				xAngle = 7;
+				yLerp = 4;
+				zLerp = 3;
+				xLerp = zLerp;
+			} else if (ship.state.tunnel2) {
+				yPos = 3;
+				zPos = -13;
+				xAngle = 3;
+				yLerp = 4;
+				zLerp = 3;
+				xLerp = zLerp;
+			} else {
+				yPos = 6; //+(0.1*(cam.fieldOfView-35));
+				zPos = -14;
+				xAngle = 10;
+				yLerp = 1;
+				zLerp = 1;
+				xLerp = zLerp;
+			}
 
-					camXLerpSpeed = Mathf.Lerp(camXLerpSpeed, defaultLerpSpeed * 2, Time.deltaTime); // lerping lerps?
+			camXLerpSpeed = Mathf.Lerp (camXLerpSpeed, defaultLerpSpeed * 2, Time.deltaTime); // lerping lerps?
 
-					cam.transform.localPosition = new Vector3(0f, Mathf.Lerp(cam.transform.localPosition.y, yPos, Time.deltaTime * yLerp), Mathf.Lerp(cam.transform.localPosition.z, zPos, Time.deltaTime * zLerp));
+			cam.transform.localPosition = new Vector3 (0f, Mathf.Lerp (cam.transform.localPosition.y, yPos, Time.deltaTime * yLerp), Mathf.Lerp (cam.transform.localPosition.z, zPos, Time.deltaTime * zLerp));
 
-					// what is the cam x rot for?
-					//			cam.transform.localEulerAngles.x=Mathf.Lerp(cam.transform.localEulerAngles.x, xAngle, Time.deltaTime*xLerp); 
+			// what is the cam x rot for?
+			//			cam.transform.localEulerAngles.x=Mathf.Lerp(cam.transform.localEulerAngles.x, xAngle, Time.deltaTime*xLerp); 
 
-				}	
+		}	
 	}
 
 
-	public void switchTo(Mode which) {
+	public void switchTo (Mode which)
+	{
 				
 		switch (which) {
-			case Mode.Play:
+		case Mode.Play:
 					
-				anim.Stop();
-				if (titleObj) {
-					Destroy(titleObj.gameObject);
-					Destroy(titleArtifactObj.gameObject);
-				}
-				lerpSpeed = defaultLerpSpeed;
-				cam.transform.localPosition = new Vector3(0, 8, -13.5f);
-				cam.transform.localRotation = Quaternion.Euler(cam_xRo_Default, 0, 0);
+			anim.Stop ();
+			if (titleObj) {
+				Destroy (titleObj.gameObject);
+				Destroy (titleArtifactObj.gameObject);
+			}
+			lerpSpeed = defaultLerpSpeed;
+			cam.transform.localPosition = new Vector3 (0, 8, -13.5f);
+			cam.transform.localRotation = Quaternion.Euler (cam_xRo_Default, 0, 0);
 //						float sp = gm.startPos.y + 5f;
-				float sp = 5f;
-				transform.position = new Vector3(Mathf.Clamp(ship.transform.position.x, -10, 10), sp, 0);
-				goalHeight = sp;
-				transform.localEulerAngles = Vector3.zero;
-				break;
+			float sp = 5f;
+			transform.position = new Vector3 (Mathf.Clamp (ship.transform.position.x, -10, 10), sp, 0);
+			goalHeight = sp;
+			transform.localEulerAngles = Vector3.zero;
+			break;
 	
-			case Mode.Win:
+		case Mode.Win:
 							
-				goalRY = 0.0f;
-				cam.transform.localPosition = new Vector3(0, 4.8f, -5);
-				cam.transform.localRotation = Quaternion.Euler(20, 0, 0);
+			goalRY = 0.0f;
+			cam.transform.localPosition = new Vector3 (0, 4.8f, -5);
+			cam.transform.localRotation = Quaternion.Euler (20, 0, 0);
 				// adjust the alt of the ship to center for victory cruise
-				ship.anim.transform.localPosition = new Vector3(0, VCshipAdj[gm.shipNum], 0);
-				lerpSpeed = 2.0f;
-				transform.position = new Vector3(target.GetComponent<Rigidbody>().position.x - 12, 10, 0);
-				transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Random.Range(-35, 35), transform.localEulerAngles.z);
-				break;
+			ship.anim.transform.localPosition = new Vector3 (0, VCshipAdj [gm.shipNum], 0);
+			lerpSpeed = 2.0f;
+			transform.position = new Vector3 (target.GetComponent<Rigidbody> ().position.x - 12, 10, 0);
+			transform.localEulerAngles = new Vector3 (transform.localEulerAngles.x, Random.Range (-35, 35), transform.localEulerAngles.z);
+			break;
 
-			case Mode.Title:
+		case Mode.Title:
 
-				if (ship.sfx) {
-					GetComponent<AudioSource>().clip = (Resources.Load<AudioClip>(titleAudioName[gm.worldNum]));
-					GetComponent<AudioSource>().Play();	
-				}
-				anim.Play("cameraTitle");
-				transform.localEulerAngles = Vector3.zero;
-				cam.transform.localRotation = Quaternion.Euler(cam_xRo_Default, 0, 0);
-				cam.fieldOfView = 35;
-				titleObj = Instantiate(titlePF, Vector3.zero, Quaternion.identity) as Transform;
-				titleArtifactObj = Instantiate(titleArtifactPFs[gm.worldNum], Vector3.zero, Quaternion.identity) as Transform;
-				titleObj.parent = cam.transform;
-				titleObj.localPosition = Vector3.zero;
+			if (ship.sfx) {
+				GetComponent<AudioSource> ().clip = (Resources.Load<AudioClip> (titleAudioName [gm.worldNum]));
+				GetComponent<AudioSource> ().Play ();	
+			}
+			anim.Play ("cameraTitle");
+			transform.localEulerAngles = Vector3.zero;
+			cam.transform.localRotation = Quaternion.Euler (cam_xRo_Default, 0, 0);
+			cam.fieldOfView = 35;
+			titleObj = Instantiate (titlePF, Vector3.zero, Quaternion.identity) as Transform;
+			titleArtifactObj = Instantiate (titleArtifactPFs [gm.worldNum], Vector3.zero, Quaternion.identity) as Transform;
+			titleObj.parent = cam.transform;
+			titleObj.localPosition = Vector3.zero;
 				//	TitleScript titleScript = titleObj.GetComponent<TitleScript<();
 //				titleScript.updateTitle(gm.worldNum);
-				break;
+			break;
 
 		}
 		mode = which;

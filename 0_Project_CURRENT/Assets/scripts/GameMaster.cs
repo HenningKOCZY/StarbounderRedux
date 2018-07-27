@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameMaster : MonoBehaviour {
-	public enum DeviceType {
+public class GameMaster : MonoBehaviour
+{
+	public enum DeviceType
+	{
 		Computer,
 		iPhone
-		}
+	}
 
 	public DeviceType device;
 
-	public enum DiagMode {
+	public enum DiagMode
+	{
 		Player,
 		Programmer
-		}
+	}
 
 	public DiagMode diagMode;
 
@@ -30,7 +33,8 @@ public class GameMaster : MonoBehaviour {
 	public bool setData;
 
 	[System.Serializable]
-	public class SetDataState {
+	public class SetDataState
+	{
 		public int GamePhase;
 		public int ShipNum;
 		public int MaxLevel;
@@ -38,7 +42,7 @@ public class GameMaster : MonoBehaviour {
 		public int gameSpeed;
 	}
 
-	public SetDataState sd = new SetDataState();
+	public SetDataState sd = new SetDataState ();
 
 	public int worldNum;
 	public int gamePhase;
@@ -96,11 +100,12 @@ public class GameMaster : MonoBehaviour {
 
 
 
-	void Awake() {
-        Application.targetFrameRate = 60;
+	void Awake ()
+	{
+		Application.targetFrameRate = 60;
 
-		if (GameObject.Find("MusicSource") == null) {
-			musicSource = Instantiate(Resources.Load<GameObject>("MusicSource"), Vector3.zero, Quaternion.identity) as GameObject;
+		if (GameObject.Find ("MusicSource") == null) {
+			musicSource = Instantiate (Resources.Load<GameObject> ("MusicSource"), Vector3.zero, Quaternion.identity) as GameObject;
 		}
 	
 		if (Application.platform == RuntimePlatform.IPhonePlayer) {
@@ -115,56 +120,57 @@ public class GameMaster : MonoBehaviour {
 //	Time.timeScale=gameSpeed;
 	}
 
-	void Start() {
+	void Start ()
+	{
 	
 		if (clearData) { // set in gameMaster... for diag purposes
 			for (int i = 0; i < 60; i++) {
-				PlayerPrefs.SetFloat(("Level" + i + "Time"), 99.99f);
-				PlayerPrefs.SetInt(("Level" + i + "ArtCount"), 000);
-				PlayerPrefs.SetInt(("Level" + i + "PantherFlag"), 0);
+				PlayerPrefs.SetFloat (("Level" + i + "Time"), 99.99f);
+				PlayerPrefs.SetInt (("Level" + i + "ArtCount"), 000);
+				PlayerPrefs.SetInt (("Level" + i + "PantherFlag"), 0);
 			}	
 		
-			PlayerPrefs.SetInt("SawIntro", 0);
-			PlayerPrefs.SetInt("GamePhase", 0);
-			PlayerPrefs.SetInt(("MaxLevel"), 0);	
-			PlayerPrefs.SetInt(("Level"), 0);	
-			PlayerPrefs.SetInt(("ArtCount"), 0);
+			PlayerPrefs.SetInt ("SawIntro", 0);
+			PlayerPrefs.SetInt ("GamePhase", 0);
+			PlayerPrefs.SetInt (("MaxLevel"), 0);	
+			PlayerPrefs.SetInt (("Level"), 0);	
+			PlayerPrefs.SetInt (("ArtCount"), 0);
 			
-			PlayerPrefs.SetInt("CinemaState", 1);
-			PlayerPrefs.SetInt("TutorialState", 1);
-			PlayerPrefs.SetInt("FromLS", 0);
+			PlayerPrefs.SetInt ("CinemaState", 1);
+			PlayerPrefs.SetInt ("TutorialState", 1);
+			PlayerPrefs.SetInt ("FromLS", 0);
 		}
 	
 		if (setData) { 
-			PlayerPrefs.SetInt(("Level"), sd.Level);	
-			PlayerPrefs.SetInt("GamePhase", sd.GamePhase);
-			PlayerPrefs.SetInt(("ShipNum"), sd.ShipNum);
-			PlayerPrefs.SetInt("GameSpeed", sd.gameSpeed);
+			PlayerPrefs.SetInt (("Level"), sd.Level);	
+			PlayerPrefs.SetInt ("GamePhase", sd.GamePhase);
+			PlayerPrefs.SetInt (("ShipNum"), sd.ShipNum);
+			PlayerPrefs.SetInt ("GameSpeed", sd.gameSpeed);
 		
 			if (sd.GamePhase > 0) { 
 				sd.MaxLevel = 59;
 				if (sd.GamePhase == 1) {
-					PlayerPrefs.SetInt("TutorialState", 1);
-					PlayerPrefs.SetInt("CinemaState", 3);
+					PlayerPrefs.SetInt ("TutorialState", 1);
+					PlayerPrefs.SetInt ("CinemaState", 3);
 				}
 				if (sd.GamePhase == 2) {
-					PlayerPrefs.SetInt("TutorialState", 2);
-					PlayerPrefs.SetInt("CinemaState", 4);
+					PlayerPrefs.SetInt ("TutorialState", 2);
+					PlayerPrefs.SetInt ("CinemaState", 4);
 				}
 			} else {
-				PlayerPrefs.SetInt("TutorialState", 1);
-				PlayerPrefs.SetInt("CinemaState", 1);
+				PlayerPrefs.SetInt ("TutorialState", 1);
+				PlayerPrefs.SetInt ("CinemaState", 1);
 			}
 		
-			PlayerPrefs.SetInt(("MaxLevel"), sd.MaxLevel);
+			PlayerPrefs.SetInt (("MaxLevel"), sd.MaxLevel);
 
 		
 			for (int i = 0; i <= sd.MaxLevel; i++) {
-				PlayerPrefs.SetFloat(("Level" + i + "Time"), 66.66f);
+				PlayerPrefs.SetFloat (("Level" + i + "Time"), 66.66f);
 			}	
 			if (sd.GamePhase > 1) {
 				for (int i = 0; i <= sd.MaxLevel; i++) {
-					PlayerPrefs.SetInt(("Level" + i + "ArtCount"), 111);
+					PlayerPrefs.SetInt (("Level" + i + "ArtCount"), 111);
 				}
 			}
 		
@@ -172,32 +178,33 @@ public class GameMaster : MonoBehaviour {
 
 			for (int i = 0; i < 60; i++) {
 				//PlayerPrefs.SetFloat(("Level"+i+"Time"), 55.55);
-				PlayerPrefs.SetInt(("Level" + i + "ArtCount"), 000);
+				PlayerPrefs.SetInt (("Level" + i + "ArtCount"), 000);
 				//PlayerPrefs.SetInt(("Level"+i+"PantherFlag"), 1);
 			}
-			PlayerPrefs.SetInt(("Level21PantherFlag"), 0);
-			PlayerPrefs.SetInt(("Level8ArtCount"), 010);
+			PlayerPrefs.SetInt (("Level21PantherFlag"), 0);
+			PlayerPrefs.SetInt (("Level8ArtCount"), 010);
 		
-			PlayerPrefs.SetInt(("Level29ArtCount"), 110);
+			PlayerPrefs.SetInt (("Level29ArtCount"), 110);
 //		PlayerPrefs.SetInt(("Level12ArtCount"), 110);
-			countArtifacts();
+			countArtifacts ();
 		}
 	
 
-		shipNum = PlayerPrefs.GetInt("ShipNum", 1);	
+		shipNum = PlayerPrefs.GetInt ("ShipNum", 1);	
 
-		level = PlayerPrefs.GetInt(("Level"), 0);	
-		worldNum = (int)Mathf.Floor(level / 10);
-		gamePhase = PlayerPrefs.GetInt("GamePhase", 0);
+		level = PlayerPrefs.GetInt (("Level"), 0);	
+		worldNum = (int)Mathf.Floor (level / 10);
+		gamePhase = PlayerPrefs.GetInt ("GamePhase", 0);
 //	print("gp: "+gamePhase);
-		music = PlayerPrefs.GetInt("Music", 1);
+		music = PlayerPrefs.GetInt ("Music", 1);
 		if (shipNum != 10)
-			pantherFlag.transform.position = new Vector3(0, 0, -100);
+			pantherFlag.transform.position = new Vector3 (0, 0, -100);
 	}
 
-	public void updateGameSpeed(int num) {
+	public void updateGameSpeed (int num)
+	{
 		gameSpeed = 0.75f + (num * 0.125f);
-		PlayerPrefs.SetInt("GameSpeed", num);
+		PlayerPrefs.SetInt ("GameSpeed", num);
 		gui.gameSpeed = num;
 		if (level == 60 || level == 61) { 
 			tutScript.timeInc = 0.017f * gameSpeed; 
@@ -205,14 +212,15 @@ public class GameMaster : MonoBehaviour {
 		}
 	}
 
-	public void updateWorld() {
+	public void updateWorld ()
+	{
 		if (gui.tutorialState < 1 && level == 60) {
 			gui.tutorialState = 1;
-			PlayerPrefs.SetInt("TutorialState", 1);
+			PlayerPrefs.SetInt ("TutorialState", 1);
 		}
 		if (gui.tutorialState < 2 && level == 61) {
 			gui.tutorialState = 2;
-			PlayerPrefs.SetInt("TutorialState", 2);
+			PlayerPrefs.SetInt ("TutorialState", 2);
 		}
 		/*
 	if(gui.tutorialState<3 && level==69) {
@@ -220,11 +228,11 @@ public class GameMaster : MonoBehaviour {
 		PlayerPrefs.SetInt("TutorialState",3);
 	}
 	*/
-		worldNum = bgScript.changeBackground(level);
-		gatewayMat.mainTexture = Resources.Load<Texture>("world" + worldNum + "_warpGate");
-		colorBursts();
+		worldNum = bgScript.changeBackground (level);
+		gatewayMat.mainTexture = Resources.Load<Texture> ("world" + worldNum + "_warpGate");
+		colorBursts ();
 		gui.worldNum = worldNum;
-		gui.updateLevel();
+		gui.updateLevel ();
 		/*
 	topMat.SetColor( "_Emission", topColor[worldNum]);
 	topMat.SetColor( "_SpecColor", topSpec[worldNum]);
@@ -238,26 +246,28 @@ public class GameMaster : MonoBehaviour {
 	
 	}
 
-	void colorBursts() {
-		artMat1.SetColor("_TintColor", new Vector4((1 - burstColor[worldNum].r) / 4 + burstColor[worldNum].r, (1 - burstColor[worldNum].g) / 4 + burstColor[worldNum].g, (1 - burstColor[worldNum].b) / 4 + burstColor[worldNum].b, 1));
-		artMat2.SetColor("_Emission", burstColor[worldNum]);
-		artMat3.SetColor("_TintColor", new Vector4((1 - burstColor[worldNum].r) / 8 + burstColor[worldNum].r, (1 - burstColor[worldNum].g) / 8 + burstColor[worldNum].g, (1 - burstColor[worldNum].b) / 4 + burstColor[worldNum].b, 1));
+	void colorBursts ()
+	{
+		artMat1.SetColor ("_TintColor", new Vector4 ((1 - burstColor [worldNum].r) / 4 + burstColor [worldNum].r, (1 - burstColor [worldNum].g) / 4 + burstColor [worldNum].g, (1 - burstColor [worldNum].b) / 4 + burstColor [worldNum].b, 1));
+		artMat2.SetColor ("_Emission", burstColor [worldNum]);
+		artMat3.SetColor ("_TintColor", new Vector4 ((1 - burstColor [worldNum].r) / 8 + burstColor [worldNum].r, (1 - burstColor [worldNum].g) / 8 + burstColor [worldNum].g, (1 - burstColor [worldNum].b) / 4 + burstColor [worldNum].b, 1));
 
 		for (int i = 0; i <= 3; i++) {
 			if (i < 1)
-				artBurstColorScript[i].colorBurst(burstColor[worldNum] / 2, "_Emission");
+				artBurstColorScript [i].colorBurst (burstColor [worldNum] / 2, "_Emission");
 			else
-				artBurstColorScript[i].colorBurst(new Vector4((1 - burstColor[worldNum].r) / 4 + burstColor[worldNum].r, (1 - burstColor[worldNum].g) / 4 + burstColor[worldNum].g, (1 - burstColor[worldNum].b) / 4 + burstColor[worldNum].b, 1), "_TintColor");
+				artBurstColorScript [i].colorBurst (new Vector4 ((1 - burstColor [worldNum].r) / 4 + burstColor [worldNum].r, (1 - burstColor [worldNum].g) / 4 + burstColor [worldNum].g, (1 - burstColor [worldNum].b) / 4 + burstColor [worldNum].b, 1), "_TintColor");
 
 		}
 	}
 
-	void artifactInit() {
+	void artifactInit ()
+	{
 //***new */
 		if (level < 60) {
-			artCount = PlayerPrefs.GetInt("Level" + level + "ArtCount", 000);
-			gui.a1state = (int)Mathf.Floor(artCount / 100);	
-			gui.a2state = (int)Mathf.Floor((artCount % 100) / 10);
+			artCount = PlayerPrefs.GetInt ("Level" + level + "ArtCount", 000);
+			gui.a1state = (int)Mathf.Floor (artCount / 100);	
+			gui.a2state = (int)Mathf.Floor ((artCount % 100) / 10);
 			gui.a3state = (int)artCount % 10;
 //		print("LEVEL: "+level);
 //		print("artifacts: "+artCount);
@@ -270,19 +280,20 @@ public class GameMaster : MonoBehaviour {
 		}	
 	}
 
-	public void makeLevel() {
-		print("makeLevel!");
-		updateWorld();
+	public void makeLevel ()
+	{
+		print ("makeLevel!");
+		updateWorld ();
 
-		artifactInit();	
+		artifactInit ();	
 //	print("makeLevel");
 		//var which: GameObject = levelList[level];
 		if (level < 10)
-			which = Resources.Load<GameObject>("level_10" + level);
+			which = Resources.Load<GameObject> ("level_10" + level);
 		else
-			which = Resources.Load<GameObject>("level_1" + level);
+			which = Resources.Load<GameObject> ("level_1" + level);
 	
-		currLevel = Instantiate(which, Vector3.zero, Quaternion.identity) as GameObject;
+		currLevel = Instantiate (which, Vector3.zero, Quaternion.identity) as GameObject;
 	
 		gui.level = level;
 		//currLighting = Instantiate(lightingList[worldNum], Vector3(0,0,0), Quaternion.identity) as Transform;
@@ -295,11 +306,11 @@ public class GameMaster : MonoBehaviour {
 		//currShipLighting.transform.localPosition=Vector3(0,0,0);
 		//currShipLighting.transform.localEulerAngles=Vector3(0,0,0);
 		startPos = Vector3.zero;
-		resetPos[0] = Vector3.zero;
+		resetPos [0] = Vector3.zero;
 	
-		replaceCubes(currLevel);
+		replaceCubes (currLevel);
 	
-		Transform winCube = currLevel.transform.Find("gateway");
+		Transform winCube = currLevel.transform.Find ("gateway");
 		if (winCube) {
 			//gui.winDist=winCube.position.z;
 			ship.winDist = winCube.position.z;
@@ -309,46 +320,49 @@ public class GameMaster : MonoBehaviour {
 		//lom.transform.parent=currLevel.transform;
 		//resetEasy();
 		if (level == 60 || level == 61) {
-			tutScript = currLevel.GetComponent<TutScript>();
+			tutScript = currLevel.GetComponent<TutScript> ();
 		}
-		updateGameSpeed(PlayerPrefs.GetInt("GameSpeed", 1));
+		updateGameSpeed (PlayerPrefs.GetInt ("GameSpeed", 1));
 		Time.timeScale = gameSpeed;
-		batchLevelMove();
+		batchLevelMove ();
 	}
 
-	void batchLevelMove() {
-		currLevel.transform.position = new Vector3(0, 0, ship.winDist / -2);
+	void batchLevelMove ()
+	{
+		currLevel.transform.position = new Vector3 (0, 0, ship.winDist / -2);
 //	yield;
 		currLevel.transform.position = Vector3.zero;
 	}
 
 
 
-	public void killLevel() {
+	public void killLevel ()
+	{
 		if (pantherFlag) {
-			pantherFlag.transform.position = new Vector3(0, 0, -100);
-			pantherFlagScript.pantherAudio.Stop();
+			pantherFlag.transform.position = new Vector3 (0, 0, -100);
+			pantherFlagScript.pantherAudio.Stop ();
 		}
 		//print("killLevel");
-		Destroy(currLevel);
+		Destroy (currLevel);
 		//if (currLighting) Destroy(currLighting.gameObject);
 		//if (currShipLighting) Destroy(currShipLighting.gameObject);
 	}
 
 
-	void replaceCubes(GameObject currLevel) {
+	void replaceCubes (GameObject currLevel)
+	{
 		//print("replaceCubes");
-		List<Transform> cubes = new List<Transform>();
+		List<Transform> cubes = new List<Transform> ();
 
 		int gs = 0;
 		rPointCounter = 0;
 		// dupe array prevents endless for in loop when you parent new stuff back or Destroy under currLevel
 		foreach (Transform cube in currLevel.transform) {
-			cubes.Add(cube);
+			cubes.Add (cube);
 		}
 		int artNum = 0;
-		int a1 = (int)Mathf.Floor(artCount / 100);	
-		int a2 = (int)Mathf.Floor((artCount % 100) / 10);
+		int a1 = (int)Mathf.Floor (artCount / 100);	
+		int a2 = (int)Mathf.Floor ((artCount % 100) / 10);
 		int a3 = (int)artCount % 10;
 	
 		foreach (Transform cube in cubes) {
@@ -356,49 +370,50 @@ public class GameMaster : MonoBehaviour {
 			bool destroy = false;
 		
 			if (cube.tag == "Finish") {
-				newObj = Instantiate(gatewayPF, cube.position, cube.rotation) as Transform;
-				gateways[gs] = newObj;
+				newObj = Instantiate (gatewayPF, cube.position, cube.rotation) as Transform;
+				gateways [gs] = newObj;
 				gs++;
 				destroy = true;
 			} else if (cube.tag == "artifact") {
-					if (gamePhase < 2) {
-						artNum++;
-						if ((artNum == 1 && a1 == 0) || (artNum == 2 && a2 == 0) || (artNum == 3 && a3 == 0)) {
-							newObj = Instantiate(artifactPF, cube.position, cube.rotation) as Transform;
-							newObj.name = "artifact" + artNum;
-						}
+				if (gamePhase < 2) {
+					artNum++;
+					if ((artNum == 1 && a1 == 0) || (artNum == 2 && a2 == 0) || (artNum == 3 && a3 == 0)) {
+						newObj = Instantiate (artifactPF, cube.position, cube.rotation) as Transform;
+						newObj.name = "artifact" + artNum;
 					}
-					destroy = true;
-				} else if (cube.name == "pantherFlagPos") {
-						if (shipNum == 10) {
-							pantherFlag.transform.position = cube.transform.position;
-						}
-						destroy = true;
-					} else if (cube.name == "LevelNumText") {
-							destroy = true;
-							continue;
-						} else if (cube.tag == "StartPos") {
-								startPos = cube.position;
-								destroy = true;
-							} else if (cube.tag == "ResetPos") {
-									resetPos[rPointCounter++] = cube.position;
-									destroy = true;
-								} else if (cube.tag == "EditorOnly")
-										destroy = true;
+				}
+				destroy = true;
+			} else if (cube.name == "pantherFlagPos") {
+				if (shipNum == 10) {
+					pantherFlag.transform.position = cube.transform.position;
+				}
+				destroy = true;
+			} else if (cube.name == "LevelNumText") {
+				destroy = true;
+				continue;
+			} else if (cube.tag == "StartPos") {
+				startPos = cube.position;
+				destroy = true;
+			} else if (cube.tag == "ResetPos") {
+				resetPos [rPointCounter++] = cube.position;
+				destroy = true;
+			} else if (cube.tag == "EditorOnly")
+				destroy = true;
 			//else if (cube.name=="camDropBox" || cube.name=="camDropBox2") cube.gameObject.layer=2;
 			//else if (ship.shipNum==10 && (cube.name=="camDropBox" || cube.name=="camDropBox2"))	destroy = true;
 			if (newObj != null)
 				newObj.parent = currLevel.transform;
 			if (destroy)
-				Destroy(cube.gameObject);
+				Destroy (cube.gameObject);
 		}
 		rPointCounter = 0;
 	
 	}
 
-	Transform cubeRep(Transform cube) {
+	Transform cubeRep (Transform cube)
+	{
 		Transform newObj;
-		int cubeDiv = (int)Mathf.Abs(cube.localScale.x / 4);
+		int cubeDiv = (int)Mathf.Abs (cube.localScale.x / 4);
 
 		if (cubeDiv < 1)
 			cubeDiv = 1;
@@ -408,31 +423,31 @@ public class GameMaster : MonoBehaviour {
 			if (cubeDiv > 33)
 				cubeDiv = 33;
 		} else if (cube.tag == "DiagA2") {
-				cubeDiv += 40;
-				if (cubeDiv > 42)
-					cubeDiv = 42;
-			} else if (cube.tag == "DiagB1") {
-					cubeDiv += 50;
-					mult = 1.0f;
-				} else if (cube.tag == "DiagB2") {
-						cubeDiv += 60;
-						mult = 1.5f;
-					} else if (cube.tag == "Kill") {
-							cubeDiv = 20;
-						}
+			cubeDiv += 40;
+			if (cubeDiv > 42)
+				cubeDiv = 42;
+		} else if (cube.tag == "DiagB1") {
+			cubeDiv += 50;
+			mult = 1.0f;
+		} else if (cube.tag == "DiagB2") {
+			cubeDiv += 60;
+			mult = 1.5f;
+		} else if (cube.tag == "Kill") {
+			cubeDiv = 20;
+		}
 		// print(cubeDiv);
 		if (cubeDiv < 1)
 			cubeDiv = 1;
 		if (cubeDiv > 10 && cubeDiv < 20)
 			cubeDiv = 10;
 		// print(cubeDiv);
-		newObj = Instantiate(newCubePF[cubeDiv], cube.position, cube.rotation) as Transform;
+		newObj = Instantiate (newCubePF [cubeDiv], cube.position, cube.rotation) as Transform;
 
 		newObj.localScale = cube.localScale;
 		if (cube.localScale.x < 0)
-			switchLR(newObj);
+			switchLR (newObj);
 	
-		CubeConvert newObjScript = newObj.gameObject.GetComponent<CubeConvert>();
+		CubeConvert newObjScript = newObj.gameObject.GetComponent<CubeConvert> ();
 		newObjScript.gameMaster = this;
 		newObjScript.ship = ship.transform;
 		newObjScript.cubeDiv = cubeDiv;
@@ -440,7 +455,7 @@ public class GameMaster : MonoBehaviour {
 		newObjScript.backZ = cube.position.z + (cube.localScale.z * mult);
 
 		if (cube.tag == "StartCube") {
-			makeColls(newObj, cubeDiv);
+			makeColls (newObj, cubeDiv);
 			newObjScript.converted = true;
 		}
 
@@ -448,95 +463,104 @@ public class GameMaster : MonoBehaviour {
 	}
 
 
-	void switchLR(Transform cube) {
-		Transform or = cube.Find("right2");
-		Transform ol = cube.Find("left2");
+	void switchLR (Transform cube)
+	{
+		Transform or = cube.Find ("right2");
+		Transform ol = cube.Find ("left2");
 		if (or)
 			or.name = "left2";
 		if (ol)
 			or.name = "right2";
-		or = cube.Find("right");
-		ol = cube.Find("left");
+		or = cube.Find ("right");
+		ol = cube.Find ("left");
 		if (or)
 			or.name = "left";
 		if (ol)
 			ol.name = "right";
 	}
 
-	public void makeColls(Transform cube, int cubeDiv) {
+	public void makeColls (Transform cube, int cubeDiv)
+	{
 		// var sub: Transform;
 
 		if (cubeDiv > 30) {	
-			Transform meshy = cube.transform.Find("mesh");
-			MeshCollider mc = meshy.gameObject.AddComponent<MeshCollider>();
+			Transform meshy = cube.transform.Find ("mesh");
+			MeshCollider mc = meshy.gameObject.AddComponent<MeshCollider> ();
 			mc.material = topPhysMaterial;
 		} else { 
-			BoxCollider bc = cube.gameObject.AddComponent<BoxCollider>();
+			BoxCollider bc = cube.gameObject.AddComponent<BoxCollider> ();
 			bc.material = topPhysMaterial;
 		}
 	}
 
-	void SetLayerRecursively(GameObject obj, int newLayer) {
+	void SetLayerRecursively (GameObject obj, int newLayer)
+	{
 		obj.layer = newLayer;
 		foreach (Transform child in obj.transform) {
-			SetLayerRecursively(child.gameObject, newLayer);
+			SetLayerRecursively (child.gameObject, newLayer);
 		}
 	}
 
-	public void incrementLevel() {
+	public void incrementLevel ()
+	{
 		level++;
 		if (level == 60)
 			level = 0;
-		PlayerPrefs.SetInt("Level", level);
-		if (level < 60 && level > PlayerPrefs.GetInt("MaxLevel", level))
-			PlayerPrefs.SetInt("MaxLevel", level);
+		PlayerPrefs.SetInt ("Level", level);
+		if (level < 60 && level > PlayerPrefs.GetInt ("MaxLevel", level))
+			PlayerPrefs.SetInt ("MaxLevel", level);
 	}
 
 
-	public void setLevel(int lev) {
+	public void setLevel (int lev)
+	{
 		level = lev;
-		PlayerPrefs.SetInt("Level", lev);
+		PlayerPrefs.SetInt ("Level", lev);
 	}
 
-	public bool saveTime(float t) {
-		oldRecord = PlayerPrefs.GetFloat(("Level" + level + "Time"), 99.99f);
+	public bool saveTime (float t)
+	{
+		oldRecord = PlayerPrefs.GetFloat (("Level" + level + "Time"), 99.99f);
 		if (t < oldRecord) {
-			PlayerPrefs.SetFloat(("Level" + level + "Time"), t);
+			PlayerPrefs.SetFloat (("Level" + level + "Time"), t);
 			return true;
 		} else
 			return false;
 	}
 
-	public int countPanthers() {
+	public int countPanthers ()
+	{
 		int flagTotal = 0;
 	
 		for (int i = 0; i < 60; i++) {
-			if (PlayerPrefs.GetInt("Level" + i + "PantherFlag", 0) == 1)
+			if (PlayerPrefs.GetInt ("Level" + i + "PantherFlag", 0) == 1)
 				flagTotal++;
 		}
 		return flagTotal;
 	}
 
-	public int countArtifacts() {
+	public int countArtifacts ()
+	{
 		int artTotal = 0;
 	
 		for (int i = 0; i < 60; i++) {
-			int tempCount = PlayerPrefs.GetInt("Level" + i + "ArtCount", 0);
-			int a1 = (int)Mathf.Floor(tempCount / 100);	
-			int a2 = (int)Mathf.Floor((tempCount % 100) / 10);
+			int tempCount = PlayerPrefs.GetInt ("Level" + i + "ArtCount", 0);
+			int a1 = (int)Mathf.Floor (tempCount / 100);	
+			int a2 = (int)Mathf.Floor ((tempCount % 100) / 10);
 			int a3 = (int)tempCount % 10;
 			artTotal += a1 + a2 + a3;
 		}
 	
-		PlayerPrefs.SetInt("ArtCount", artTotal);
+		PlayerPrefs.SetInt ("ArtCount", artTotal);
 		return artTotal;
 	}
 
-	public int countLevels() {
+	public int countLevels ()
+	{
 		int levTotal = 0;
 	
 		for (int i = 0; i < 60; i++) {
-			if (PlayerPrefs.GetFloat("Level" + i + "Time", 99.99f) < 90.0f)
+			if (PlayerPrefs.GetFloat ("Level" + i + "Time", 99.99f) < 90.0f)
 				levTotal++;
 		}
 	
@@ -544,20 +568,21 @@ public class GameMaster : MonoBehaviour {
 	}
 
 
-	public void resetEasy() {
+	public void resetEasy ()
+	{
 		// ***new
 		//lomScript.UpdateNumbers(level);
 		if (shipNum == 10)
-			pantherFlagScript.InitFlag();
+			pantherFlagScript.InitFlag ();
 		else
-			Destroy(pantherFlag);
+			Destroy (pantherFlag);
 		if (checkpoint > 0) {
 			rPointCounter = checkpoint;
-			ship.resetRepoShip(); 
+			ship.resetRepoShip (); 
 		} else {
-			ship.repoShip();
+			ship.repoShip ();
 		}
 				
-		gui.camBlack("up");	
+		gui.camBlack ("up");	
 	}
 }

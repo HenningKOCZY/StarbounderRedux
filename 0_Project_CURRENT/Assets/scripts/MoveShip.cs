@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveShip : MonoBehaviour {
-    public float accelerometerSensitivity = 2.0f;
+public class MoveShip : MonoBehaviour
+{
+	public float accelerometerSensitivity = 2.0f;
 
 	GameObject shipObj;
 	Transform sub;
@@ -12,9 +13,9 @@ public class MoveShip : MonoBehaviour {
 	public Animation anim2;
 	public Projector shad;
 	Rigidbody rb;
-	public float rbx;
-	public float rby;
-	public float rbz;
+	float rbx;
+	float rby;
+	float rbz;
 
 	public MoveCam cam;
 	Transform camTrans;
@@ -164,7 +165,8 @@ public class MoveShip : MonoBehaviour {
 
 	public bool restarted = false;
 
-	public class CharacterState {
+	public class CharacterState
+	{
 		public bool started = false;
 		//var startedTime: float;
 		public float elapsedTime = 0;
@@ -201,7 +203,8 @@ public class MoveShip : MonoBehaviour {
 		
 	}
 
-	public class SoundClips {
+	public class SoundClips
+	{
 		public AudioClip metalHit;
 		public AudioClip[] jump;
 		public AudioClip[] explosion;
@@ -211,47 +214,50 @@ public class MoveShip : MonoBehaviour {
 		public AudioClip[] engineSound;
 	}
 
-	public CharacterState state = new CharacterState();
-	public SoundClips sound = new SoundClips();
+	public CharacterState state = new CharacterState ();
+	public SoundClips sound = new SoundClips ();
 
 
-	void Start() {
-		System.GC.Collect();
-		int ppsfx = PlayerPrefs.GetInt("Sfx", 1);
+	void Start ()
+	{
+		System.GC.Collect ();
+		int ppsfx = PlayerPrefs.GetInt ("Sfx", 1);
 		if (ppsfx == 1)
 			sfx = true;
 		else
 			sfx = false;
-		rb = GetComponent<Rigidbody>();
+		rb = GetComponent<Rigidbody> ();
 
-		sub = transform.GetChild(0);
-		animSub = sub.GetChild(0);
+		sub = transform.GetChild (0);
+		animSub = sub.GetChild (0);
 
-		guiCam = GameObject.Find("GUICameraL1").GetComponent<Camera>();
-		musicSource = GameObject.Find("MusicSource(Clone)");
-		musicSourceScript = musicSource.GetComponent<Music>();
+		guiCam = GameObject.Find ("GUICameraL1").GetComponent<Camera> ();
+		musicSource = GameObject.Find ("MusicSource(Clone)");
+		musicSourceScript = musicSource.GetComponent<Music> ();
 		if (!sfx)
-			engineAudio.SetActive(false);
+			engineAudio.SetActive (false);
 		defGrav = grav;
-		initShip();
-		reset(2);
+		initShip ();
+		reset (2);
 		blackerPause = gui.blackerPause;
 	}
 
 
-	void Awake() {
-		GameObject guiQuadMgr = GameObject.Find("GUIQuadMgr");
-		guiObjs = guiQuadMgr.GetComponentsInChildren<GUIQuadObj>();
+	void Awake ()
+	{
+		GameObject guiQuadMgr = GameObject.Find ("GUIQuadMgr");
+		guiObjs = guiQuadMgr.GetComponentsInChildren<GUIQuadObj> ();
 		
-		boosterColor = new Vector4(PlayerPrefs.GetFloat("BoostColor_R", 0f), PlayerPrefs.GetFloat("BoostColor_G", 0.5f), PlayerPrefs.GetFloat("BoostColor_B", 1f), 1);	
-		explosionMaterial.SetColor("_Emission", new Vector4(boosterColor.r / 2, boosterColor.g / 2, boosterColor.b / 2, 1));
-		explosionParticleMat.SetColor("_TintColor", new Vector4(((1 - boosterColor.r) / 4 + boosterColor.r), ((1 - boosterColor.g) / 4 + boosterColor.g), ((1 - boosterColor.b) / 4 + boosterColor.b), 1));
-		airBurst.GetComponent<Renderer>().material.SetColor("_Emission", new Vector4(boosterColor.r / 2, boosterColor.g / 2, boosterColor.b / 2, 1));
+		boosterColor = new Vector4 (PlayerPrefs.GetFloat ("BoostColor_R", 0f), PlayerPrefs.GetFloat ("BoostColor_G", 0.5f), PlayerPrefs.GetFloat ("BoostColor_B", 1f), 1);	
+		explosionMaterial.SetColor ("_Emission", new Vector4 (boosterColor.r / 2, boosterColor.g / 2, boosterColor.b / 2, 1));
+		explosionParticleMat.SetColor ("_TintColor", new Vector4 (((1 - boosterColor.r) / 4 + boosterColor.r), ((1 - boosterColor.g) / 4 + boosterColor.g), ((1 - boosterColor.b) / 4 + boosterColor.b), 1));
+		airBurst.GetComponent<Renderer> ().material.SetColor ("_Emission", new Vector4 (boosterColor.r / 2, boosterColor.g / 2, boosterColor.b / 2, 1));
 	}
 
 
-	void initShip() {	
-		Transform parentToObj = transform.GetChild(0).GetChild(0);
+	void initShip ()
+	{	
+		Transform parentToObj = transform.GetChild (0).GetChild (0);
 		
 		shipNum = gm.shipNum;
 		
@@ -262,67 +268,69 @@ public class MoveShip : MonoBehaviour {
 //				engineAudio.GetComponent<AudioSource>().clip = sound.engineSound[1];
 		}
 
-		shipObj = Instantiate(Resources.Load<GameObject>("ship" + shipNum), Vector3.zero, Quaternion.identity) as GameObject;
+		shipObj = Instantiate (Resources.Load<GameObject> ("ship" + shipNum), Vector3.zero, Quaternion.identity) as GameObject;
 		shipObj.transform.parent = parentToObj;
 		shipObj.transform.localPosition = Vector3.zero;
 		
 		camTrans = cam.transform;
 		if (shipNum != 10) { 
 			ultraMaxZSpeed = maxZSpeed;
-			Transform ccs = transform.Find("collCheckL");
-			ccs.gameObject.SetActive(false);
-			ccs = transform.Find("collCheckR");
-			ccs.gameObject.SetActive(false);
+			Transform ccs = transform.Find ("collCheckL");
+			ccs.gameObject.SetActive (false);
+			ccs = transform.Find ("collCheckR");
+			ccs.gameObject.SetActive (false);
 		} else { // special panther stuff	
-			shipObj.transform.localPosition = new Vector3(0, -0.5f, -0.1f);
+			shipObj.transform.localPosition = new Vector3 (0, -0.5f, -0.1f);
 			maxZSpeed = defPantherMaxZ;
 
 			ultraMaxZSpeed = maxZSpeed;
-			anim = shipObj.GetComponent<Animation>();
-			anim["jump"].layer = 1;
-			anim["lJump"].layer = 1;
-			anim["rJump"].layer = 1;
-			anim["fJump"].layer = 1;
-			anim["boost"].layer = 1;
-			anim["doubleJump"].layer = 1;
+			anim = shipObj.GetComponent<Animation> ();
+			anim ["jump"].layer = 1;
+			anim ["lJump"].layer = 1;
+			anim ["rJump"].layer = 1;
+			anim ["fJump"].layer = 1;
+			anim ["boost"].layer = 1;
+			anim ["doubleJump"].layer = 1;
 
 		}
 
-		Color baseColor = new Vector4(PlayerPrefs.GetFloat("BaseColor_R", 0.5f), PlayerPrefs.GetFloat("BaseColor_G", 0.5f), PlayerPrefs.GetFloat("BaseColor_B", 0.5f), 1);
-		Color patColor = new Vector4(PlayerPrefs.GetFloat("PatColor_R", 0.5f), PlayerPrefs.GetFloat("PatColor_G", 0), PlayerPrefs.GetFloat("PatColor_B", 0), 1);
+		Color baseColor = new Vector4 (PlayerPrefs.GetFloat ("BaseColor_R", 0.5f), PlayerPrefs.GetFloat ("BaseColor_G", 0.5f), PlayerPrefs.GetFloat ("BaseColor_B", 0.5f), 1);
+		Color patColor = new Vector4 (PlayerPrefs.GetFloat ("PatColor_R", 0.5f), PlayerPrefs.GetFloat ("PatColor_G", 0), PlayerPrefs.GetFloat ("PatColor_B", 0), 1);
 
-		shipMat.SetColor("_BaseColor", baseColor * 0.5f);
-		shipMat.SetColor("_PatColor", patColor * 0.6f);
-		shipMat.SetTexture("_MultTex", Resources.Load<Texture>("ship/ship" + shipNum));
-		shipMat.SetTexture("_DecalTex", Resources.Load<Texture>("patterns/" + PlayerPrefs.GetInt("texture", 6)));
-		shipMat.SetTextureOffset("_DecalTex", new Vector2((1 / (-1 * -0.96f)) * (PlayerPrefs.GetFloat("offset", 0) + 0.48f), 0));
-		shipMat.SetTexture("_Shad", Resources.Load<Texture>("ship/world" + gm.worldNum + " Refl"));
+		shipMat.SetColor ("_BaseColor", baseColor * 0.5f);
+		shipMat.SetColor ("_PatColor", patColor * 0.6f);
+		shipMat.SetTexture ("_MultTex", Resources.Load<Texture> ("ship/ship" + shipNum));
+		shipMat.SetTexture ("_DecalTex", Resources.Load<Texture> ("patterns/" + PlayerPrefs.GetInt ("texture", 6)));
+		shipMat.SetTextureOffset ("_DecalTex", new Vector2 ((1 / (-1 * -0.96f)) * (PlayerPrefs.GetFloat ("offset", 0) + 0.48f), 0));
+		shipMat.SetTexture ("_Shad", Resources.Load<Texture> ("ship/world" + gm.worldNum + " Refl"));
 		
-		shipMat.SetTextureOffset("_Shad", new Vector2(0, shipMatOffset[shipNum]));
-		shipMat.SetTextureScale("_Shad", new Vector2(1, shipMatScale[shipNum]));	
+		shipMat.SetTextureOffset ("_Shad", new Vector2 (0, shipMatOffset [shipNum]));
+		shipMat.SetTextureScale ("_Shad", new Vector2 (1, shipMatScale [shipNum]));	
 
-		shipBoosterMat.SetColor("_Emission", new Vector4(((1 - boosterColor.r) / 2 + boosterColor.r), ((1 - boosterColor.g) / 2 + boosterColor.g), ((1 - boosterColor.b) / 2 + boosterColor.b), 1));
-		engineFlareMat.SetColor("_TintColor", new Vector4(boosterColor.r / 2, boosterColor.g / 2, boosterColor.b / 2, 0.5f));
+		shipBoosterMat.SetColor ("_Emission", new Vector4 (((1 - boosterColor.r) / 2 + boosterColor.r), ((1 - boosterColor.g) / 2 + boosterColor.g), ((1 - boosterColor.b) / 2 + boosterColor.b), 1));
+		engineFlareMat.SetColor ("_TintColor", new Vector4 (boosterColor.r / 2, boosterColor.g / 2, boosterColor.b / 2, 0.5f));
 
 		artCount = artCountSaved;
 	}
 
 
-	void UpdateArtIcons() {
+	void UpdateArtIcons ()
+	{
 		if (gm.gamePhase < 2) {
 			artCount = artCountSaved;
-			a1.UV = new Vector2(((Mathf.Floor(artCount / 100)) * 16) + 464, a1.UV.y);	
-			a2.UV = new Vector2(((Mathf.Floor((artCount % 100) / 10)) * 16) + 464, a2.UV.y);
-			a3.UV = new Vector2(((artCount % 10) * 16) + 464, a3.UV.y);
+			a1.UV = new Vector2 (((Mathf.Floor (artCount / 100)) * 16) + 464, a1.UV.y);	
+			a2.UV = new Vector2 (((Mathf.Floor ((artCount % 100) / 10)) * 16) + 464, a2.UV.y);
+			a3.UV = new Vector2 (((artCount % 10) * 16) + 464, a3.UV.y);
 		} else {
-			a1.UV = new Vector2(448, a1.UV.y);
-			a2.UV = new Vector2(448, a2.UV.y);
-			a3.UV = new Vector2(448, a3.UV.y);
+			a1.UV = new Vector2 (448, a1.UV.y);
+			a2.UV = new Vector2 (448, a2.UV.y);
+			a3.UV = new Vector2 (448, a3.UV.y);
 		}	
 	}
 
 
-	IEnumerator adjustYV2() { // this is for panther
+	IEnumerator adjustYV2 ()
+	{ // this is for panther
 		float timer = 0.08f;
 		float startY = state.lv.y;
 		state.landing = true;
@@ -332,7 +340,7 @@ public class MoveShip : MonoBehaviour {
 			yield return null;
 		}
 		state.landing = false;
-		sub.localPosition = new Vector3(sub.localPosition.x, sub.localPosition.y, 0);
+		sub.localPosition = new Vector3 (sub.localPosition.x, sub.localPosition.y, 0);
 	}
 
 
@@ -788,96 +796,79 @@ public class MoveShip : MonoBehaviour {
 	//
 
 
-	void FixedUpdate() {
+	void FixedUpdate ()
+	{
 
-		guiUpdate();
+		guiUpdate ();
 		rbx = rb.velocity.x;
 		rby = rb.velocity.y;
 		rbz = rb.velocity.z;
 
         
-        if (!state.crashing && !state.winning)
-        {
-            if (gm.device == GameMaster.DeviceType.iPhone)
-            {
-                // inputs (merged from OldFixedUpdate)
-                if (state.started)
-                {
-                    //acceleration.x now used for side tilts in both landscape or portrait.
-                    //used to be -accerlation.y for side tilting when in landscape, and x when in portrait
-                    xf = Input.acceleration.x * accelerometerSensitivity; 
-                    brakes = false;
-                    yf = false;
-                }
-                if (!state.paused)
-                {
-                    for (int i = 0; i < Input.touchCount; ++i)
-                    {
-                        if (Input.GetTouch(i).position.x > Screen.width - (Screen.width / 4))
-                        {
-                            if (Input.GetTouch(i).phase == TouchPhase.Began || Input.GetTouch(i).phase != TouchPhase.Ended)
-                            {
-                                yf = true;
-                            }
-                            else
-                                yf = false;
-                            //if (jumpTouches == 0) yf = false;
-                        }
-                        else if (Input.GetTouch(i).position.x < Screen.width / 4)
-                        {
-                            if (Input.GetTouch(i).phase != TouchPhase.Ended)
-                            {
-                                brakes = true;
-                            }
-                            else
-                                brakes = false;
-                        }
-                    }
-                }
-            }
-            else
-            { // computer ctrls
-                //inputs (new)
-                yf = Input.GetButton("Fire1");
-                if (state.started)
-                {
-                    xf = Input.GetAxis("Horizontal");
-                    xfRaw = Input.GetAxisRaw("Horizontal");
-                }
-                if (!state.cruising)
-                {
-                    qf = Input.GetButton("jumpAhead");
-                    if (Input.GetAxisRaw("Vertical") > 0 || brakeOverride)
-                        brakes = false;
-                    else
-                        brakes = true;
-                } 
-            }
-            if (brakeOverride)
-                brakes = false;
-        }
+		if (!state.crashing && !state.winning) {
+			if (gm.device == GameMaster.DeviceType.iPhone) {
+				// inputs (merged from OldFixedUpdate)
+				if (state.started) {
+					//acceleration.x now used for side tilts in both landscape or portrait.
+					//used to be -accerlation.y for side tilting when in landscape, and x when in portrait
+					xf = Input.acceleration.x * accelerometerSensitivity; 
+					brakes = false;
+					yf = false;
+				}
+				if (!state.paused) {
+					for (int i = 0; i < Input.touchCount; ++i) {
+						if (Input.GetTouch (i).position.x > Screen.width - (Screen.width / 4)) {
+							if (Input.GetTouch (i).phase == TouchPhase.Began || Input.GetTouch (i).phase != TouchPhase.Ended) {
+								yf = true;
+							} else
+								yf = false;
+							//if (jumpTouches == 0) yf = false;
+						} else if (Input.GetTouch (i).position.x < Screen.width / 4) {
+							if (Input.GetTouch (i).phase != TouchPhase.Ended) {
+								brakes = true;
+							} else
+								brakes = false;
+						}
+					}
+				}
+			} else { // computer ctrls
+				//inputs (new)
+				yf = Input.GetButton ("Fire1");
+				if (state.started) {
+					xf = Input.GetAxis ("Horizontal");
+					xfRaw = Input.GetAxisRaw ("Horizontal");
+				}
+				if (!state.cruising) {
+					qf = Input.GetButton ("jumpAhead");
+					if (Input.GetAxisRaw ("Vertical") > 0 || brakeOverride)
+						brakes = false;
+					else
+						brakes = true;
+				} 
+			}
+			if (brakeOverride)
+				brakes = false;
+		}
 
-        //inputs (new)
-        if (!yf)
-        {
-            state.jbClear = true;
-        }
-        if (!qf)
-        {
-            qbClear = true;
-        }
-        if (qf && qbClear && !state.cruising)
-            resetRepoShip();
+		//inputs (new)
+		if (!yf) {
+			state.jbClear = true;
+		}
+		if (!qf) {
+			qbClear = true;
+		}
+		if (qf && qbClear && !state.cruising)
+			resetRepoShip ();
 
 
-        // velocity z
-        if (!state.stopDead) {
+		// velocity z
+		if (!state.stopDead) {
 			if (!state.cruising) {// && state.started) {
 				if (!brakes)
 					targetSpeed += ((maxZSpeed - targetSpeed + 20) / 2) * Time.deltaTime * 2;
 				else
 					targetSpeed -= ((targetSpeed + 50) / 4) * Time.deltaTime * 4;
-				targetSpeed = Mathf.Clamp(targetSpeed, minZSpeed, maxZSpeed);
+				targetSpeed = Mathf.Clamp (targetSpeed, minZSpeed, maxZSpeed);
 			}
 		}
 
@@ -887,7 +878,7 @@ public class MoveShip : MonoBehaviour {
 		if (!state.crashing && !state.winning) {
 			rbz = targetSpeed;
 		} else
-			rbz = Mathf.Lerp(rb.velocity.z, 0.0f, Time.deltaTime * 6);
+			rbz = Mathf.Lerp (rb.velocity.z, 0.0f, Time.deltaTime * 6);
 
 		zForce = rbz / maxZSpeed; //ratio for display?
 
@@ -899,19 +890,19 @@ public class MoveShip : MonoBehaviour {
 				xf = 0;
 				state.started = true;
 				//state.startedTime=Time.time;
-				speedUpX();
-				StartCoroutine(speedUpZ());
+				speedUpX ();
+				StartCoroutine (speedUpZ ());
 				if (sfx && engineAudio.activeSelf)
-					engineAudio.GetComponent<AudioSource>().Play();
+					engineAudio.GetComponent<AudioSource> ().Play ();
 			}
 		} else if (!state.crashing) {
-				state.elapsedTime += Time.deltaTime / gm.gameSpeed;
-			}
+			state.elapsedTime += Time.deltaTime / gm.gameSpeed;
+		}
 
 		if (!state.crashing && !state.cruising) {
 			// check gateways
 			if (transform.position.z > winDist && winDist > 0)
-				checkGates();
+				checkGates ();
 		}
 
 
@@ -930,21 +921,21 @@ public class MoveShip : MonoBehaviour {
 
 		// set side to side vel
 		if (!state.cruising)
-			rbx = Mathf.Lerp(rbx, xf * Xspeed, Time.deltaTime * state.handling);
+			rbx = Mathf.Lerp (rbx, xf * Xspeed, Time.deltaTime * state.handling);
 
 		// for tilting
-		xf2 = Mathf.Lerp(xf2, (xf * -20) - rbx, Time.deltaTime * 10);
+		xf2 = Mathf.Lerp (xf2, (xf * -20) - rbx, Time.deltaTime * 10);
 
 
 		// spacecraft tilt
-		float yPos = Mathf.Abs(rbx * 0.01f) + 0.8f;
+		float yPos = Mathf.Abs (rbx * 0.01f) + 0.4f;
 		float yRot = -xf2 * 0.5f;
 		float zRot = xf2;
 
 
 		// spacecraft pitch up down on jumps and fall 
 		if (state.jumps > 0) {
-			xRot = Mathf.Lerp(xRot, -1.5f * rby, Time.deltaTime * xRotSpeed);
+			xRot = Mathf.Lerp (xRot, -1.5f * rby, Time.deltaTime * xRotSpeed);
 		} else {
 			if (rby < -10) { // free fall over the edge / take away a jump 
 				if (gm.worldNum == 1)
@@ -959,8 +950,8 @@ public class MoveShip : MonoBehaviour {
 
 		// engine sound
 		if (sfx && state.started) {
-			engineAudio.GetComponent<AudioSource>().pitch = (targetSpeed / ultraMaxZSpeed + 0.2f) * 1.4f;
-			engineAudio.GetComponent<AudioSource>().volume = 1 - (Mathf.Abs(((targetSpeed / ultraMaxZSpeed) * 2) - 1.1f));
+			engineAudio.GetComponent<AudioSource> ().pitch = (targetSpeed / ultraMaxZSpeed + 0.2f) * 1.4f;
+			engineAudio.GetComponent<AudioSource> ().volume = 1 - (Mathf.Abs (((targetSpeed / ultraMaxZSpeed) * 2) - 1.1f));
 		}
 
 
@@ -968,21 +959,21 @@ public class MoveShip : MonoBehaviour {
 		if (yf && state.jbClear && !state.paused) {
 			if (state.jumps == 1) { // double jump
 				if (rc == 0) {
-					jump(2);
+					jump (2);
 					state.jumps = 2;
 				} else {
-					jump(2);
+					jump (2);
 					state.jumps = 1;
 				}
 			} else if (state.jumps == 0 && !state.cruising) { // jump
-					jump(1);
-					state.jumps = 1;
-				}
+				jump (1);
+				state.jumps = 1;
+			}
 		}
 
 		// store some vars from this update cycle for use in the next
 		if (state.grounded && deltaY > 0.01f && deltaY < 0.3f) {
-			rby = Mathf.Clamp(rby, -20.0f, 0.0f);
+			rby = Mathf.Clamp (rby, -20.0f, 0.0f);
 		}
 
 		if (state.landed) {
@@ -992,19 +983,19 @@ public class MoveShip : MonoBehaviour {
 		}
 
 		// assign forces and store
-		rb.velocity = new Vector3(rbx, rby, rbz);
+		rb.velocity = new Vector3 (rbx, rby, rbz);
 		state.lv = rb.velocity;
-		deltaY = Mathf.Abs(state.lastY - rb.position.y);
+		deltaY = Mathf.Abs (state.lastY - rb.position.y);
 		state.lastY = rb.position.y;
 
 		// rotate and place the sub
-		sub.eulerAngles = new Vector3(xRot, yRot, zRot);
-		sub.localPosition = new Vector3(0, yPos, 0);
+		sub.eulerAngles = new Vector3 (xRot, yRot, zRot);
+		sub.localPosition = new Vector3 (0, yPos, 0);
 
 
 		// fall off the bottom death
 		if (rb.position.y < -25.5f && !state.crashing)
-			crash(0);
+			crash (0);
 		
 
 		// cam goal height adjustment
@@ -1012,29 +1003,29 @@ public class MoveShip : MonoBehaviour {
 			if (splode.transform.position.y < cam.transform.position.y)
 				cam.goalHeight = splode.transform.position.y;	
 		} else if (state.winning) {
-				cam.goalHeight = warpPath.transform.position.y;	
-			} else if (!state.cruising) {
-					// cam goals
-					if (cam.goalHeight < transform.position.y - cam.sensitivity)
-						cam.goalHeight += 1.0f;
-					else if (cam.goalHeight > transform.position.y)
-							cam.goalHeight = transform.position.y;	
-				}
+			cam.goalHeight = warpPath.transform.position.y;	
+		} else if (!state.cruising) {
+			// cam goals
+			if (cam.goalHeight < transform.position.y - cam.sensitivity)
+				cam.goalHeight += 1.0f;
+			else if (cam.goalHeight > transform.position.y)
+				cam.goalHeight = transform.position.y;	
+		}
 
 		// pausing
 		if (!state.paused) {
 			if (gm.device == GameMaster.DeviceType.iPhone) {	
 				foreach (Touch touch in Input.touches) {  
 					if (touch.position.x > Screen.width / 4 && touch.position.x < Screen.width - (Screen.width / 4)) {   
-						if (Mathf.Abs(touch.deltaPosition.y) > 10) {
+						if (Mathf.Abs (touch.deltaPosition.y) > 10) {
 							//Application.LoadLevel(0);	
 
 							if (!state.paused && !state.cruising && !state.crashing) { 
 								Time.timeScale = 0; 
 								state.paused = true; 
-								gui.switchGUI("paused"); 
+								gui.switchGUI ("paused"); 
 								if (sfx && engineAudio.activeSelf)
-									engineAudio.GetComponent<AudioSource>().Stop(); 
+									engineAudio.GetComponent<AudioSource> ().Stop (); 
 								//gui.inputWait(.5); 
 							}
 							//	else { Time.timeScale=1.0; state.paused=false; paused=false; 
@@ -1043,13 +1034,13 @@ public class MoveShip : MonoBehaviour {
 					}
 				}
 			} else {
-				if (Input.GetButton("pause")) {
+				if (Input.GetButton ("pause")) {
 					if (!state.paused && !state.cruising && !state.crashing) { 
 						Time.timeScale = 0.0f; 
 						state.paused = true; 
-						gui.switchGUI("paused"); 
+						gui.switchGUI ("paused"); 
 						if (sfx && engineAudio.activeSelf)
-							engineAudio.GetComponent<AudioSource>().Stop();
+							engineAudio.GetComponent<AudioSource> ().Stop ();
 					}
 				}
 			}
@@ -1058,39 +1049,41 @@ public class MoveShip : MonoBehaviour {
 
 
 
-	IEnumerator vcfly() {
+	IEnumerator vcfly ()
+	{
 		float timer = 1.0f;
 		float oldZ = 0;
 		float goalZtemp = 0;
 
 		while (state.cruising) {
 			if (shipNum == 10)
-				anim.Play("fly");
+				anim.Play ("fly");
 			timer -= Time.deltaTime;
 			if (timer < 0) {
 				oldZ = goalZtemp;
 				do {
-					goalZtemp = oldZ + Random.Range(-8.0f, 8.0f);
+					goalZtemp = oldZ + Random.Range (-8.0f, 8.0f);
 				} while (goalZtemp < -12 || goalZtemp > 12);
-				timer = Random.Range(1.0f, 3.5f) * (Mathf.Abs(oldZ - goalZtemp) / 8);
+				timer = Random.Range (1.0f, 3.5f) * (Mathf.Abs (oldZ - goalZtemp) / 8);
 				//print("diff: "+Mathf.Abs(oldZ-goalZtemp)+" +time: "+timer);
 			}
-			rb.rotation = Quaternion.Slerp(rb.rotation, Quaternion.Euler(0, 0, goalZtemp), Time.deltaTime * 2);
-			rb.position = new Vector3(rb.position.x, Random.Range(2.995f, 3.005f), rb.position.z);
+			rb.rotation = Quaternion.Slerp (rb.rotation, Quaternion.Euler (0, 0, goalZtemp), Time.deltaTime * 2);
+			rb.position = new Vector3 (rb.position.x, Random.Range (2.995f, 3.005f), rb.position.z);
 			//anim2.transform.position.y=Random.Range(2.99, 3.01);
 
 			yield return null;		
 		}
 	}
 
-	void guiUpdate() {
+	void guiUpdate ()
+	{
 
 		if (!state.stopDead)
 			brakeValue = -0.5f * (state.lv.z / ultraMaxZSpeed);
 		else
 			brakeValue = 0;
 
-		speedbarMat.mainTextureOffset = new Vector2(speedbarMat.mainTextureOffset.x, Mathf.Lerp(speedbarMat.mainTextureOffset.y, brakeValue, Time.deltaTime * 15));
+		speedbarMat.mainTextureOffset = new Vector2 (speedbarMat.mainTextureOffset.x, Mathf.Lerp (speedbarMat.mainTextureOffset.y, brakeValue, Time.deltaTime * 15));
 
 		jumpValueTar = state.jumps * 0.25f;
 
@@ -1102,38 +1095,40 @@ public class MoveShip : MonoBehaviour {
 				jumpValue -= Time.deltaTime * 2;
 			}
 			if (jumpValueTar == 0)
-				jumpValue = Mathf.Clamp(jumpValue, 0, 0.2f);
+				jumpValue = Mathf.Clamp (jumpValue, 0, 0.2f);
 			else if (jumpValueTar == 0.25f)
-					jumpValue = Mathf.Clamp(jumpValue, 0, 0.25f);
-				else if (jumpValueTar == 0.5f)
-						jumpValue = Mathf.Clamp(jumpValue, 0.3f, 0.5f);
+				jumpValue = Mathf.Clamp (jumpValue, 0, 0.25f);
+			else if (jumpValueTar == 0.5f)
+				jumpValue = Mathf.Clamp (jumpValue, 0.3f, 0.5f);
 		}
 		//print(jumpValue);
-		jumpBarMat.mainTextureOffset = new Vector2(jumpBarMat.mainTextureOffset.x, jumpValue);	
+		jumpBarMat.mainTextureOffset = new Vector2 (jumpBarMat.mainTextureOffset.x, jumpValue);	
 		//progBar.transform.localScale.x = Mathf.Clamp(state.progress/winDist,0,1);
 	}
 
-	void level10off() {
-		topSurface.GetComponent<Animation>().Play("10_off");	
-		sideSurface.GetComponent<Animation>().Play("10_off");	
-		frontSurface.GetComponent<Animation>().Play("10_off");
+	void level10off ()
+	{
+		topSurface.GetComponent<Animation> ().Play ("10_off");	
+		sideSurface.GetComponent<Animation> ().Play ("10_off");	
+		frontSurface.GetComponent<Animation> ().Play ("10_off");
 		//shipLight10s.animation.Play("10_light_off");
 	}
 
-	void jump(int which) {
+	void jump (int which)
+	{
 		state.jbClear = false;
 		state.grounded = false;
 		state.landing = false;
 		state.handling = airHandling;
 
-		rb.position += new Vector3(0f, 0.4f, 0f);
+		rb.position += new Vector3 (0f, 0.4f, 0f);
 
 
 		jumpMult = 1.04f;
 		rby = jumpforce * jumpMult;
 
 		if (which > 0 && which <= 2) {
-			jumpCards(which, Time.time);
+			jumpCards (which, Time.time);
 		}
 		state.jumpTimer = 0.06f;
 	}
@@ -1254,74 +1249,80 @@ public class MoveShip : MonoBehaviour {
 	//
 	//	}
 
-	void jumpCards(int which, float startTime) { // which 2 means mirror the card in x
+	void jumpCards (int which, float startTime)
+	{ // which 2 means mirror the card in x
 		if (which == 2)
-			airBurstScript.transform.localScale = new Vector3(airBurstScript.transform.localScale.x * -1, airBurstScript.transform.localScale.y, airBurstScript.transform.localScale.z);
-		airBurstScript.CardGo();
+			airBurstScript.transform.localScale = new Vector3 (airBurstScript.transform.localScale.x * -1, airBurstScript.transform.localScale.y, airBurstScript.transform.localScale.z);
+		airBurstScript.CardGo ();
 		//print("ship y = "+shipObj.transform.position.y);
 		airBurstScript2.yPos = shipObj.transform.position.y;
 	}
 
-	void winCards(Vector3 pos) { // makes cam flare and path after win gate
+	void winCards (Vector3 pos)
+	{ // makes cam flare and path after win gate
 
-		elecBurst[0].transform.position = pos;	
-		elecBurst[1].transform.position = rb.position;
+		elecBurst [0].transform.position = pos;	
+		elecBurst [1].transform.position = rb.position;
 
-		warpPath.transform.position = rb.position - new Vector3(0, 0, 5);
-		warpPathAniObj.GetComponent<Animation>().Play("warpPath");
+		warpPath.transform.position = rb.position - new Vector3 (0, 0, 5);
+		warpPathAniObj.GetComponent<Animation> ().Play ("warpPath");
 
 		for (int i = 0; i < 2; i++) {
-			elecBurstScript[i].CardGo();
+			elecBurstScript [i].CardGo ();
 		}
 
 	}
 
 
 
-	IEnumerator ArtiBurst(Vector3 pos) { // makes cam flare when artifact is collected
+	IEnumerator ArtiBurst (Vector3 pos)
+	{ // makes cam flare when artifact is collected
 		if (sfx)
-			GetComponent<AudioSource>().PlayOneShot(sound.artSound);
+			GetComponent<AudioSource> ().PlayOneShot (sound.artSound);
 		artBurst.transform.position = pos;
 		artBurst.transform.parent = camTrans;
-		artBurstScript.CardGo();
-		yield return new WaitForSeconds(1f);
+		artBurstScript.CardGo ();
+		yield return new WaitForSeconds (1f);
 
 		artBurst.transform.parent = null;
-		artBurst.transform.position = new Vector3(0, 0, -100);
+		artBurst.transform.position = new Vector3 (0, 0, -100);
 
 	}
 
 
-	void OnCollisionEnter(Collision collision) {
+	void OnCollisionEnter (Collision collision)
+	{
 		if (collision.gameObject.tag == "Kill" && !state.crashing) {
-			crash(0);
+			crash (0);
 			return;
 		}
 		if (!state.grounded) {
 			if (state.lv.y < -1) { // used to be state.lv.y
 //				print(collision.gameObject.name);
 //				print("vel y: " + state.lv.y + "    enter..");
-				checkLanding();
+				checkLanding ();
 			}
 		}
 	}
 
-	void OnCollisionStay() {
+	void OnCollisionStay ()
+	{
 		if (!state.grounded) {
 			if (rb.velocity.y < -1)
-				checkLanding(); 
+				checkLanding (); 
 		}
 	}
 
 
-	string checkSides() {
-		int cc = raycheckSide(0);	
+	string checkSides ()
+	{
+		int cc = raycheckSide (0);	
 		if (cc > 0) {
 			state.jumps = 0;
 			//state.contactTimerL=10;
 			return "left";
 		}
-		cc = raycheckSide(1);
+		cc = raycheckSide (1);
 		if (cc > 0) {
 			state.jumps = 0;
 			return "right";
@@ -1331,21 +1332,22 @@ public class MoveShip : MonoBehaviour {
 	}
 
 
-	public void checkLanding() {
+	public void checkLanding ()
+	{
 
-		cc = raycheckDown(1);	
+		cc = raycheckDown (1);	
 		if (cc > 0 || fakeCC == true) {
 			state.fJumping = false;
 			state.jumps = 0;
 			state.landed = true;
 			state.grounded = true;
-			airBurstScript.CardStop();
+			airBurstScript.CardStop ();
 			state.handling = defaultHandling;
 			//playSound("land");
 
 			if (shipNum != 10) {
-				anim.Play("hop2");
-				anim.PlayQueued("idle");
+				anim.Play ("hop2");
+				anim.PlayQueued ("idle");
 				xRot = 0;
 //				sub.localEulerAngles = new Vector3(0, sub.localEulerAngles.y, sub.localEulerAngles.z);
 			} else {
@@ -1353,11 +1355,11 @@ public class MoveShip : MonoBehaviour {
 					maxZSpeed = defPantherMaxZ;
 				jumpMult = 1.0f;
 				// print("start landing");
-				StartCoroutine(adjustYV2());
-				anim.Stop();
-				anim.Rewind("run");
-				anim.Play("land");
-				anim.PlayQueued("run");
+				StartCoroutine (adjustYV2 ());
+				anim.Stop ();
+				anim.Rewind ("run");
+				anim.Play ("land");
+				anim.PlayQueued ("run");
 			}
 
 //			rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
@@ -1366,29 +1368,31 @@ public class MoveShip : MonoBehaviour {
 				cam.goalHeight = state.lastY;
 		}
 		if (gm.worldNum == 1)
-			if (state.grounded == true)
+		if (state.grounded == true)
 				//level10on();
 		cc = 0;
 		fakeCC = false;
 	}
 
-	void level10on() {
-		topSurface.GetComponent<Animation>().Play("10_on");	
-		sideSurface.GetComponent<Animation>().Play("10_on");	
-		frontSurface.GetComponent<Animation>().Play("10_on");
+	void level10on ()
+	{
+		topSurface.GetComponent<Animation> ().Play ("10_on");	
+		sideSurface.GetComponent<Animation> ().Play ("10_on");	
+		frontSurface.GetComponent<Animation> ().Play ("10_on");
 		//shipLight10s.animation.Play("10_light_on");
 //		yield WaitForSeconds(.3);
-		if (!topSurface.GetComponent<Animation>().isPlaying)
-			topSurface.GetComponent<Animation>().Play("10_idle");	
-		if (!sideSurface.GetComponent<Animation>().isPlaying)
-			sideSurface.GetComponent<Animation>().Play("10_idle");	
-		if (!frontSurface.GetComponent<Animation>().isPlaying)
-			frontSurface.GetComponent<Animation>().Play("10_idle");
+		if (!topSurface.GetComponent<Animation> ().isPlaying)
+			topSurface.GetComponent<Animation> ().Play ("10_idle");	
+		if (!sideSurface.GetComponent<Animation> ().isPlaying)
+			sideSurface.GetComponent<Animation> ().Play ("10_idle");	
+		if (!frontSurface.GetComponent<Animation> ().isPlaying)
+			frontSurface.GetComponent<Animation> ().Play ("10_idle");
 		//if(!shipLight10s.animation.isPlaying)shipLight10s.animation.Play("10_light_idle");
 	}
 
 
-	void OnTriggerEnter(Collider collision) {
+	void OnTriggerEnter (Collider collision)
+	{
 		Transform ct = collision.transform;
 
 		if (ct.name == "camDropBox")
@@ -1396,43 +1400,45 @@ public class MoveShip : MonoBehaviour {
 		if (ct.name == "camDropBox2")
 			state.tunnel2 = true;
 		if (ct.tag == "artifact" && ct.position.z > 0) { // >0 necessary to stop double collisions and therefore playing the second at -100, for some reason
-			print(ct.name);
+			print (ct.name);
 			// set off burst
-			StartCoroutine(ArtiBurst(ct.position));
-			ct.position = new Vector3(ct.position.x, ct.position.y, -100); // "disappear" the artifact out of the way
+			StartCoroutine (ArtiBurst (ct.position));
+			ct.position = new Vector3 (ct.position.x, ct.position.y, -100); // "disappear" the artifact out of the way
 			// update guis
 			if (ct.name == "artifact1") {
 				if (gui.a1state == 0)
 					artCount += 100;
 				gui.a1state = 1;
-				a1.UV = new Vector2(480, 0);
+				a1.UV = new Vector2 (480, 0);
 			} else if (ct.name == "artifact2") {
-					if (gui.a2state == 0)
-						artCount += 10;
-					gui.a2state = 1;
-					a2.UV = new Vector2(480, 0);
-				} else if (ct.name == "artifact3") {
-						if (gui.a3state == 0)
-							artCount += 1;
-						gui.a3state = 1;
-						a3.UV = new Vector2(480, 0);
-					} else if (ct.name == "artifact0") { // special for tutorial
-							gui.a1state++;
-						}
+				if (gui.a2state == 0)
+					artCount += 10;
+				gui.a2state = 1;
+				a2.UV = new Vector2 (480, 0);
+			} else if (ct.name == "artifact3") {
+				if (gui.a3state == 0)
+					artCount += 1;
+				gui.a3state = 1;
+				a3.UV = new Vector2 (480, 0);
+			} else if (ct.name == "artifact0") { // special for tutorial
+				gui.a1state++;
+			}
 		}
 	}
 
-	void OnTriggerExit(Collider collision) {
+	void OnTriggerExit (Collider collision)
+	{
 		Transform ct = collision.transform;
 		if (!state.crashing) {
 			if (ct.name == "camDropBox")
 				state.tunnel = false;
 			else if (ct.name == "camDropBox2")
-					state.tunnel2 = false;
+				state.tunnel2 = false;
 		}
 	}
 
-	int raycheckDown(int which) {
+	int raycheckDown (int which)
+	{
 		RaycastHit hit;
 		float xRad = 0.9f;
 		float zRad = 0.8f;
@@ -1442,24 +1448,24 @@ public class MoveShip : MonoBehaviour {
 			rayDist = 1.2f;
 		Vector3 pos = transform.position;
 		int count = 0;
-		Debug.DrawRay(new Vector3(pos.x + xRad, pos.y + yRad, pos.z + zRad), -Vector3.up * (rayDist), Color.green);
-		Debug.DrawRay(new Vector3(pos.x - xRad, pos.y + yRad, pos.z + zRad), -Vector3.up * (rayDist), Color.green);
-		Debug.DrawRay(new Vector3(pos.x + xRad, pos.y + yRad, pos.z - zRad), -Vector3.up * (rayDist), Color.green);
-		Debug.DrawRay(new Vector3(pos.x - xRad, pos.y + yRad, pos.z - zRad), -Vector3.up * (rayDist), Color.green);
+		Debug.DrawRay (new Vector3 (pos.x + xRad, pos.y + yRad, pos.z + zRad), -Vector3.up * (rayDist), Color.green);
+		Debug.DrawRay (new Vector3 (pos.x - xRad, pos.y + yRad, pos.z + zRad), -Vector3.up * (rayDist), Color.green);
+		Debug.DrawRay (new Vector3 (pos.x + xRad, pos.y + yRad, pos.z - zRad), -Vector3.up * (rayDist), Color.green);
+		Debug.DrawRay (new Vector3 (pos.x - xRad, pos.y + yRad, pos.z - zRad), -Vector3.up * (rayDist), Color.green);
 		//cast 4 down
-		if (Physics.Raycast(new Vector3(pos.x + xRad, pos.y + yRad, pos.z + zRad), -Vector3.up, out hit, rayDist))
-			if (hit.collider.tag != "Kill")
-				count++;
-		if (Physics.Raycast(new Vector3(pos.x - xRad, pos.y + yRad, pos.z + zRad), -Vector3.up, out hit, rayDist))
-			if (hit.collider.tag != "Kill")
-				count++;
-		if (Physics.Raycast(new Vector3(pos.x + xRad, pos.y + yRad, pos.z - zRad), -Vector3.up, out hit, rayDist))
-			if (hit.collider.tag != "Kill")
-				count++;
-		if (Physics.Raycast(new Vector3(pos.x - xRad, pos.y + yRad, pos.z - zRad), -Vector3.up, out hit, rayDist))
-			if (hit.collider.tag != "Kill")
-				count++;
-        //World 1 Ground Flicker
+		if (Physics.Raycast (new Vector3 (pos.x + xRad, pos.y + yRad, pos.z + zRad), -Vector3.up, out hit, rayDist))
+		if (hit.collider.tag != "Kill")
+			count++;
+		if (Physics.Raycast (new Vector3 (pos.x - xRad, pos.y + yRad, pos.z + zRad), -Vector3.up, out hit, rayDist))
+		if (hit.collider.tag != "Kill")
+			count++;
+		if (Physics.Raycast (new Vector3 (pos.x + xRad, pos.y + yRad, pos.z - zRad), -Vector3.up, out hit, rayDist))
+		if (hit.collider.tag != "Kill")
+			count++;
+		if (Physics.Raycast (new Vector3 (pos.x - xRad, pos.y + yRad, pos.z - zRad), -Vector3.up, out hit, rayDist))
+		if (hit.collider.tag != "Kill")
+			count++;
+		//World 1 Ground Flicker
 		//if (gm.worldNum == 1)
 		//	if (count > 0)
 		//		level10on();
@@ -1467,7 +1473,8 @@ public class MoveShip : MonoBehaviour {
 		return count;
 	}
 
-	int raycheckSide(int which) { // 0 = left check.  1 = right check
+	int raycheckSide (int which)
+	{ // 0 = left check.  1 = right check
 		RaycastHit hit;
 		float zRad = 1.0f;
 		float yH = 0.5f;
@@ -1475,26 +1482,27 @@ public class MoveShip : MonoBehaviour {
 		Vector3 pos = transform.position;
 		int count = 0;
 		if (which == 0) { // left
-			Debug.DrawRay(new Vector3(pos.x, pos.y + yH, pos.z + zRad), -Vector3.right * (rayDist), Color.green);
-			Debug.DrawRay(new Vector3(pos.x, pos.y + yH, pos.z - zRad), -Vector3.right * (rayDist), Color.green);
-			if (Physics.Raycast(new Vector3(pos.x, pos.y + yH, pos.z + zRad), -Vector3.right, out hit, rayDist))
+			Debug.DrawRay (new Vector3 (pos.x, pos.y + yH, pos.z + zRad), -Vector3.right * (rayDist), Color.green);
+			Debug.DrawRay (new Vector3 (pos.x, pos.y + yH, pos.z - zRad), -Vector3.right * (rayDist), Color.green);
+			if (Physics.Raycast (new Vector3 (pos.x, pos.y + yH, pos.z + zRad), -Vector3.right, out hit, rayDist))
 				count++;
-			if (Physics.Raycast(new Vector3(pos.x, pos.y + yH, pos.z - zRad), -Vector3.right, out hit, rayDist))
+			if (Physics.Raycast (new Vector3 (pos.x, pos.y + yH, pos.z - zRad), -Vector3.right, out hit, rayDist))
 				count++;
 		} else if (which == 1) { // right
-				Debug.DrawRay(new Vector3(pos.x, pos.y + yH, pos.z + zRad), Vector3.right * (rayDist), Color.green);
-				Debug.DrawRay(new Vector3(pos.x, pos.y + yH, pos.z - zRad), Vector3.right * (rayDist), Color.green);
-				if (Physics.Raycast(new Vector3(pos.x, pos.y + yH, pos.z + zRad), Vector3.right, out hit, rayDist))
-					count++;
-				if (Physics.Raycast(new Vector3(pos.x, pos.y + yH, pos.z - zRad), Vector3.right, out hit, rayDist))
-					count++;
-			}
+			Debug.DrawRay (new Vector3 (pos.x, pos.y + yH, pos.z + zRad), Vector3.right * (rayDist), Color.green);
+			Debug.DrawRay (new Vector3 (pos.x, pos.y + yH, pos.z - zRad), Vector3.right * (rayDist), Color.green);
+			if (Physics.Raycast (new Vector3 (pos.x, pos.y + yH, pos.z + zRad), Vector3.right, out hit, rayDist))
+				count++;
+			if (Physics.Raycast (new Vector3 (pos.x, pos.y + yH, pos.z - zRad), Vector3.right, out hit, rayDist))
+				count++;
+		}
 
 		return count;
 	}
 
 
-	int raycheckFront() {
+	int raycheckFront ()
+	{
 		RaycastHit hit;
 		float xRad = 0.9f;
 		float zRad = 0.5f;
@@ -1502,25 +1510,26 @@ public class MoveShip : MonoBehaviour {
 		float rayDist = 4.0f;
 		Vector3 pos = transform.position;
 		int count = 0;
-		Debug.DrawRay(new Vector3(pos.x + xRad, pos.y + 0.5f, pos.z + zRad), Vector3.forward * (rayDist), Color.green);
-		Debug.DrawRay(new Vector3(pos.x - xRad, pos.y + 0.5f, pos.z + zRad), Vector3.forward * (rayDist), Color.green);
-		Debug.DrawRay(new Vector3(pos.x + xRad, pos.y + yRad, pos.z + zRad), Vector3.forward * (rayDist), Color.green);
-		Debug.DrawRay(new Vector3(pos.x - xRad, pos.y + yRad, pos.z + zRad), Vector3.forward * (rayDist), Color.green);
+		Debug.DrawRay (new Vector3 (pos.x + xRad, pos.y + 0.5f, pos.z + zRad), Vector3.forward * (rayDist), Color.green);
+		Debug.DrawRay (new Vector3 (pos.x - xRad, pos.y + 0.5f, pos.z + zRad), Vector3.forward * (rayDist), Color.green);
+		Debug.DrawRay (new Vector3 (pos.x + xRad, pos.y + yRad, pos.z + zRad), Vector3.forward * (rayDist), Color.green);
+		Debug.DrawRay (new Vector3 (pos.x - xRad, pos.y + yRad, pos.z + zRad), Vector3.forward * (rayDist), Color.green);
 		//cast 4 down
-		if (Physics.Raycast(new Vector3(pos.x + xRad, pos.y + 0.5f, pos.z + zRad), Vector3.forward, out hit, rayDist))
+		if (Physics.Raycast (new Vector3 (pos.x + xRad, pos.y + 0.5f, pos.z + zRad), Vector3.forward, out hit, rayDist))
 			count++;
-		if (Physics.Raycast(new Vector3(pos.x - xRad, pos.y + 0.5f, pos.z + zRad), Vector3.forward, out hit, rayDist))
+		if (Physics.Raycast (new Vector3 (pos.x - xRad, pos.y + 0.5f, pos.z + zRad), Vector3.forward, out hit, rayDist))
 			count++;
-		if (Physics.Raycast(new Vector3(pos.x + xRad, pos.y + yRad, pos.z + zRad), Vector3.forward, out hit, rayDist))
+		if (Physics.Raycast (new Vector3 (pos.x + xRad, pos.y + yRad, pos.z + zRad), Vector3.forward, out hit, rayDist))
 			count++;
-		if (Physics.Raycast(new Vector3(pos.x - xRad, pos.y + yRad, pos.z + zRad), Vector3.forward, out hit, rayDist))
+		if (Physics.Raycast (new Vector3 (pos.x - xRad, pos.y + yRad, pos.z + zRad), Vector3.forward, out hit, rayDist))
 			count++;
-		if (Physics.Raycast(new Vector3(pos.x, pos.y + 1, pos.z + zRad), Vector3.forward, out hit, rayDist))
+		if (Physics.Raycast (new Vector3 (pos.x, pos.y + 1, pos.z + zRad), Vector3.forward, out hit, rayDist))
 			count++;
 		return count;
 	}
 
-	public void crash(int type) { //type: 0=wall hit, 1=falling death (no sound or splode or wait)
+	public void crash (int type)
+	{ //type: 0=wall hit, 1=falling death (no sound or splode or wait)
 		float secs = 0.0f;
 		shad.enabled = false;
 		state.crashing = true;	
@@ -1538,38 +1547,39 @@ public class MoveShip : MonoBehaviour {
 			splode.transform.position = rb.position;
 			//		splodeParticles.GetComponent.<ParticleEmitter>().emit = true;
 			splodeScript.lookAtCam = true;
-			splodeScript.CardGo();
+			splodeScript.CardGo ();
 			secs = 1.55f;
 		}
 		levelAttempts++;
 		Vector3 posStore = rb.position;
-		rb.position = new Vector3(0, 0, 1000);
+		rb.position = new Vector3 (0, 0, 1000);
 		// rigidbody.position.z-=10;
 		rb.velocity = Vector3.zero;
 //		yield WaitForSeconds(0.2);
 		explosionMark.transform.position = posStore; 
-		Transform exploSub = explosionMark.transform.Find("shadowProjectorExplosion");
-		exploSub.localEulerAngles = new Vector3(0, 0, Random.Range(0, 360));
+		Transform exploSub = explosionMark.transform.Find ("shadowProjectorExplosion");
+		exploSub.localEulerAngles = new Vector3 (0, 0, Random.Range (0, 360));
 //		yield WaitForSeconds(secs);
-		reset(0);
+		reset (0);
 	}
 
-	void win() {
+	void win ()
+	{
 		//artCount=(gui.a1state*100)+(gui.a2state*10)+gui.a3state;
 		bool ultimateWin = false;
-		PlayerPrefs.SetInt("Level" + level + "ArtCount", artCount);
+		PlayerPrefs.SetInt ("Level" + level + "ArtCount", artCount);
 
 		if (shipNum == 10) {
 			if (gm.pantherFlagScript.on == 1) {
-				PlayerPrefs.SetInt(("Level" + level + "PantherFlag"), 1);
-				print("panther woooooo");	
+				PlayerPrefs.SetInt (("Level" + level + "PantherFlag"), 1);
+				print ("panther woooooo");	
 			}
 		}
 		//curTime = state.elapsedTime;
 		//	print("current time: "+curTime);
 		//	print("record time: "+PlayerPrefs.GetFloat("Level"+level+"Time", 60.00));
 		//	print("artifact: "+artCount);
-		if (gm.saveTime(gui.curTime))
+		if (gm.saveTime (gui.curTime))
 			newRecord = true; // savetime here. Like panthers and artifacts, must set player prefs before deciding whether to victory cruise or outro
 		else
 			newRecord = false;
@@ -1578,73 +1588,73 @@ public class MoveShip : MonoBehaviour {
 		cam.mode = MoveCam.Mode.Stop;
 		state.winning = true;
 		if (sfx && engineAudio.activeSelf)
-			engineAudio.GetComponent<AudioSource>().Stop();
+			engineAudio.GetComponent<AudioSource> ().Stop ();
 		minZSpeed = 0;
 		targetSpeed = 0;
 		xf = 0;
 		cam.goalZ = warpPath.transform.position.z + 7;
 
-		rb.position = new Vector3(0, 0, 1000);
+		rb.position = new Vector3 (0, 0, 1000);
 //		yield WaitForSeconds(2.5);
-		gui.camBlack("down");
+		gui.camBlack ("down");
 //		yield WaitForSeconds(blackerPause);
 
 		// ultimate win conditions
 		if (gm.gamePhase < 2) { // <2 means Safe for the unlikely eventuality that someone beats the last level and gets the last artifact on the same run!
 			// nested ifs so it doesn't run count___ for everything, every time
-			if (gm.countArtifacts() == 180) {
+			if (gm.countArtifacts () == 180) {
 				ultimateWin = true;
-				PlayerPrefs.SetInt("GamePhase", 2);
+				PlayerPrefs.SetInt ("GamePhase", 2);
 				gm.gamePhase = 2;
-				PlayerPrefs.SetInt("ShipNum", 10);
-				PlayerPrefs.SetInt("Level", 61);
-				PlayerPrefs.SetInt("TutorialState", 2);
-				PlayerPrefs.SetInt("CinemaState", 4);
-				PlayerPrefs.SetInt("Quit", 1);
+				PlayerPrefs.SetInt ("ShipNum", 10);
+				PlayerPrefs.SetInt ("Level", 61);
+				PlayerPrefs.SetInt ("TutorialState", 2);
+				PlayerPrefs.SetInt ("CinemaState", 4);
+				PlayerPrefs.SetInt ("Quit", 1);
 				// print("goto Outro 2");	
-				Application.LoadLevel(4);
+				Application.LoadLevel (4);
 			} 
 			if (gm.gamePhase == 0) {
 				//print("Levels beaten: "+gm.countLevels());
-				if (gm.countLevels() == 60) {
+				if (gm.countLevels () == 60) {
 					ultimateWin = true;
-					PlayerPrefs.SetInt("GamePhase", 1);
-					PlayerPrefs.SetInt("MaxLevel", 59);
+					PlayerPrefs.SetInt ("GamePhase", 1);
+					PlayerPrefs.SetInt ("MaxLevel", 59);
 					gm.gamePhase = 1;
-					PlayerPrefs.SetInt("CinemaState", 3);
-					PlayerPrefs.SetInt("Quit", 1);
+					PlayerPrefs.SetInt ("CinemaState", 3);
+					PlayerPrefs.SetInt ("Quit", 1);
 					//print("goto Outro 1");
-					Application.LoadLevel(3);
+					Application.LoadLevel (3);
 				}
 			}
 		} else if (gm.gamePhase == 2) { 
-				if (gm.countPanthers() == 60) {
-					ultimateWin = true;
-					PlayerPrefs.SetInt("GamePhase", 3);
-					PlayerPrefs.SetInt("CinemaState", 5);
-					gm.gamePhase = 3; // no longer counting panthers
-					PlayerPrefs.SetInt("Quit", 1);
-					Application.LoadLevel(6);
-				}
+			if (gm.countPanthers () == 60) {
+				ultimateWin = true;
+				PlayerPrefs.SetInt ("GamePhase", 3);
+				PlayerPrefs.SetInt ("CinemaState", 5);
+				gm.gamePhase = 3; // no longer counting panthers
+				PlayerPrefs.SetInt ("Quit", 1);
+				Application.LoadLevel (6);
 			}
+		}
 		// else {
 		if (!ultimateWin) {
 			if (level < 60)
-				victoryCruise();
+				victoryCruise ();
 
 			if (level >= 60 && level <= 61) {	
-				if (PlayerPrefs.GetInt("FromLS", 0) == 1) {
-					PlayerPrefs.SetInt("Quit", 2);
-					Application.LoadLevel(0);
+				if (PlayerPrefs.GetInt ("FromLS", 0) == 1) {
+					PlayerPrefs.SetInt ("Quit", 2);
+					Application.LoadLevel (0);
 				} else {
 					if (level == 60) {
 						//gm.level=0;
-						PlayerPrefs.SetInt("Level", 0);
-						Application.LoadLevel(1);	
+						PlayerPrefs.SetInt ("Level", 0);
+						Application.LoadLevel (1);	
 					}
 					if (level == 61) {
-						PlayerPrefs.SetInt("Quit", 2);
-						Application.LoadLevel(0);
+						PlayerPrefs.SetInt ("Quit", 2);
+						Application.LoadLevel (0);
 					}
 				}
 			}	
@@ -1652,72 +1662,75 @@ public class MoveShip : MonoBehaviour {
 	}
 
 
-	void victoryCruise() {
+	void victoryCruise ()
+	{
 		Time.timeScale = 1;
-		disableGUI();
-		System.GC.Collect();
-		gui.updateVC();
-		gui.switchGUI("victoryCruise");
+		disableGUI ();
+		System.GC.Collect ();
+		gui.updateVC ();
+		gui.switchGUI ("victoryCruise");
 		RenderSettings.fogStartDistance = 10;
 		RenderSettings.fogEndDistance = 300;
 		//playSound("vc");
-		anim.Stop();
+		anim.Stop ();
 		state.winning = false;
 		state.cruising = true;
 		state.crashing = false;
 		state.jumps = 2;
-		StartCoroutine(vcfly());
+		StartCoroutine (vcfly ());
 		cam.goalHeight = 0;
 		if (newRecord)
 			cam.newRecordCheck = true;
 
-		gm.incrementLevel();
-		gm.bgScript.killBackground();
-		gm.killLevel();
-		anim2.Play("winCruise1");	
-		repoShip();	
+		gm.incrementLevel ();
+		gm.bgScript.killBackground ();
+		gm.killLevel ();
+		anim2.Play ("winCruise1");	
+		repoShip ();	
 
-		cam.switchTo(MoveCam.Mode.Win);
+		cam.switchTo (MoveCam.Mode.Win);
 		gui.message = "none";
-		explosionMark.transform.position = new Vector3(0, 0, -50);
+		explosionMark.transform.position = new Vector3 (0, 0, -50);
 
 		targetSpeed = 0;
 		//make star streaks
-		warpTubeObj = Instantiate(warpTubePF, Vector3.zero, Quaternion.identity) as Transform;
+		warpTubeObj = Instantiate (warpTubePF, Vector3.zero, Quaternion.identity) as Transform;
 		// make star lights
 		for (int i = 1; i <= 20; i++) {
-			shipWarpRefl[i] = Resources.Load<Texture2D>("ship/world" + gm.worldNum + "_warpRefl/world" + gm.worldNum + "_warpRefl_" + i);
+			shipWarpRefl [i] = Resources.Load<Texture2D> ("ship/world" + gm.worldNum + "_warpRefl/world" + gm.worldNum + "_warpRefl_" + i);
 		}
-		InvokeRepeating("ReflectWarpTube", 0, 0.04f);
-		gui.resetVC();
+		InvokeRepeating ("ReflectWarpTube", 0, 0.04f);
+		gui.resetVC ();
 
-		gui.camBlack("up");
-		gui.playAnim(1.9f);
+		gui.camBlack ("up");
+		gui.playAnim (1.9f);
 	}
 
 
-	void ReflectWarpTube() {
-		shipMat.SetTexture("_Shad", shipWarpRefl[f]);
+	void ReflectWarpTube ()
+	{
+		shipMat.SetTexture ("_Shad", shipWarpRefl [f]);
 		f++;
 		if (f > 20)
 			f = 1;
 	}
 
 
-	void enableGUI() {
+	void enableGUI ()
+	{
 		if (gui.state == "play" && level < 60) {
 			for (int i = 0; i < guiObjs.Length; i++) {
-				guiObjs[i].Enabled = true;
-				guiObjs[i].Visible = true;
+				guiObjs [i].Enabled = true;
+				guiObjs [i].Visible = true;
 			}
 		} else {
 			for (int i = 0; i < guiObjs.Length; i++) {
-				if (guiObjs[i].name == "Brake" || guiObjs[i].name == "Jump") {
-					guiObjs[i].Enabled = true;
-					guiObjs[i].Visible = true;
+				if (guiObjs [i].name == "Brake" || guiObjs [i].name == "Jump") {
+					guiObjs [i].Enabled = true;
+					guiObjs [i].Visible = true;
 				} else {
-					guiObjs[i].Enabled = false;
-					guiObjs[i].Visible = false;
+					guiObjs [i].Enabled = false;
+					guiObjs [i].Visible = false;
 				}
 			}
 		}
@@ -1725,18 +1738,20 @@ public class MoveShip : MonoBehaviour {
 
 	}
 
-	void disableGUI() {
+	void disableGUI ()
+	{
 		for (int i = 0; i < guiObjs.Length; i++) {
-			guiObjs[i].Enabled = false;
-			guiObjs[i].Visible = false;
+			guiObjs [i].Enabled = false;
+			guiObjs [i].Visible = false;
 		}
 		guiCam.enabled = false;
 
 	}
 
-	void titleScreen() {
-		disableGUI();
-		musicSourceScript.StopTrack();
+	void titleScreen ()
+	{
+		disableGUI ();
+		musicSourceScript.StopTrack ();
 		if (gm.worldNum != 1) {
 			RenderSettings.fogStartDistance = 110;
 			RenderSettings.fogEndDistance = 190;
@@ -1749,80 +1764,86 @@ public class MoveShip : MonoBehaviour {
 		state.jumps = 2;
 		cam.goalHeight = -1;
 		targetSpeed = 0;
-		cam.switchTo(MoveCam.Mode.Title);
-		anim2.Play("titleCruise");	
-		repoShip();	
+		cam.switchTo (MoveCam.Mode.Title);
+		anim2.Play ("titleCruise");	
+		repoShip ();	
 		if (sfx && engineAudio.activeSelf)
-			engineAudio.GetComponent<AudioSource>().Stop();
-		rb.position = new Vector3(0, 1000, 0);
-		gui.camBlack("up");	
+			engineAudio.GetComponent<AudioSource> ().Stop ();
+		rb.position = new Vector3 (0, 1000, 0);
+		gui.camBlack ("up");	
 	}
 
-	public void repoShip() {
+	public void repoShip ()
+	{
 //		print("repoShip");
 		xf = 0;
 		grav = 0;
 		targetSpeed = 0;
 		rb.velocity = Vector3.zero;
-		rb.position = gm.startPos + new Vector3(0, 5, 0);	
+		rb.position = gm.startPos + new Vector3 (0, 5, 0);	
 		state.lastY = rb.position.y;
 		rb.rotation = Quaternion.identity;
 		anim2.transform.localPosition = Vector3.zero;
 
-		StartCoroutine(AfterReset());
+		StartCoroutine (AfterReset ());
 	}
 
 
-	public void resetRepoShip() {
+	public void resetRepoShip ()
+	{
 //		print("reset repoShip");
 		qbClear = false;
 		xf = 0;
 		grav = 0;
 		targetSpeed = 0;
 		rb.velocity = Vector3.zero;
-		rb.position = gm.resetPos[gm.rPointCounter] + new Vector3(0, 5, 0);	
+		rb.position = gm.resetPos [gm.rPointCounter] + new Vector3 (0, 5, 0);	
 		state.lastY = rb.position.y;
 		rb.rotation = Quaternion.identity;
 		anim2.transform.localPosition = Vector3.zero;
 		gm.rPointCounter++;
 
-		StartCoroutine(AfterReset());
+		StartCoroutine (AfterReset ());
 	}
 
-	IEnumerator AfterReset() {
-		yield return new WaitForSeconds(blackerPause);
+	IEnumerator AfterReset ()
+	{
+		yield return new WaitForSeconds (blackerPause);
 		grav = defGrav;
 		state.grounded = false;
 		state.jumpTimer = 0.25f;
 	}
 
 
-	void level10null() {
+	void level10null ()
+	{
 		topSurface = null;
 		sideSurface = null;
 		frontSurface = null;
 
 	}
 
-	void level10Init() {
-		topSurface = GameObject.Find("topSurfaces");
-		sideSurface = GameObject.Find("sideSurfaces");
-		frontSurface = GameObject.Find("frontSurfaces");
+	void level10Init ()
+	{
+		topSurface = GameObject.Find ("topSurfaces");
+		sideSurface = GameObject.Find ("sideSurfaces");
+		frontSurface = GameObject.Find ("frontSurfaces");
 
 	}
 
-	public void reset(int type) { // 0: regular 1: after victory cruise 2: vary beginning 3: skip title check
-		System.GC.Collect();
+	public void reset (int type)
+	{ // 0: regular 1: after victory cruise 2: vary beginning 3: skip title check
+		System.GC.Collect ();
 		if (gm.worldNum == 1)
-			level10null();
+			level10null ();
 		if (type != 2) {
-			gui.camBlack("down");
+			gui.camBlack ("down");
 //			yield WaitForSeconds(blackerPause);
 		}
 
 		if (warpTubeObj) {
 			levelAttempts = 1;
-			Destroy(warpTubeObj.gameObject);
+			Destroy (warpTubeObj.gameObject);
 		}
 		if (restarted) {
 			levelAttempts++;
@@ -1832,44 +1853,44 @@ public class MoveShip : MonoBehaviour {
 			gui.lineCount = -1;
 
 		level = gm.level;
-		artCountSaved = PlayerPrefs.GetInt(("Level" + level + "ArtCount"), 000);	
+		artCountSaved = PlayerPrefs.GetInt (("Level" + level + "ArtCount"), 000);	
 		Xspeed = 0;	
 		state.started = false;
 		state.elapsedTime = 0;
 		state.stopDead = false;
 		state.fullStop = false;
-		gm.killLevel();
+		gm.killLevel ();
 		state.jumpStore = false;
 		minZSpeed = 0;
 		brakeOverride = false;
 		targetSpeed = 0.0f;
-		gm.updateWorld();
+		gm.updateWorld ();
 		if (sfx && engineAudio.activeSelf)
-			engineAudio.GetComponent<AudioSource>().Stop();
+			engineAudio.GetComponent<AudioSource> ().Stop ();
 
-		CancelInvoke("ReflectWarpTube");
+		CancelInvoke ("ReflectWarpTube");
 		for (int i = 1; i <= 20; i++) {
-			shipWarpRefl[i] = null;
+			shipWarpRefl [i] = null;
 		}
-		shipMat.SetTexture("_Shad", Resources.Load<Texture2D>("ship/world" + gm.worldNum + " Refl"));
+		shipMat.SetTexture ("_Shad", Resources.Load<Texture2D> ("ship/world" + gm.worldNum + " Refl"));
 
 		state.tunnel = false;
 		state.tunnel2 = false;
 		jumpMult = 1.0f;
 
-		resetCards();
-		explosionMark.transform.position = new Vector3(0, 0, -50);
+		resetCards ();
+		explosionMark.transform.position = new Vector3 (0, 0, -50);
 
 		if (gm.level % 10 == 0 && levelAttempts == 1 && type != 3 && gm.worldNum != 6) {
-			titleScreen();
-			gui.switchGUI("clear");
+			titleScreen ();
+			gui.switchGUI ("clear");
 		} else {
 			if (gm.worldNum == 6)
-				gui.switchGUI("tutorial");
+				gui.switchGUI ("tutorial");
 			else
-				gui.switchGUI("play");
-			disableGUI();
-			enableGUI();
+				gui.switchGUI ("play");
+			disableGUI ();
+			enableGUI ();
 			state.title = false;
 
 			if (gm.worldNum == 5 || gm.worldNum == 1)
@@ -1883,132 +1904,140 @@ public class MoveShip : MonoBehaviour {
 			state.jumps = 2;
 			state.landed = false;
 			gui.message = "none";
-			gm.makeLevel();
+			gm.makeLevel ();
 			xf = 0;
-			sub.rotation = Quaternion.Euler(0, 0, 0);
-			cam.switchTo(MoveCam.Mode.Play);
-			anim2.Stop();
+			sub.rotation = Quaternion.Euler (0, 0, 0);
+			cam.switchTo (MoveCam.Mode.Play);
+			anim2.Stop ();
 			if (shipNum == 10) {
-				anim.Stop("jump");
-				anim.Play("jump");
+				anim.Stop ("jump");
+				anim.Play ("jump");
 			} // start panther out mid-jump rather than standing
 			else
-				anim.Play("idle");
+				anim.Play ("idle");
 			yf = false;
 			state.jbClear = true;
 			brakes = true;
-			musicSourceScript.SetTrack();
+			musicSourceScript.SetTrack ();
 		}
 		artCount = artCountSaved;
-		UpdateArtIcons();
-		System.GC.Collect();
+		UpdateArtIcons ();
+		System.GC.Collect ();
 
 
-		gm.resetEasy();
+		gm.resetEasy ();
 		if (gm.worldNum == 1)
-			level10Init();
+			level10Init ();
 	}
 
-	void checkGates() {
+	void checkGates ()
+	{
 		foreach (Transform gate in gm.gateways) {
 			if (gate != null && !state.winning) {
-				float dist = Vector3.Distance(gate.position + new Vector3(0, 3, 0), transform.position);
+				float dist = Vector3.Distance (gate.position + new Vector3 (0, 3, 0), transform.position);
 				if (dist < gateDist) {
-					winCards(gate.position); 
-					win();
+					winCards (gate.position); 
+					win ();
 				}
 			}
 		}
 	}
 
-	public void stopDead() {
+	public void stopDead ()
+	{
 		if (!state.stopDead) {
-			print("Stoppin'....Dead");
+			print ("Stoppin'....Dead");
 			//playSound("land");
 
 			state.stopDead = true;
-			rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, 0);
+			rb.velocity = new Vector3 (rb.velocity.x, rb.velocity.y, 0);
 			minZSpeed = 0;
 			targetSpeed = 0;
 		}
 	}
 
-	void bounceBack() {
+	void bounceBack ()
+	{
 
 		rb.position += Vector3.back;
-		rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, -30);
+		rb.velocity = new Vector3 (rb.velocity.x, rb.velocity.y, -30);
 		targetSpeed = 0;
 		state.stunned = true;
 //		yield WaitForSeconds(0.2);
 		state.stunned = false;
 	}
 
-	void resetCards() {
+	void resetCards ()
+	{
 		//reset explosion
-		splode.transform.localEulerAngles = new Vector3(336, 180, 180);
-		splode.transform.position = new Vector3(0, 0, -100);
-		splodeScript = splode.GetComponentInChildren<CardAnim>();
-		splodeParticles = splode.GetComponentInChildren<ParticleEmitter>();
+		splode.transform.localEulerAngles = new Vector3 (336, 180, 180);
+		splode.transform.position = new Vector3 (0, 0, -100);
+		splodeScript = splode.GetComponentInChildren<CardAnim> ();
+		splodeParticles = splode.GetComponentInChildren<ParticleEmitter> ();
 
 		//reset win cards
 		for (int i = 0; i < 2; i++) {
-			elecBurst[i].transform.parent = null;
-			elecBurst[i].transform.position = new Vector3(0, 0, -100);
+			elecBurst [i].transform.parent = null;
+			elecBurst [i].transform.position = new Vector3 (0, 0, -100);
 		}
-		warpPath.transform.position = new Vector3(0, 0, -100);
-		warpPathAniObj.GetComponent<Animation>().Rewind("warpPath");
+		warpPath.transform.position = new Vector3 (0, 0, -100);
+		warpPathAniObj.GetComponent<Animation> ().Rewind ("warpPath");
 	}
 
-	void playSound(string which) { // jump, land, win, explode
+	void playSound (string which)
+	{ // jump, land, win, explode
 		int rando = 0;
 		if (sfx) {
 			if (which == "jump") {
 				if (shipNum != 10) {
-					rando = (int)Random.Range(0, 2);
-					GetComponent<AudioSource>().PlayOneShot(sound.jump[rando]);
+					rando = (int)Random.Range (0, 2);
+					GetComponent<AudioSource> ().PlayOneShot (sound.jump [rando]);
 				} else {
-					GetComponent<AudioSource>().PlayOneShot(sound.jump[4]);
+					GetComponent<AudioSource> ().PlayOneShot (sound.jump [4]);
 				}
 			} else if (which == "jump2") {
-					if (shipNum != 10)
-						GetComponent<AudioSource>().PlayOneShot(sound.jump[2]);
-					else
-						GetComponent<AudioSource>().PlayOneShot(sound.jump[5]);
-				} else if (which == "land") {
-						GetComponent<AudioSource>().PlayOneShot(sound.metalHit);
-					} else if (which == "explode") {
-							rando = Random.Range(0, 2);
-							//GetComponent<AudioSource>().PlayOneShot(sound.explosion[rando]);
-						} else if (which == "win") {
-								GetComponent<AudioSource>().PlayOneShot(sound.winGate);
-							} else if (which == "vc") {
-									if (shipNum != 10)
-										GetComponent<AudioSource>().PlayOneShot(sound.VCsound[0]);
-									else
-										GetComponent<AudioSource>().PlayOneShot(sound.VCsound[1]);
-								}
+				if (shipNum != 10)
+					GetComponent<AudioSource> ().PlayOneShot (sound.jump [2]);
+				else
+					GetComponent<AudioSource> ().PlayOneShot (sound.jump [5]);
+			} else if (which == "land") {
+				GetComponent<AudioSource> ().PlayOneShot (sound.metalHit);
+			} else if (which == "explode") {
+				rando = Random.Range (0, 2);
+				//GetComponent<AudioSource>().PlayOneShot(sound.explosion[rando]);
+			} else if (which == "win") {
+				GetComponent<AudioSource> ().PlayOneShot (sound.winGate);
+			} else if (which == "vc") {
+				if (shipNum != 10)
+					GetComponent<AudioSource> ().PlayOneShot (sound.VCsound [0]);
+				else
+					GetComponent<AudioSource> ().PlayOneShot (sound.VCsound [1]);
+			}
 		}
 	}
 
 
-	void speedUpX() {
+	void speedUpX ()
+	{
 		for (int i = 0; i <= maxXspeed; i++) {
 			Xspeed = i;
 //			yield WaitForSeconds(0.01);
 		}
 	}
 
-	public IEnumerator speedUpZ() {
+	public IEnumerator speedUpZ ()
+	{
 		brakeOverride = true;
 		while (minZSpeed < minZBrake) {
-			minZSpeed = Mathf.Clamp(targetSpeed, 0, minZBrake);
+			minZSpeed = Mathf.Clamp (targetSpeed, 0, minZBrake);
 			yield return null;
 		}
 		minZSpeed = minZBrake;
 		brakeOverride = false;
 	}
 
-	void disableX(int which) {
+	void disableX (int which)
+	{
 		state.xDisabled = which;
 
 		for (int i = 1; i <= maxXspeed; i++) {
