@@ -367,7 +367,6 @@ MonoBehaviour:
   - {fileID: 16}
   - {fileID: 15}
   - {fileID: 0}
-  timeInc: 0.04
   btnTexture:
   - {fileID: 2800000, guid: 5921d37c02fee44adb9b2eb991da9d8a, type: 3}
   - {fileID: 2800000, guid: e334619edfa9a469e9b4171ea37678e9, type: 3}
@@ -377,18 +376,6 @@ MonoBehaviour:
   btnUp: 1
   cam: {fileID: 13}
   currAnims:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}

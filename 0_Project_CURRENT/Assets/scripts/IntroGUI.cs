@@ -24,9 +24,9 @@ public class IntroGUI : MonoBehaviour
 	private float elapsedTime = 0;
 	private float lastTime = 0;
 	private int letterAdvance = -1;
-	public float timeInc = 0.4f;
+	float timeInc = 0.04f;
 	private float dynTimeInc;
-	float pauseInc = 0.8f;
+	float pauseInc = 0.1f;
 	private float dynPauseInc;
 	public Texture[] btnTexture;
 	//var btnFlarePF: GameObject;
@@ -107,8 +107,9 @@ public class IntroGUI : MonoBehaviour
 
 	void Start ()
 	{
-		if (!GameObject.Find ("MusicSource(Clone)"))
+		if (GameObject.Find ("MusicSource") == null) {
 			musicSource = Instantiate (Resources.Load<GameObject> ("MusicSource"), Vector3.zero, Quaternion.identity) as GameObject;
+		}
 
 		musicSourceScript = musicSource.GetComponent<Music> ();
 		musicSourceScript.SetTrack ();
