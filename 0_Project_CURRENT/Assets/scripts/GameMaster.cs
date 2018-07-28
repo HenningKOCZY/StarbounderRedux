@@ -583,6 +583,6 @@ public class GameMaster : MonoBehaviour
 			ship.repoShip ();
 		}
 				
-		gui.camBlack ("up");	
+		gui.CamBlack ("up");	
 	}
 }

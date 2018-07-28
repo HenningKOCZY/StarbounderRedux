@@ -111,7 +111,7 @@ public class PantherFlagScript : MonoBehaviour
 			base.GetComponent<AudioSource> ().PlayOneShot (platformDescend);
 			pFlag.GetComponent<Animation> ().Play ();
 //			ship.state.started = false;
-			ship.stopDead ();
+			ship.StopDead ();
 			ship.state = MoveShip.State.FullStop;
 			//ship.state.started= false;
 			reposShip = true;
@@ -194,7 +194,7 @@ public class PantherFlagScript : MonoBehaviour
 					print ("releasing");
 					//ship.state.stoppedTime = Time.time-stoppedMoment;
 					ship.state = MoveShip.State.Normal;
-					ship.speedUpZ ();	
+					StartCoroutine (ship.SpeedUpZ ());
 					allowRelease = false;
 				}	
 			}

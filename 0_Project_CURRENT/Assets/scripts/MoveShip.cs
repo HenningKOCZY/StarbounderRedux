@@ -172,7 +172,6 @@ public class MoveShip : MonoBehaviour
 		Winning,
 		Title,
 		Stunned,
-		StoppedDead,
 		FullStop,
 		Paused
 	}
@@ -187,8 +186,8 @@ public class MoveShip : MonoBehaviour
 		//		public bool crashing = false;
 		//		public bool cruising = false;
 		//		public bool winning = false;
-		public bool stopDead = false;
-		public bool fullStop = false;
+		public bool stopped = false;
+		//		public bool fullStop = false;
 		//var stoppedTime: float = 0;
 		//		public bool stunned = false;
 		public float handling = 10;
@@ -322,7 +321,9 @@ public class MoveShip : MonoBehaviour
 		shipBoosterMat.SetColor ("_Emission", new Vector4 (((1 - boosterColor.r) / 2 + boosterColor.r), ((1 - boosterColor.g) / 2 + boosterColor.g), ((1 - boosterColor.b) / 2 + boosterColor.b), 1));
 		engineFlareMat.SetColor ("_TintColor", new Vector4 (boosterColor.r / 2, boosterColor.g / 2, boosterColor.b / 2, 0.5f));
 
-		// splode set color
+		// set splode color
+
+		// set airburst color?
 
 		artCount = artCountSaved;
 	}
@@ -343,8 +344,8 @@ public class MoveShip : MonoBehaviour
 	}
 
 
-	IEnumerator adjustYV2 ()
-	{ // this is for panther
+	IEnumerator adjustYV2 () // this is for panther
+	{ 
 		float timer = 0.08f;
 		float startY = stats.lv.y;
 		stats.landing = true;
@@ -358,462 +359,10 @@ public class MoveShip : MonoBehaviour
 	}
 
 
-	//	void OldFixedUpdate() {
-	//
-	//		rbx = rb.velocity.x;
-	//		rby = rb.velocity.y;
-	//		rbz = rb.velocity.z;
-	//
-	//		// inputs
-	//		if (!state.crashing && !state.winning) {
-	//
-	//			if (gm.device == GameMaster.DeviceType.iPhone) {
-	//				if (state.started) {
-	//					//xf = -(Input.acceleration.y*3*((Mathf.Abs(Input.acceleration.y)+0.6)*.75));
-	//					xf = -(Input.acceleration.y * 2);
-	//					brakes = false;
-	//					yf = false;
-	//				}
-	//				if (!state.paused) {
-	//					for (int i = 0; i < Input.touchCount; ++i) {
-	//						if (Input.GetTouch(i).position.x > Screen.width - (Screen.width / 4)) {
-	//							if (Input.GetTouch(i).phase == TouchPhase.Began || Input.GetTouch(i).phase != TouchPhase.Ended) {
-	//								yf = true;
-	//							} else
-	//								yf = false;
-	//							//if (jumpTouches == 0) yf = false;
-	//						} else if (Input.GetTouch(i).position.x < Screen.width / 4) {
-	//								if (Input.GetTouch(i).phase != TouchPhase.Ended) {
-	//									brakes = true;
-	//								} else
-	//									brakes = false;
-	//							}
-	//					}
-	//				}
-	//			} else { // computer ctrls
-	//				yf = Input.GetButton("Fire1");
-	//				if (state.started) {
-	//					xf = Input.GetAxis("Horizontal");
-	//					xfRaw = Input.GetAxisRaw("Horizontal");
-	//				}
-	//				if (!state.cruising) {
-	//					qf = Input.GetButton("jumpAhead");
-	//					if (Input.GetAxisRaw("Vertical") > 0)
-	//						brakes = false;
-	//					else
-	//						brakes = true;
-	//				}
-	//			}
-	//			if (brakeOverride)
-	//				brakes = false;
-	//		}
-	//
-	//		if (!yf) {
-	//			state.jbClear = true;
-	//		}
-	//		if (!qf) {
-	//			qbClear = true;
-	//		}
-	//		if (qf && qbClear && !state.cruising)
-	//			resetRepoShip();
-	//
-	//
-	//		state.jumpTimer -= Time.deltaTime;
-	//
-	//		if (shipNum != 10) {
-	//			// gravity and hop limiting. rb now (what the fuck was that?>
-	//			if (!state.cruising && !state.crashing)
-	//				rby -= (grav * Time.deltaTime);
-	//			actualY = rby;
-	//			if (state.jumpTimer < 0 && rby > jumpforce)
-	//				rby = jumpforce;
-	//			if (state.jumpTimer < -0.5f && rby > 1)
-	//				rby = 1;
-	//			// fall off the bottom
-	//			if (rb.position.y < -25.5f && !state.crashing)
-	//				crash(0);
-	//
-	//			// jumps
-	//			if (yf && state.jbClear && !state.paused) {
-	//				if (state.jumps == 1) { // double jump
-	//					if (rc == 0) {
-	//						jump(2);
-	//						state.jumps = 2;
-	//					} else {
-	//						jump(2);
-	//						state.jumps = 1;
-	//					}
-	//				} else if (state.jumps == 0 && !state.cruising) { // jump
-	//						jump(1);
-	//						state.jumps = 1;
-	//					}
-	//
-	//			}
-	//
-	//			// store some vars from this update cycle for use in the next
-	//			// raycheckDown(2);
-	//
-	//			if (state.grounded && deltaY > 0.01f && deltaY < 0.3f) {
-	//				rby = Mathf.Clamp(rby, -20.0f, 0.0f);
-	//			}
-	//
-	//			if (state.landed) {
-	//				state.jumps = 0;
-	//				state.landed = false;
-	//				jumpValueTar = 0;
-	//			}
-	//		} else { //panther code
-	//			if (state.fullStop != true) {
-	//				if (state.xDisabled == 1)
-	//					xf = Mathf.Clamp(xf, 0.6f, 4.0f);
-	//				else if (state.xDisabled == -1)
-	//						xf = Mathf.Clamp(xf, -4.0f, -0.6f);
-	//				collLeft = Mathf.Clamp(collLeft - Time.deltaTime, 0, sideJumpTolerance);
-	//				collRight = Mathf.Clamp(collRight - Time.deltaTime, 0, sideJumpTolerance);
-	//
-	//				if (!state.stopDead) {
-	//
-	//					// forward speed, slow down after crash, and progress
-	//					if (!state.cruising && !state.stunned) { // && state.started) {
-	//						if (!brakes)
-	//							targetSpeed += ((maxZSpeed - targetSpeed + 20) / 2) * Time.deltaTime * 4.5f;
-	//						else
-	//							targetSpeed -= ((targetSpeed + 50) / 4) * (Time.deltaTime * 4.5f);
-	//
-	//						// boost speed, slow down when in air, but clamp it
-	//						//					if (state.boosting) {
-	//						//						maxZSpeed=Mathf.Clamp(maxZSpeed-35.0*Time.deltaTime, 65, ultraMaxZSpeed);
-	//						//						targetSpeed=maxZSpeed;
-	//						//						if (maxZSpeed<=defPantherMaxZ) {
-	//						//							state.boosting=false;
-	//						//							maxZSpeed=defPantherMaxZ;
-	//						//						}
-	//						//					}
-	//						if (!state.grounded) {
-	//							maxZSpeed = Mathf.Clamp(maxZSpeed - (pantherSlowInAirSpeed * Time.deltaTime), pantherSlowInAirLimit, ultraMaxZSpeed);
-	//						}
-	//						targetSpeed = Mathf.Clamp(targetSpeed, minZSpeed, maxZSpeed);
-	//					}
-	//
-	//
-	//				} //end stopdead if
-	//
-	//				state.progress = transform.position.z;
-	//
-	//				// gravity and hop limiting
-	//				if (!state.cruising && !state.crashing)
-	//					rby -= grav * Time.deltaTime;
-	//				actualY = rby;
-	//				if (state.jumpTimer < 0 && rby > jumpforce * jumpMult)
-	//					rby = jumpforce * jumpMult;
-	//				if (state.jumpTimer < -0.5f && rby > 1)
-	//					rby = 1;
-	//				// fall off the bottom
-	//				if (rb.position.y < -25.5f && !state.crashing)
-	//					crash(0);
-	//
-	//				// jumps
-	//				if ((yf && state.jbClear) && !state.paused && !state.cruising && !state.stunned) {
-	//					if (!state.grounded) {
-	//						int rcb = raycheckDown(2);
-	//						if (rcb > 0) {
-	//							//takeoffZ = rigidbody.position.z;
-	//							jump(1);
-	//						} else {
-	//							int rcf = raycheckFront();
-	//							if (rcf > 0) {
-	//								jump(6);
-	//							} else if (collLeft > 0.001f) {
-	//									jump(3);
-	//								} else if (collRight > 0.001f) {
-	//										jump(4);
-	//									} else if (state.jumps == 1)
-	//											jump(2);
-	//						}
-	//					} else {
-	//						// ** new
-	//						//takeoffZ = rigidbody.position.z;
-	//						jump(1);
-	//					}
-	//				}
-	//
-	//
-	//				// store some vars from this update cycle for use in the next
-	//
-	//				if (state.landed) {
-	//					state.jumps = 0;
-	//					state.landed = false;
-	//				}
-	//				if (!state.crashing && !state.stunned && !state.winning) {
-	//					rbz = targetSpeed;
-	//				} else
-	//					rbz = Mathf.Lerp(rbz, 0.0f, Time.deltaTime * 6);
-	//				//if (state.boostTimer>0) { var xf2Adj: float = 1-(state.boostTimer/boostTime); }
-	//				// else xf2Adj=1.0;
-	//				xf2 = Mathf.Lerp(xf2, Mathf.Clamp((xf * -20) - rbx, -50, 50), Time.deltaTime * 8);
-	//			}
-	//		}
-	//
-	//		//raycheckSide(0);
-	//		//raycheckSide(1);
-	//		//raycheckFront();
-	//		//raycheckDown(1);
-	//		rb.velocity = new Vector3(rbx, rby, rbz);
-	//		state.lv = rb.velocity;
-	//		deltaY = Mathf.Abs(state.lastY - rb.position.y);
-	//		state.lastY = rb.position.y;
-	//
-	//		if (state.crashing && !restarted) {
-	//			if (splode.transform.position.y < cam.transform.position.y)
-	//				cam.goalHeight = splode.transform.position.y;
-	//		} else if (state.winning) {
-	//				cam.goalHeight = warpPath.transform.position.y;
-	//			} else if (!state.cruising) {
-	//					// cam goals
-	//					if (cam.goalHeight < transform.position.y - cam.sensitivity)
-	//						cam.goalHeight += 1.0f;
-	//					else if (cam.goalHeight > transform.position.y)
-	//							cam.goalHeight = transform.position.y;
-	//				}
-	//
-	//
-	//
-	//	}
-
-
-	//
-	//	void OldUpdate() {
-	//		guiUpdate();
-	//
-	////		float rbx = rb.velocity.x;
-	////		float rby = rb.velocity.y;
-	////		float rbz = rb.velocity.z;
-	//
-	//		if (gm.worldNum == 1 && !state.cruising)
-	//			if (!topSurface)
-	//				level10Init();
-	//
-	//		if (shipNum != 10) {
-	//			// forward speed, slow down after crash, and progress
-	//			if (!state.stopDead) {
-	//				if (!state.cruising) {// && state.started) {
-	//					if (!brakes)
-	//						targetSpeed += ((maxZSpeed - targetSpeed + 20) / 2) * Time.deltaTime * 2;
-	//					else
-	//						targetSpeed -= ((targetSpeed + 50) / 4) * Time.deltaTime * 4;
-	//					targetSpeed = Mathf.Clamp(targetSpeed, minZSpeed, maxZSpeed);
-	//				}
-	//				zForce = rbz / maxZSpeed;
-	//			}
-	//			state.progress = transform.position.z;
-	//
-	//			if (!state.crashing && !state.winning) {
-	//				rbz = targetSpeed;
-	//
-	//			} else
-	//				rbz = Mathf.Lerp(rb.velocity.z, 0.0f, Time.deltaTime * 6);
-	//			xf2 = Mathf.Lerp(xf2, (xf * -20) - rbx, Time.deltaTime * 10);
-	//
-	//			// start the motion of the ship and the clock when brakes released
-	//			if (!state.started) {
-	//				state.elapsedTime = 0;
-	//				if (!brakes) {
-	//					xf = 0;
-	//					state.started = true;
-	//					//state.startedTime=Time.time;
-	//					speedUpX();
-	//					StartCoroutine(speedUpZ());
-	//					if (sfx && engineAudio.activeSelf)
-	//						engineAudio.GetComponent<AudioSource>().Play();
-	//				}
-	//			} else if (!state.crashing) {
-	//					state.elapsedTime += Time.deltaTime / gm.gameSpeed;
-	//					//state.elapsedTime=((Time.time-state.startedTime)/gm.gameSpeed)+state.progressedTime;
-	//				}
-	//
-	//			if (!state.crashing && !state.cruising) {
-	//
-	//				// check gateways
-	//				if (transform.position.z > winDist && winDist > 0)
-	//					checkGates();
-	//
-	//			}
-	//
-	//
-	//
-	//			// spacecraft tilt and pitch 
-	//			float yPos = Mathf.Abs(rbx * 0.01f) + 0.8f;
-	//			float yRot = -xf2 * 0.5f;
-	//			float zRot = xf2;
-	//
-	//
-	//			// pitch up down and when to free fall/ take away a jump 
-	//			if (state.jumps > 0) {
-	//				xRot = Mathf.Lerp(xRot, -1.5f * rby, Time.deltaTime * xRotSpeed);
-	//
-	//			} else if (rby < -10) {
-	//					if (gm.worldNum == 1)
-	//						level10off();
-	//					xRot = 0;
-	//					xRotSpeed = 4;
-	//					state.jumps = 1;
-	//					state.grounded = false;
-	//				}
-	//			zForce = rbz / maxZSpeed;
-	//			sub.eulerAngles = new Vector3(xRot, yRot, zRot);
-	//			sub.localPosition = new Vector3(0, yPos, 0);
-	//
-	//			if (!state.cruising)
-	//				rbx = Mathf.Lerp(rb.velocity.x, xf * Xspeed, Time.deltaTime * state.handling);
-	//
-	//			if (sfx && state.started) {
-	//				engineAudio.GetComponent<AudioSource>().pitch = (targetSpeed / ultraMaxZSpeed + 0.2f) * 1.4f;
-	//				engineAudio.GetComponent<AudioSource>().volume = 1 - (Mathf.Abs(((targetSpeed / ultraMaxZSpeed) * 2) - 1.1f));
-	//			}
-	//		}
-	//				
-	//		// else panther code below vv
-	//		else {
-	//			if (!state.fullStop) {
-	//				anim["run"].speed = Mathf.Clamp(0.1f + targetSpeed / 60f, 0.75f, 10);
-	//				anim["lStep"].speed = Mathf.Clamp(0.1f + Mathf.Abs(xf2) / 30f, 0.8f, 10);
-	//				anim["rStep"].speed = Mathf.Clamp(0.1f + Mathf.Abs(xf2) / 30f, 0.8f, 10);
-	//				if (targetSpeed < 8)
-	//					if (xf2 < -2)
-	//						anim.CrossFade("rStep", 0.2f);
-	//					else if (xf2 > 2)
-	//							anim.CrossFade("lStep", 0.2f);
-	//						else
-	//							anim.CrossFade("idle", 0.2f);
-	//				else
-	//					anim.CrossFade("run");
-	//
-	//				// start the motion of the ship and the clock when brakes released
-	//				if (!state.started) {
-	//					//state.elapsedTime=0;
-	//					if (!brakes) {
-	//						xf = 0;
-	//						state.started = true;
-	//						//state.startedTime=Time.time;
-	//						speedUpX();
-	//						StartCoroutine(speedUpZ());
-	//					}
-	//				} else if (!state.crashing) {
-	//						state.elapsedTime += Time.deltaTime / gm.gameSpeed;
-	//					}
-	//					
-	//				if (!state.crashing && !state.cruising && !state.winning) {
-	//					// check gateways
-	//					if (transform.position.z > winDist && winDist > 0)
-	//						checkGates();
-	//				}
-	//					
-	//				// spacecraft tilt and pitch 
-	//				float yRot = (Mathf.Atan2(-xf2, targetSpeed + 1) * Mathf.Rad2Deg) * Mathf.Clamp(((targetSpeed * 1.2f) / defPantherMaxZ), 0, 1);
-	//				float zRot = xf2 * 0.5f;
-	//
-	//				float yPos = Mathf.Abs(rbx * 0.01f) + 0.8f;
-	//				float zPos = 0;
-	//
-	//
-	//				// pitch up down and when to free fall/ take away a jump
-	//				if (state.jumps > 0 || state.landing) {
-	//					// xRot = Mathf.Lerp(xRot, -1.7*rigidbody.velocity.y, Time.deltaTime*xRotSpeed); 
-	//					if (!state.landing)
-	//						yv2 = rby;
-	//					//else print(yv2);
-	//					xRot = Mathf.Lerp(xRot, -1.7f * yv2, Time.deltaTime * xRotSpeed); 
-	//					if (state.fJumping) {
-	//						xRot = Mathf.Clamp(xRot, 0, 90);
-	//						zPos = Mathf.Clamp(xRot * -0.02f, -2, 0);
-	//					} else {
-	//						xRot = Mathf.Clamp(xRot, -70, 90);
-	//						zPos = Mathf.Clamp(xRot * -0.02f, -2, 0);
-	//					}
-	//				} else if (rby < -10) {
-	//						xRotSpeed = 6;
-	//						xRot = 0;
-	//						state.jumps = 1;
-	//						state.grounded = false;
-	//						state.landing = false;
-	//						anim.Rewind("jump");
-	//						anim.CrossFade("jump");
-	//						if (gm.worldNum == 1)
-	//							level10off();
-	//					}
-	//
-	//				sub.localPosition = new Vector3(0, yPos, zPos);
-	//				sub.eulerAngles = new Vector3(xRot, yRot, zRot);
-	//
-	//				if (!state.cruising)
-	//					rb.velocity = Vector3.Lerp(rb.velocity, new Vector3(xf * Xspeed, rby, rbz), Time.deltaTime * state.handling);
-	//
-	//			} else {
-	//				anim.CrossFade("idle", 0.2f);
-	//				xf = 0;
-	//				rb.velocity = new Vector3(0, rby, rbz);
-	//			}
-	//			if (engineAudio.activeSelf) {
-	//				if (sfx && state.grounded && engineAudio.activeSelf && !state.paused && state.started && !state.stopDead && !state.fullStop) {
-	//					if (!engineAudio.GetComponent<AudioSource>().isPlaying)
-	//						engineAudio.GetComponent<AudioSource>().Play();
-	//
-	//					if ((targetSpeed / ultraMaxZSpeed) > 0.7f)
-	//						engineAudio.GetComponent<AudioSource>().clip = sound.engineSound[2];
-	//					else
-	//						engineAudio.GetComponent<AudioSource>().clip = sound.engineSound[1];
-	//					//engineAudio.audio.pitch = (targetSpeed/ultraMaxZSpeed)*1.2;
-	//					//engineAudio.audio.volume = .6;
-	//					//engineAudio.audio.volume = Mathf.Clamp(2-((targetSpeed/ultraMaxZSpeed)*2),.09,1);
-	//				} else {
-	//					if (engineAudio.GetComponent<AudioSource>().isPlaying)
-	//						engineAudio.GetComponent<AudioSource>().Stop();
-	//				}
-	//			}
-	//		}
-	//
-	////		rb.velocity = new Vector3(rbx, rby, rbz);
-	//
-	//		if (!state.paused) {
-	//			if (gm.device == GameMaster.DeviceType.iPhone) {	
-	//				foreach (Touch touch in Input.touches) {  
-	//					if (touch.position.x > Screen.width / 4 && touch.position.x < Screen.width - (Screen.width / 4)) {   
-	//						if (Mathf.Abs(touch.deltaPosition.y) > 10) {
-	//							//Application.LoadLevel(0);	
-	//						            	
-	//							if (!state.paused && !state.cruising && !state.crashing) { 
-	//								Time.timeScale = 0; 
-	//								state.paused = true; 
-	//								gui.switchGUI("paused"); 
-	//								if (sfx && engineAudio.activeSelf)
-	//									engineAudio.GetComponent<AudioSource>().Stop(); 
-	//								//gui.inputWait(.5); 
-	//							}
-	//							//	else { Time.timeScale=1.0; state.paused=false; paused=false; 
-	//							//}
-	//						}
-	//					}
-	//				}
-	//			} else {
-	//				if (Input.GetButton("pause")) {
-	//					if (!state.paused && !state.cruising && !state.crashing) { 
-	//						Time.timeScale = 0.0f; 
-	//						state.paused = true; 
-	//						gui.switchGUI("paused"); 
-	//						if (sfx && engineAudio.activeSelf)
-	//							engineAudio.GetComponent<AudioSource>().Stop();
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
-	//
-
-
 	void FixedUpdate ()
 	{
 
-		guiUpdate ();
+		CtrlGUIUpdate ();
 		rbx = rb.velocity.x;
 		rby = rb.velocity.y;
 		rbz = rb.velocity.z;
@@ -899,9 +448,8 @@ public class MoveShip : MonoBehaviour
 				xf = 0;
 				state = State.Normal;
 				cam.switchTo (MoveCam.Mode.Play);
-				//state.startedTime=Time.time;
-				speedUpX ();
-				StartCoroutine (speedUpZ ());
+				StartCoroutine (SpeedUpX ());
+				StartCoroutine (SpeedUpZ ());
 				if (sfx && engineAudio.activeSelf)
 					engineAudio.GetComponent<AudioSource> ().Play ();
 			}
@@ -909,6 +457,9 @@ public class MoveShip : MonoBehaviour
 
 		if (state == State.Normal) {
 			stats.elapsedTime += Time.deltaTime / gm.gameSpeed;
+			gui.UpdateTime (stats.elapsedTime);
+			gui.UpdateProg (Mathf.Clamp01 (stats.progress / winDist));
+
 			// check gateways
 			if (transform.position.z > winDist && winDist > 0)
 				checkGates ();
@@ -1004,7 +555,7 @@ public class MoveShip : MonoBehaviour
 
 		// fall off the bottom death
 		if (rb.position.y < -25.5f && state != State.Crashing)
-			crash (1);
+			Crash (1);
 		
 
 		// cam goal height adjustment
@@ -1040,6 +591,7 @@ public class MoveShip : MonoBehaviour
 		}
 	}
 
+
 	void Pause ()
 	{
 		Time.timeScale = 0; 
@@ -1049,7 +601,8 @@ public class MoveShip : MonoBehaviour
 			engineAudio.GetComponent<AudioSource> ().Stop ();
 	}
 
-	IEnumerator vcfly ()
+
+	IEnumerator VCfly ()
 	{
 		float timer = 1.0f;
 		float oldZ = 0;
@@ -1075,16 +628,16 @@ public class MoveShip : MonoBehaviour
 		}
 	}
 
-	void guiUpdate ()
+
+	void CtrlGUIUpdate ()
 	{
 
-		if (state != State.StoppedDead)
+		if (!stats.stopped)
 			brakeValue = -0.5f * (stats.lv.z / ultraMaxZSpeed);
 		else
 			brakeValue = 0;
 
 		speedbarMat.mainTextureOffset = new Vector2 (speedbarMat.mainTextureOffset.x, Mathf.Lerp (speedbarMat.mainTextureOffset.y, brakeValue, Time.deltaTime * 15));
-
 		jumpValueTar = stats.jumps * 0.25f;
 
 
@@ -1103,8 +656,9 @@ public class MoveShip : MonoBehaviour
 		}
 		//print(jumpValue);
 		jumpBarMat.mainTextureOffset = new Vector2 (jumpBarMat.mainTextureOffset.x, jumpValue);	
-		//progBar.transform.localScale.x = Mathf.Clamp(state.progress/winDist,0,1);
+
 	}
+
 
 	void level10off ()
 	{
@@ -1293,7 +847,7 @@ public class MoveShip : MonoBehaviour
 	void OnCollisionEnter (Collision collision)
 	{
 		if (collision.gameObject.tag == "Kill" && state != State.Crashing) {
-			crash (0);
+			Crash (0);
 			return;
 		}
 		if (!stats.grounded) {
@@ -1529,7 +1083,7 @@ public class MoveShip : MonoBehaviour
 	}
 
 
-	public void crash (int type)
+	public void Crash (int type)
 	{ //type: 0=wall hit, 1=falling death (no sound or splode or wait)
 		shad.enabled = false;
 		state = State.Crashing;
@@ -1541,21 +1095,20 @@ public class MoveShip : MonoBehaviour
 		brakes = true;
 
 		levelAttempts++;
-		StartCoroutine (crashCO (type));
+		StartCoroutine (CrashCO (type));
 	}
 
-	IEnumerator crashCO (int type)
+	IEnumerator CrashCO (int type)
 	{
 		float secs = 0;
 		if (type == 0) {	
 			splode.MakeSplode (rb.position);
 			secs = 1.55f;
 		} else if (type == 1) {
-			secs = 0.55f;
+			secs = 1.1f;
 		}
 
-		rb.position = new Vector3 (0, 0, 1000);
-		rb.velocity = Vector3.zero;
+		DisappearShip ();
 		yield return new WaitForSeconds (0.2f);
 		if (type == 0) {
 			splode.MakeSplodeMark ();
@@ -1565,10 +1118,16 @@ public class MoveShip : MonoBehaviour
 		reset (0);
 	}
 
-	void win ()
+	void DisappearShip ()
+	{
+		rb.position = new Vector3 (0, 0, -1000);
+		rb.velocity = Vector3.zero;
+	}
+
+	IEnumerator Win ()
 	{
 		//artCount=(gui.a1state*100)+(gui.a2state*10)+gui.a3state;
-		bool ultimateWin = false;
+
 		PlayerPrefs.SetInt ("Level" + level + "ArtCount", artCount);
 
 		if (shipNum == 10) {
@@ -1596,11 +1155,17 @@ public class MoveShip : MonoBehaviour
 		xf = 0;
 		cam.goalZ = warpPath.transform.position.z + 7;
 
-		rb.position = new Vector3 (0, 0, 1000);
-//		yield WaitForSeconds(2.5);
-		gui.camBlack ("down");
-//		yield WaitForSeconds(blackerPause);
+		DisappearShip ();
+		yield return new WaitForSeconds (2.5f);
+		gui.CamBlack ("down");
+		yield return new WaitForSeconds (blackerPause);
+		CheckWinCons ();
 
+	}
+
+	void CheckWinCons ()
+	{
+		bool ultimateWin = false;
 		// ultimate win conditions
 		if (gm.gamePhase < 2) { // <2 means Safe for the unlikely eventuality that someone beats the last level and gets the last artifact on the same run!
 			// nested ifs so it doesn't run count___ for everything, every time
@@ -1642,7 +1207,7 @@ public class MoveShip : MonoBehaviour
 		// else {
 		if (!ultimateWin) {
 			if (level < 60)
-				victoryCruise ();
+				VictoryCruise ();
 
 			if (level >= 60 && level <= 61) {	
 				if (PlayerPrefs.GetInt ("FromLS", 0) == 1) {
@@ -1664,7 +1229,7 @@ public class MoveShip : MonoBehaviour
 	}
 
 
-	void victoryCruise ()
+	void VictoryCruise ()
 	{
 		Time.timeScale = 1;
 		disableGUI ();
@@ -1677,7 +1242,7 @@ public class MoveShip : MonoBehaviour
 		anim.Stop ();
 		state = State.Cruising;
 		stats.jumps = 2;
-		StartCoroutine (vcfly ());
+		StartCoroutine (VCfly ());
 		cam.goalHeight = 0;
 		if (newRecord)
 			cam.newRecordCheck = true;
@@ -1701,7 +1266,7 @@ public class MoveShip : MonoBehaviour
 		InvokeRepeating ("ReflectWarpTube", 0, 0.04f);
 		gui.resetVC ();
 
-		gui.camBlack ("up");
+		gui.CamBlack ("up");
 		gui.playAnim (1.9f);
 	}
 
@@ -1767,13 +1332,12 @@ public class MoveShip : MonoBehaviour
 		repoShip ();	
 		if (sfx && engineAudio.activeSelf)
 			engineAudio.GetComponent<AudioSource> ().Stop ();
-		rb.position = new Vector3 (0, 1000, 0);
-		gui.camBlack ("up");	
+		DisappearShip ();
+		gui.CamBlack ("up");	
 	}
 
 	public void repoShip ()
 	{
-//		print("repoShip");
 		xf = 0;
 		grav = 0;
 		targetSpeed = 0;
@@ -1787,9 +1351,8 @@ public class MoveShip : MonoBehaviour
 	}
 
 
-	public void resetRepoShip ()
+	public void resetRepoShip () // this is for skipping through a level to custom "resetPos[]" for testing. 
 	{
-//		print("reset repoShip");
 		qbClear = false;
 		xf = 0;
 		grav = 0;
@@ -1801,6 +1364,7 @@ public class MoveShip : MonoBehaviour
 		anim2.transform.localPosition = Vector3.zero;
 		gm.rPointCounter++;
 
+		StopAllCoroutines ();
 		StartCoroutine (AfterReset ());
 	}
 
@@ -1834,10 +1398,10 @@ public class MoveShip : MonoBehaviour
 		System.GC.Collect ();
 		if (gm.worldNum == 1)
 			level10null ();
-		if (type != 2) {
-			gui.camBlack ("down");
-//			yield WaitForSeconds(blackerPause);
-		}
+//		if (type != 2) { // what is this??
+//			gui.CamBlack ("down");
+////			yield WaitForSeconds(blackerPause);
+//		}
 
 		if (warpTubeObj) {
 			levelAttempts = 1;
@@ -1856,6 +1420,8 @@ public class MoveShip : MonoBehaviour
 
 		state = State.PreStart;
 		stats.elapsedTime = 0;
+		gui.UpdateTime (0);
+		gui.UpdateProg (0);
 
 		gm.killLevel ();
 		stats.jumpStore = false;
@@ -1896,6 +1462,7 @@ public class MoveShip : MonoBehaviour
 			shad.enabled = true;
 			stats.jumps = 2;
 			stats.landed = false;
+			stats.progress = 0;
 			gui.message = "none";
 			gm.makeLevel ();
 			xf = 0;
@@ -1918,8 +1485,7 @@ public class MoveShip : MonoBehaviour
 		System.GC.Collect ();
 
 		gm.resetEasy ();
-		stats.elapsedTime = 0;
-		guiUpdate ();
+		CtrlGUIUpdate ();
 
 		if (gm.worldNum == 1)
 			level10Init ();
@@ -1933,20 +1499,20 @@ public class MoveShip : MonoBehaviour
 				float dist = Vector3.Distance (gate.position + new Vector3 (0, 3, 0), transform.position);
 				if (dist < gateDist) {
 					winCards (gate.position); 
-					win ();
+					StartCoroutine (Win ());
 				}
 			}
 		}
 	}
 
 
-	public void stopDead ()
+	public void StopDead ()
 	{
-		if (state != State.StoppedDead) {
+		if (!stats.stopped) {
 			print ("Stoppin'....Dead");
 			//playSound("land");
 
-			state = State.StoppedDead;
+			stats.stopped = true;
 			rb.velocity = new Vector3 (rb.velocity.x, rb.velocity.y, 0);
 			minZSpeed = 0;
 			targetSpeed = 0;
@@ -2013,20 +1579,21 @@ public class MoveShip : MonoBehaviour
 	}
 
 
-	void speedUpX ()
+	public IEnumerator SpeedUpX ()
 	{
 		for (int i = 0; i <= maxXspeed; i++) {
 			Xspeed = i;
-//			yield WaitForSeconds(0.01);
+			yield return new WaitForSeconds (0.01f);
 		}
+		Xspeed = maxXspeed;
 	}
 
 
-	public IEnumerator speedUpZ ()
+	public IEnumerator SpeedUpZ ()
 	{
 		brakeOverride = true;
 		while (minZSpeed < minZBrake) {
-			minZSpeed = Mathf.Clamp (targetSpeed, 0, minZBrake);
+			minZSpeed = targetSpeed;
 			yield return null;
 		}
 		minZSpeed = minZBrake;

@@ -12,7 +12,7 @@ public class Explosion : MonoBehaviour
 	Vector3 crashPos;
 	// sound
 
-	void Start ()
+	void Awake ()
 	{
 		card = transform.GetChild (0).GetChild (0).GetComponent<CardAnim> ();
 		mark = transform.GetChild (1);
@@ -43,6 +43,6 @@ public class Explosion : MonoBehaviour
 	{
 		transform.localEulerAngles = new Vector3 (336, 180, 180); // ?
 		transform.position = new Vector3 (0, 0, -100);
-		mark.position = new Vector3 (0, 0, -50);
+		mark.position = new Vector3 (0, 0, -90);
 	}
 }

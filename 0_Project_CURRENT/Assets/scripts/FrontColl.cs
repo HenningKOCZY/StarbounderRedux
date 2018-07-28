@@ -17,16 +17,16 @@ public class FrontColl : MonoBehaviour
 		if (ship.shipNum == 10) {
 			if (other.tag != "kill" && other.name != "camDropBox" && other.name != "camDropBox2" && other.name != "endLoop") {
 				if (ship.stats.jumpTimer < -0.2f)
-					ship.stopDead ();
+					ship.StopDead ();
 			}
 		} else {
 			if (other.name != "camDropBox" && other.name != "camDropBox2" && other.name != "endLoop") {
 				if (ship.state == MoveShip.State.Normal) {
 					if (ship.targetSpeed > ship.minZBrake)
-						ship.crash (0);
+						ship.Crash (0);
 					else { 
 						print ("here " + other.name); 
-						ship.stopDead (); 
+						ship.StopDead (); 
 					}
 				}
 			}
@@ -35,8 +35,8 @@ public class FrontColl : MonoBehaviour
 
 	void OnTriggerExit ()
 	{
-		ship.stats.stopDead = false;	
+		ship.stats.stopped = false;	
 		if (ship.state == MoveShip.State.Normal)
-			ship.speedUpZ ();
+			StartCoroutine (ship.SpeedUpZ ());
 	}
 }

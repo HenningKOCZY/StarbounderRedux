@@ -714,11 +714,6 @@ public class GUIScript : MonoBehaviour
 	void OnGUI ()
 	{
 
-		if (state == "play") {
-			GUItexts [2].text = stringTime;
-			GUItexts [4].text = stringTime;
-		}
-
 		if (state == "tutorial") {
 
 			GUItexts [0].text = tutText;
@@ -1036,7 +1031,7 @@ public class GUIScript : MonoBehaviour
 								GetComponent<AudioSource> ().PlayOneShot (blip1);
 							switchGUI ("paused");
 						} else if (hitname == "button1") {
-							VCcontinue ();
+							StartCoroutine (VCcontinue ());
 						} else if (hitname == "button2" && pantherFlag [0] == 1 && gm.shipNum == 10) {
 							print ("do a panther growl!");
 						}		
@@ -1103,34 +1098,45 @@ public class GUIScript : MonoBehaviour
 	}
 
 
-	void VCcontinue ()
+	IEnumerator VCcontinue ()
 	{
 		VCbuttonState = 1;
 		if (sfx == 1)
 			GetComponent<AudioSource> ().PlayOneShot (gameStart);
-//		yield WaitForSeconds(0.4);
-		camBlack ("down");
-//		yield WaitForSeconds(0.8);
+		yield return new WaitForSeconds (0.4f);
+		CamBlack ("down");
+		yield return new WaitForSeconds (0.8f);
 
 		Application.LoadLevel (1);
 	}
 
 
+	public void UpdateProg (float prog)
+	{
+		progBarScript.UpdateMe (prog);
+	}
+
+
+	public void UpdateTime (float t)
+	{
+		if (state == "play") {
+			stringTime = t.ToString ("00.00");
+			if (curTime < 0) {
+				stringTime = "**.**";
+//
+//				ship.Crash (0); // why is this here? not on moveship
+//				message = "time";
+			}
+//		}
+
+			GUItexts [2].text = stringTime;
+			GUItexts [4].text = stringTime;
+		}
+	}
+
+
 	void Update ()
 	{		
-		if (ship.state == MoveShip.State.Normal) {		
-			if (state == "play") {
-				curTime = ship.stats.elapsedTime;
-				stringTime =	curTime.ToString ("00.00");
-				if (curTime > timeAllowed) {
-					stringTime = "**.**";
-
-					ship.crash (0); // why is this here? not on moveship
-					message = "time";
-				}
-			}
-		}
-
 		if (loadLevelGo) {		
 			counter++;
 			selectionState = counter % 2;
@@ -1141,7 +1147,6 @@ public class GUIScript : MonoBehaviour
 			if (Time.realtimeSinceStartup > pauseEndTime2)
 				loadLevel2 (whichLoad);
 		}
-
 
 		if (selectable) {	
 			if (gm.device == GameMaster.DeviceType.iPhone) {
@@ -1219,12 +1224,14 @@ public class GUIScript : MonoBehaviour
 		}
 	}
 
+
 	void SwipeLevel (int swipe)
 	{
 		print ("swipe function ran");
 		nextGo = false;
 		getButtonHit (0, 0, swipe);
 	}
+
 
 	public void resetVC ()
 	{
@@ -1233,13 +1240,20 @@ public class GUIScript : MonoBehaviour
 		pantherFlag [0] = PlayerPrefs.GetInt ("Level" + (level) + "PantherFlag", 0);
 	}
 
-	public void camBlack (string which)
+
+	public void CamBlack (string which)
+	{
+		StartCoroutine (CamBlackCo (which));
+	}
+
+
+	IEnumerator CamBlackCo (string which)
 	{
 		if (which == "down") {
 			camBlackAnim.Play ("camBlackIn");
 			camBlackState = "in";
 		} else {
-//			yield WaitForSeconds(blackerPause);
+			yield return new WaitForSeconds (blackerPause);
 			camBlackAnim.Play ("camBlackOut");
 			camBlackState = "out";
 		}
