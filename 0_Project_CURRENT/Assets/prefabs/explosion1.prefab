@@ -8,6 +8,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 400000}
+  - component: {fileID: 114948733820364014}
   m_Layer: 0
   m_Name: explosion1
   m_TagString: Untagged
@@ -89,6 +90,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400006}
+  - {fileID: 4159619534102758}
   - {fileID: 400004}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -123,7 +125,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400000}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1002 &400005
 EditorExtensionImpl:
@@ -134,14 +136,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100006}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400002}
   m_Father: {fileID: 400000}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1002 &400007
 EditorExtensionImpl:
   serializedVersion: 6
@@ -347,12 +349,9 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 2bdd76f44a7564a41af7d9572ef7da28, type: 3}
   - {fileID: 2800000, guid: b205f164063304d21abb779887eba155, type: 3}
   - {fileID: 2800000, guid: b205f164063304d21abb779887eba155, type: 3}
-  parentTo: {fileID: 0}
   randomRot: 1
   lookAtCam: 1
   FPS: 30
-  frameCnt: 0
-  startTime: 0
   cardGo: 0
 --- !u!1002 &11400003
 EditorExtensionImpl:
@@ -371,3 +370,90 @@ Prefab:
 --- !u!1002 &100100001
 EditorExtensionImpl:
   serializedVersion: 6
+--- !u!1 &1432797619200212
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4558035497883598}
+  - component: {fileID: 119478722427167292}
+  m_Layer: 0
+  m_Name: shadowProjectorExplosion
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1494740288367150
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4159619534102758}
+  m_Layer: 0
+  m_Name: explosionMark
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4159619534102758
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1494740288367150}
+  m_LocalRotation: {x: -0.9781476, y: -0.0000001932336, z: -0.0000001932336, w: -0.20791171}
+  m_LocalPosition: {x: 14.309167, y: -8.333843, z: -64.31233}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4558035497883598}
+  m_Father: {fileID: 400000}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4558035497883598
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1432797619200212}
+  m_LocalRotation: {x: 0.06975647, y: 0, z: 0, w: 0.9975641}
+  m_LocalPosition: {x: 0, y: 0.8, z: -5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4159619534102758}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114948733820364014
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b1e7fdb579dc6d4285c67f775b178d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!119 &119478722427167292
+Projector:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1432797619200212}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_NearClipPlane: 3
+  m_FarClipPlane: 10
+  m_FieldOfView: 12
+  m_AspectRatio: 1
+  m_Orthographic: 1
+  m_OrthographicSize: 4
+  m_Material: {fileID: 2100000, guid: e35c678793b97d04faf788c4a16e9ae8, type: 2}
+  m_IgnoreLayers:
+    serializedVersion: 2
+    m_Bits: 0

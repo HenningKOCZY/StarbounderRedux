@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GUIdisable : MonoBehaviour {
+public class GUIdisable : MonoBehaviour
+{
 
 	GUIQuadObj guiQuadObjScript;
 	GameObject shipObj;
@@ -10,17 +11,19 @@ public class GUIdisable : MonoBehaviour {
 	GameObject guiObj;
 	GUIScript gui;
 
-	void Awake() { 
-		guiQuadObjScript = this.GetComponent<GUIQuadObj>();
-		shipObj = GameObject.Find("Ship");
-		ship = shipObj.GetComponent<MoveShip>();
-		guiObj = GameObject.Find("GUI_1");
-		gui = guiObj.GetComponent<GUIScript>();
+	void Awake ()
+	{ 
+		guiQuadObjScript = this.GetComponent<GUIQuadObj> ();
+		shipObj = GameObject.Find ("Ship");
+		ship = shipObj.GetComponent<MoveShip> ();
+		guiObj = GameObject.Find ("GUI_1");
+		gui = guiObj.GetComponent<GUIScript> ();
 	}
 
 
-	void Update() {
-		if (gui.state == "play" && !ship.state.cruising) {
+	void Update ()
+	{
+		if (gui.state == "play" && ship.state == MoveShip.State.Normal) {
 			guiQuadObjScript.Enabled = true;
 			guiQuadObjScript.Visible = true;	
 		} else {

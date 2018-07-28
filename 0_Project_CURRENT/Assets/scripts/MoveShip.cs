@@ -6,7 +6,6 @@ public class MoveShip : MonoBehaviour
 {
 	public float accelerometerSensitivity = 2.0f;
 
-	GameObject shipObj;
 	Transform sub;
 	Transform animSub;
 	public Animation anim;
@@ -48,9 +47,8 @@ public class MoveShip : MonoBehaviour
 	public GUIQuadObj a2;
 	public GUIQuadObj a3;
 	public Material engineFlareMat;
-	public GameObject splode;
-	public Component splodeParticles;
-	public CardAnim splodeScript;
+	public Explosion splode;
+
 	public Material shipBoosterMat;
 	public Material shipMat;
 
@@ -116,7 +114,7 @@ public class MoveShip : MonoBehaviour
 	private float gateDist = 5.5f;
 	public Material explosionMaterial;
 	public Material explosionParticleMat;
-	public GameObject explosionMark;
+
 	Color boosterColor;
 	public float winDist = 10;
 	bool paused = false;
@@ -165,30 +163,43 @@ public class MoveShip : MonoBehaviour
 
 	public bool restarted = false;
 
-	public class CharacterState
+	public enum State
 	{
-		public bool started = false;
+		PreStart,
+		Normal,
+		Crashing,
+		Cruising,
+		Winning,
+		Title,
+		Stunned,
+		StoppedDead,
+		FullStop,
+		Paused
+	}
+
+	public State state = State.PreStart;
+
+	public class ShipStats
+	{
+		//		public bool started = false;
 		//var startedTime: float;
 		public float elapsedTime = 0;
-		public bool crashing = false;
-		public bool cruising = false;
-		public bool winning = false;
+		//		public bool crashing = false;
+		//		public bool cruising = false;
+		//		public bool winning = false;
 		public bool stopDead = false;
 		public bool fullStop = false;
 		//var stoppedTime: float = 0;
-		public bool stunned = false;
+		//		public bool stunned = false;
 		public float handling = 10;
 		public Vector3 lv;
-		public bool title = false;
+		//		public bool title = false;
 		public float progress;
 		public int jumps = 0;
 		public bool jbClear = true;
-		public bool tunnel = false;
-		public bool tunnel2 = false;
-		public bool tunnel3 = false;
 		public bool jumpStore = false;
 		// for storing a jump button press while close enough to a platform, but not technically on
-		public bool paused = false;
+		//		public bool paused = false;
 		public float lastY = -50f;
 		public float jumpTimer = 0.0f;
 		public int xDisabled = 0;
@@ -203,6 +214,8 @@ public class MoveShip : MonoBehaviour
 		
 	}
 
+	public ShipStats stats = new ShipStats ();
+
 	public class SoundClips
 	{
 		public AudioClip metalHit;
@@ -214,7 +227,6 @@ public class MoveShip : MonoBehaviour
 		public AudioClip[] engineSound;
 	}
 
-	public CharacterState state = new CharacterState ();
 	public SoundClips sound = new SoundClips ();
 
 
@@ -240,6 +252,7 @@ public class MoveShip : MonoBehaviour
 		initShip ();
 		reset (2);
 		blackerPause = gui.blackerPause;
+		camTrans = cam.transform;
 	}
 
 
@@ -268,11 +281,10 @@ public class MoveShip : MonoBehaviour
 //				engineAudio.GetComponent<AudioSource>().clip = sound.engineSound[1];
 		}
 
-		shipObj = Instantiate (Resources.Load<GameObject> ("ship" + shipNum), Vector3.zero, Quaternion.identity) as GameObject;
+		GameObject shipObj = Instantiate (Resources.Load<GameObject> ("ship" + shipNum), Vector3.zero, Quaternion.identity) as GameObject;
 		shipObj.transform.parent = parentToObj;
 		shipObj.transform.localPosition = Vector3.zero;
-		
-		camTrans = cam.transform;
+
 		if (shipNum != 10) { 
 			ultraMaxZSpeed = maxZSpeed;
 			Transform ccs = transform.Find ("collCheckL");
@@ -310,6 +322,8 @@ public class MoveShip : MonoBehaviour
 		shipBoosterMat.SetColor ("_Emission", new Vector4 (((1 - boosterColor.r) / 2 + boosterColor.r), ((1 - boosterColor.g) / 2 + boosterColor.g), ((1 - boosterColor.b) / 2 + boosterColor.b), 1));
 		engineFlareMat.SetColor ("_TintColor", new Vector4 (boosterColor.r / 2, boosterColor.g / 2, boosterColor.b / 2, 0.5f));
 
+		// splode set color
+
 		artCount = artCountSaved;
 	}
 
@@ -332,14 +346,14 @@ public class MoveShip : MonoBehaviour
 	IEnumerator adjustYV2 ()
 	{ // this is for panther
 		float timer = 0.08f;
-		float startY = state.lv.y;
-		state.landing = true;
-		while (timer > 0 && state.landing) {
+		float startY = stats.lv.y;
+		stats.landing = true;
+		while (timer > 0 && stats.landing) {
 			timer -= Time.deltaTime;
 			yv2 = startY * timer * 10;
 			yield return null;
 		}
-		state.landing = false;
+		stats.landing = false;
 		sub.localPosition = new Vector3 (sub.localPosition.x, sub.localPosition.y, 0);
 	}
 
@@ -803,19 +817,17 @@ public class MoveShip : MonoBehaviour
 		rbx = rb.velocity.x;
 		rby = rb.velocity.y;
 		rbz = rb.velocity.z;
-
         
-		if (!state.crashing && !state.winning) {
+		if (state != State.Crashing && state != State.Winning) {
 			if (gm.device == GameMaster.DeviceType.iPhone) {
 				// inputs (merged from OldFixedUpdate)
-				if (state.started) {
+				if (state != State.PreStart) {
 					//acceleration.x now used for side tilts in both landscape or portrait.
 					//used to be -accerlation.y for side tilting when in landscape, and x when in portrait
 					xf = Input.acceleration.x * accelerometerSensitivity; 
 					brakes = false;
 					yf = false;
-				}
-				if (!state.paused) {
+				} else if (state != State.Paused) {
 					for (int i = 0; i < Input.touchCount; ++i) {
 						if (Input.GetTouch (i).position.x > Screen.width - (Screen.width / 4)) {
 							if (Input.GetTouch (i).phase == TouchPhase.Began || Input.GetTouch (i).phase != TouchPhase.Ended) {
@@ -834,11 +846,11 @@ public class MoveShip : MonoBehaviour
 			} else { // computer ctrls
 				//inputs (new)
 				yf = Input.GetButton ("Fire1");
-				if (state.started) {
+				if (state != State.PreStart) {
 					xf = Input.GetAxis ("Horizontal");
 					xfRaw = Input.GetAxisRaw ("Horizontal");
 				}
-				if (!state.cruising) {
+				if (state != State.Cruising) {
 					qf = Input.GetButton ("jumpAhead");
 					if (Input.GetAxisRaw ("Vertical") > 0 || brakeOverride)
 						brakes = false;
@@ -852,54 +864,51 @@ public class MoveShip : MonoBehaviour
 
 		//inputs (new)
 		if (!yf) {
-			state.jbClear = true;
+			stats.jbClear = true;
 		}
 		if (!qf) {
 			qbClear = true;
 		}
-		if (qf && qbClear && !state.cruising)
+		if (qf && qbClear && state != State.Cruising)
 			resetRepoShip ();
 
 
 		// velocity z
-		if (!state.stopDead) {
-			if (!state.cruising) {// && state.started) {
-				if (!brakes)
-					targetSpeed += ((maxZSpeed - targetSpeed + 20) / 2) * Time.deltaTime * 2;
-				else
-					targetSpeed -= ((targetSpeed + 50) / 4) * Time.deltaTime * 4;
-				targetSpeed = Mathf.Clamp (targetSpeed, minZSpeed, maxZSpeed);
-			}
+		if (state == State.Normal) {
+			if (!brakes)
+				targetSpeed += ((maxZSpeed - targetSpeed + 20) / 2) * Time.deltaTime * 2;
+			else
+				targetSpeed -= ((targetSpeed + 50) / 4) * Time.deltaTime * 4;
+			targetSpeed = Mathf.Clamp (targetSpeed, minZSpeed, maxZSpeed);
+
+			stats.progress = transform.position.z;
+			stats.jumpTimer -= Time.deltaTime;
+
+			rbz = targetSpeed;
+		} else { // for stopping
+			rbz = Mathf.Lerp (rb.velocity.z, 0.0f, Time.deltaTime * 6);
 		}
 
-		state.progress = transform.position.z;
-		state.jumpTimer -= Time.deltaTime;
-
-		if (!state.crashing && !state.winning) {
-			rbz = targetSpeed;
-		} else
-			rbz = Mathf.Lerp (rb.velocity.z, 0.0f, Time.deltaTime * 6);
-
-		zForce = rbz / maxZSpeed; //ratio for display?
+		zForce = rbz / maxZSpeed;   //ratio for display?
 
 
 		// start the motion of the ship and the clock when brakes released
-		if (!state.started) {
-			state.elapsedTime = 0;
+		if (state == State.PreStart && stats.grounded) {
+			
 			if (!brakes) {
 				xf = 0;
-				state.started = true;
+				state = State.Normal;
+				cam.switchTo (MoveCam.Mode.Play);
 				//state.startedTime=Time.time;
 				speedUpX ();
 				StartCoroutine (speedUpZ ());
 				if (sfx && engineAudio.activeSelf)
 					engineAudio.GetComponent<AudioSource> ().Play ();
 			}
-		} else if (!state.crashing) {
-			state.elapsedTime += Time.deltaTime / gm.gameSpeed;
 		}
 
-		if (!state.crashing && !state.cruising) {
+		if (state == State.Normal) {
+			stats.elapsedTime += Time.deltaTime / gm.gameSpeed;
 			// check gateways
 			if (transform.position.z > winDist && winDist > 0)
 				checkGates ();
@@ -908,7 +917,7 @@ public class MoveShip : MonoBehaviour
 
 
 		// gravity 
-		if (!state.cruising && !state.crashing)
+		if (state == State.Normal || state == State.PreStart)
 			rby -= (grav * Time.deltaTime);
 
 		// hop limiting? What is this?
@@ -920,8 +929,8 @@ public class MoveShip : MonoBehaviour
 
 
 		// set side to side vel
-		if (!state.cruising)
-			rbx = Mathf.Lerp (rbx, xf * Xspeed, Time.deltaTime * state.handling);
+		if (state == State.Normal)
+			rbx = Mathf.Lerp (rbx, xf * Xspeed, Time.deltaTime * stats.handling);
 
 		// for tilting
 		xf2 = Mathf.Lerp (xf2, (xf * -20) - rbx, Time.deltaTime * 10);
@@ -934,7 +943,7 @@ public class MoveShip : MonoBehaviour
 
 
 		// spacecraft pitch up down on jumps and fall 
-		if (state.jumps > 0) {
+		if (stats.jumps > 0) {
 			xRot = Mathf.Lerp (xRot, -1.5f * rby, Time.deltaTime * xRotSpeed);
 		} else {
 			if (rby < -10) { // free fall over the edge / take away a jump 
@@ -942,51 +951,51 @@ public class MoveShip : MonoBehaviour
 					//level10off();
 				xRot = 0;
 				xRotSpeed = 4;
-				state.jumps = 1;
-				state.grounded = false;
+				stats.jumps = 1;
+				stats.grounded = false;
 			}
 		}
 
 
 		// engine sound
-		if (sfx && state.started) {
+		if (sfx && state == State.Normal) {
 			engineAudio.GetComponent<AudioSource> ().pitch = (targetSpeed / ultraMaxZSpeed + 0.2f) * 1.4f;
 			engineAudio.GetComponent<AudioSource> ().volume = 1 - (Mathf.Abs (((targetSpeed / ultraMaxZSpeed) * 2) - 1.1f));
 		}
 
 
 		// jumps
-		if (yf && state.jbClear && !state.paused) {
-			if (state.jumps == 1) { // double jump
+		if (yf && stats.jbClear && state == State.Normal) {
+			if (stats.jumps == 1) { // double jump
 				if (rc == 0) {
 					jump (2);
-					state.jumps = 2;
+					stats.jumps = 2;
 				} else {
 					jump (2);
-					state.jumps = 1;
+					stats.jumps = 1;
 				}
-			} else if (state.jumps == 0 && !state.cruising) { // jump
+			} else if (stats.jumps == 0) { // jump
 				jump (1);
-				state.jumps = 1;
+				stats.jumps = 1;
 			}
 		}
 
 		// store some vars from this update cycle for use in the next
-		if (state.grounded && deltaY > 0.01f && deltaY < 0.3f) {
+		if (stats.grounded && deltaY > 0.01f && deltaY < 0.3f) {
 			rby = Mathf.Clamp (rby, -20.0f, 0.0f);
 		}
 
-		if (state.landed) {
-			state.jumps = 0;
-			state.landed = false;
+		if (stats.landed) {
+			stats.jumps = 0;
+			stats.landed = false;
 			jumpValueTar = 0;
 		}
 
 		// assign forces and store
 		rb.velocity = new Vector3 (rbx, rby, rbz);
-		state.lv = rb.velocity;
-		deltaY = Mathf.Abs (state.lastY - rb.position.y);
-		state.lastY = rb.position.y;
+		stats.lv = rb.velocity;
+		deltaY = Mathf.Abs (stats.lastY - rb.position.y);
+		stats.lastY = rb.position.y;
 
 		// rotate and place the sub
 		sub.eulerAngles = new Vector3 (xRot, yRot, zRot);
@@ -994,60 +1003,51 @@ public class MoveShip : MonoBehaviour
 
 
 		// fall off the bottom death
-		if (rb.position.y < -25.5f && !state.crashing)
-			crash (0);
+		if (rb.position.y < -25.5f && state != State.Crashing)
+			crash (1);
 		
 
 		// cam goal height adjustment
-		if (state.crashing && !restarted) {
+		if (state == State.Crashing && !restarted) {
 			if (splode.transform.position.y < cam.transform.position.y)
 				cam.goalHeight = splode.transform.position.y;	
-		} else if (state.winning) {
+		} else if (state == State.Winning) {
 			cam.goalHeight = warpPath.transform.position.y;	
-		} else if (!state.cruising) {
+		} else if (state == State.Normal) {
 			// cam goals
-			if (cam.goalHeight < transform.position.y - cam.sensitivity)
+			if (cam.goalHeight < transform.position.y - cam.Ysensitivity)
 				cam.goalHeight += 1.0f;
 			else if (cam.goalHeight > transform.position.y)
 				cam.goalHeight = transform.position.y;	
 		}
 
 		// pausing
-		if (!state.paused) {
+		if (state != State.Paused) {
 			if (gm.device == GameMaster.DeviceType.iPhone) {	
 				foreach (Touch touch in Input.touches) {  
 					if (touch.position.x > Screen.width / 4 && touch.position.x < Screen.width - (Screen.width / 4)) {   
 						if (Mathf.Abs (touch.deltaPosition.y) > 10) {
-							//Application.LoadLevel(0);	
-
-							if (!state.paused && !state.cruising && !state.crashing) { 
-								Time.timeScale = 0; 
-								state.paused = true; 
-								gui.switchGUI ("paused"); 
-								if (sfx && engineAudio.activeSelf)
-									engineAudio.GetComponent<AudioSource> ().Stop (); 
-								//gui.inputWait(.5); 
+							if (state == State.Normal) { 
+								Pause ();
 							}
-							//	else { Time.timeScale=1.0; state.paused=false; paused=false; 
-							//}
 						}
 					}
 				}
 			} else {
-				if (Input.GetButton ("pause")) {
-					if (!state.paused && !state.cruising && !state.crashing) { 
-						Time.timeScale = 0.0f; 
-						state.paused = true; 
-						gui.switchGUI ("paused"); 
-						if (sfx && engineAudio.activeSelf)
-							engineAudio.GetComponent<AudioSource> ().Stop ();
-					}
-				}
+				if (Input.GetButton ("pause"))
+					Pause ();
 			}
 		}
 	}
 
-
+	void Pause ()
+	{
+		Time.timeScale = 0; 
+		state = State.Paused; 
+		gui.switchGUI ("paused"); 
+		if (sfx && engineAudio.activeSelf)
+			engineAudio.GetComponent<AudioSource> ().Stop ();
+	}
 
 	IEnumerator vcfly ()
 	{
@@ -1055,7 +1055,7 @@ public class MoveShip : MonoBehaviour
 		float oldZ = 0;
 		float goalZtemp = 0;
 
-		while (state.cruising) {
+		while (state == State.Cruising) {
 			if (shipNum == 10)
 				anim.Play ("fly");
 			timer -= Time.deltaTime;
@@ -1078,14 +1078,14 @@ public class MoveShip : MonoBehaviour
 	void guiUpdate ()
 	{
 
-		if (!state.stopDead)
-			brakeValue = -0.5f * (state.lv.z / ultraMaxZSpeed);
+		if (state != State.StoppedDead)
+			brakeValue = -0.5f * (stats.lv.z / ultraMaxZSpeed);
 		else
 			brakeValue = 0;
 
 		speedbarMat.mainTextureOffset = new Vector2 (speedbarMat.mainTextureOffset.x, Mathf.Lerp (speedbarMat.mainTextureOffset.y, brakeValue, Time.deltaTime * 15));
 
-		jumpValueTar = state.jumps * 0.25f;
+		jumpValueTar = stats.jumps * 0.25f;
 
 
 		if (jumpValue != jumpValueTar) {
@@ -1116,10 +1116,10 @@ public class MoveShip : MonoBehaviour
 
 	void jump (int which)
 	{
-		state.jbClear = false;
-		state.grounded = false;
-		state.landing = false;
-		state.handling = airHandling;
+		stats.jbClear = false;
+		stats.grounded = false;
+		stats.landing = false;
+		stats.handling = airHandling;
 
 		rb.position += new Vector3 (0f, 0.4f, 0f);
 
@@ -1130,7 +1130,7 @@ public class MoveShip : MonoBehaviour
 		if (which > 0 && which <= 2) {
 			jumpCards (which, Time.time);
 		}
-		state.jumpTimer = 0.06f;
+		stats.jumpTimer = 0.06f;
 	}
 
 
@@ -1253,9 +1253,9 @@ public class MoveShip : MonoBehaviour
 	{ // which 2 means mirror the card in x
 		if (which == 2)
 			airBurstScript.transform.localScale = new Vector3 (airBurstScript.transform.localScale.x * -1, airBurstScript.transform.localScale.y, airBurstScript.transform.localScale.z);
+
 		airBurstScript.CardGo ();
-		//print("ship y = "+shipObj.transform.position.y);
-		airBurstScript2.yPos = shipObj.transform.position.y;
+		airBurstScript2.yPos = transform.position.y - 0.5f;
 	}
 
 	void winCards (Vector3 pos)
@@ -1292,12 +1292,12 @@ public class MoveShip : MonoBehaviour
 
 	void OnCollisionEnter (Collision collision)
 	{
-		if (collision.gameObject.tag == "Kill" && !state.crashing) {
+		if (collision.gameObject.tag == "Kill" && state != State.Crashing) {
 			crash (0);
 			return;
 		}
-		if (!state.grounded) {
-			if (state.lv.y < -1) { // used to be state.lv.y
+		if (!stats.grounded) {
+			if (stats.lv.y < -1) { // used to be state.lv.y
 //				print(collision.gameObject.name);
 //				print("vel y: " + state.lv.y + "    enter..");
 				checkLanding ();
@@ -1307,7 +1307,7 @@ public class MoveShip : MonoBehaviour
 
 	void OnCollisionStay ()
 	{
-		if (!state.grounded) {
+		if (!stats.grounded) {
 			if (rb.velocity.y < -1)
 				checkLanding (); 
 		}
@@ -1318,13 +1318,13 @@ public class MoveShip : MonoBehaviour
 	{
 		int cc = raycheckSide (0);	
 		if (cc > 0) {
-			state.jumps = 0;
+			stats.jumps = 0;
 			//state.contactTimerL=10;
 			return "left";
 		}
 		cc = raycheckSide (1);
 		if (cc > 0) {
-			state.jumps = 0;
+			stats.jumps = 0;
 			return "right";
 			//state.contactTimerR=10;
 		}
@@ -1337,12 +1337,12 @@ public class MoveShip : MonoBehaviour
 
 		cc = raycheckDown (1);	
 		if (cc > 0 || fakeCC == true) {
-			state.fJumping = false;
-			state.jumps = 0;
-			state.landed = true;
-			state.grounded = true;
+			stats.fJumping = false;
+			stats.jumps = 0;
+			stats.landed = true;
+			stats.grounded = true;
 			airBurstScript.CardStop ();
-			state.handling = defaultHandling;
+			stats.handling = defaultHandling;
 			//playSound("land");
 
 			if (shipNum != 10) {
@@ -1364,11 +1364,11 @@ public class MoveShip : MonoBehaviour
 
 //			rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
 			rby = 0;
-			if (!state.cruising)
-				cam.goalHeight = state.lastY;
+			if (state == State.Normal)
+				cam.goalHeight = stats.lastY;
 		}
 		if (gm.worldNum == 1)
-		if (state.grounded == true)
+		if (stats.grounded == true)
 				//level10on();
 		cc = 0;
 		fakeCC = false;
@@ -1395,11 +1395,13 @@ public class MoveShip : MonoBehaviour
 	{
 		Transform ct = collision.transform;
 
-		if (ct.name == "camDropBox")
-			state.tunnel = true;
-		if (ct.name == "camDropBox2")
-			state.tunnel2 = true;
-		if (ct.tag == "artifact" && ct.position.z > 0) { // >0 necessary to stop double collisions and therefore playing the second at -100, for some reason
+		if (ct.name == "camDropBox") {
+//			state.tunnel = true;
+			cam.tunnelSwitch (1);
+		} else if (ct.name == "camDropBox2") {
+//			state.tunnel2 = true;
+			cam.tunnelSwitch (2);
+		} else if (ct.tag == "artifact" && ct.position.z > 0) { // >0 necessary to stop double collisions and therefore playing the second at -100, for some reason
 			print (ct.name);
 			// set off burst
 			StartCoroutine (ArtiBurst (ct.position));
@@ -1429,11 +1431,9 @@ public class MoveShip : MonoBehaviour
 	void OnTriggerExit (Collider collision)
 	{
 		Transform ct = collision.transform;
-		if (!state.crashing) {
-			if (ct.name == "camDropBox")
-				state.tunnel = false;
-			else if (ct.name == "camDropBox2")
-				state.tunnel2 = false;
+		if (state == State.Normal) {
+			if (ct.name == "camDropBox" || ct.name == "camDropBox2")
+				cam.tunnelSwitch (0);
 		}
 	}
 
@@ -1528,38 +1528,40 @@ public class MoveShip : MonoBehaviour
 		return count;
 	}
 
+
 	public void crash (int type)
 	{ //type: 0=wall hit, 1=falling death (no sound or splode or wait)
-		float secs = 0.0f;
 		shad.enabled = false;
-		state.crashing = true;	
-		shad.enabled = false;
+		state = State.Crashing;
 		cam.goalZ = rb.position.z + 2;
-		//print(rigidbody.position);
-		cam.mode = MoveCam.Mode.Stop;
+		cam.switchTo (MoveCam.Mode.Crash);
 		minZSpeed = 0;
 		targetSpeed = 0;
 		xf = 0;	
 		brakes = true;
 
-		if (type == 0) {	
-			//playSound("explode");
-			splode.transform.position = rb.position;
-			//		splodeParticles.GetComponent.<ParticleEmitter>().emit = true;
-			splodeScript.lookAtCam = true;
-			splodeScript.CardGo ();
-			secs = 1.55f;
-		}
 		levelAttempts++;
-		Vector3 posStore = rb.position;
+		StartCoroutine (crashCO (type));
+	}
+
+	IEnumerator crashCO (int type)
+	{
+		float secs = 0;
+		if (type == 0) {	
+			splode.MakeSplode (rb.position);
+			secs = 1.55f;
+		} else if (type == 1) {
+			secs = 0.55f;
+		}
+
 		rb.position = new Vector3 (0, 0, 1000);
-		// rigidbody.position.z-=10;
 		rb.velocity = Vector3.zero;
-//		yield WaitForSeconds(0.2);
-		explosionMark.transform.position = posStore; 
-		Transform exploSub = explosionMark.transform.Find ("shadowProjectorExplosion");
-		exploSub.localEulerAngles = new Vector3 (0, 0, Random.Range (0, 360));
-//		yield WaitForSeconds(secs);
+		yield return new WaitForSeconds (0.2f);
+		if (type == 0) {
+			splode.MakeSplodeMark ();
+		}
+
+		yield return new WaitForSeconds (secs);
 		reset (0);
 	}
 
@@ -1585,8 +1587,8 @@ public class MoveShip : MonoBehaviour
 			newRecord = false;
 		// print ("Level: "+level+"   Time: "+gui.curTime);
 		//playSound("win");
-		cam.mode = MoveCam.Mode.Stop;
-		state.winning = true;
+		cam.switchTo (MoveCam.Mode.Win);
+		state = State.Winning;
 		if (sfx && engineAudio.activeSelf)
 			engineAudio.GetComponent<AudioSource> ().Stop ();
 		minZSpeed = 0;
@@ -1673,10 +1675,8 @@ public class MoveShip : MonoBehaviour
 		RenderSettings.fogEndDistance = 300;
 		//playSound("vc");
 		anim.Stop ();
-		state.winning = false;
-		state.cruising = true;
-		state.crashing = false;
-		state.jumps = 2;
+		state = State.Cruising;
+		stats.jumps = 2;
 		StartCoroutine (vcfly ());
 		cam.goalHeight = 0;
 		if (newRecord)
@@ -1688,9 +1688,8 @@ public class MoveShip : MonoBehaviour
 		anim2.Play ("winCruise1");	
 		repoShip ();	
 
-		cam.switchTo (MoveCam.Mode.Win);
+		cam.switchTo (MoveCam.Mode.Cruise);
 		gui.message = "none";
-		explosionMark.transform.position = new Vector3 (0, 0, -50);
 
 		targetSpeed = 0;
 		//make star streaks
@@ -1759,9 +1758,8 @@ public class MoveShip : MonoBehaviour
 			RenderSettings.fogStartDistance = 150;
 			RenderSettings.fogEndDistance = 300;	
 		}
-		state.cruising = true;
-		state.crashing = false;
-		state.jumps = 2;
+		state = State.Cruising; // ??
+		stats.jumps = 2;
 		cam.goalHeight = -1;
 		targetSpeed = 0;
 		cam.switchTo (MoveCam.Mode.Title);
@@ -1781,7 +1779,7 @@ public class MoveShip : MonoBehaviour
 		targetSpeed = 0;
 		rb.velocity = Vector3.zero;
 		rb.position = gm.startPos + new Vector3 (0, 5, 0);	
-		state.lastY = rb.position.y;
+		stats.lastY = rb.position.y;
 		rb.rotation = Quaternion.identity;
 		anim2.transform.localPosition = Vector3.zero;
 
@@ -1798,7 +1796,7 @@ public class MoveShip : MonoBehaviour
 		targetSpeed = 0;
 		rb.velocity = Vector3.zero;
 		rb.position = gm.resetPos [gm.rPointCounter] + new Vector3 (0, 5, 0);	
-		state.lastY = rb.position.y;
+		stats.lastY = rb.position.y;
 		rb.rotation = Quaternion.identity;
 		anim2.transform.localPosition = Vector3.zero;
 		gm.rPointCounter++;
@@ -1808,10 +1806,10 @@ public class MoveShip : MonoBehaviour
 
 	IEnumerator AfterReset ()
 	{
-		yield return new WaitForSeconds (blackerPause);
+		yield return new WaitForSeconds (blackerPause / 4);
 		grav = defGrav;
-		state.grounded = false;
-		state.jumpTimer = 0.25f;
+		stats.grounded = false;
+		stats.jumpTimer = 0.25f;
 	}
 
 
@@ -1820,19 +1818,19 @@ public class MoveShip : MonoBehaviour
 		topSurface = null;
 		sideSurface = null;
 		frontSurface = null;
-
 	}
+
 
 	void level10Init ()
 	{
 		topSurface = GameObject.Find ("topSurfaces");
 		sideSurface = GameObject.Find ("sideSurfaces");
 		frontSurface = GameObject.Find ("frontSurfaces");
-
 	}
 
-	public void reset (int type)
-	{ // 0: regular 1: after victory cruise 2: vary beginning 3: skip title check
+
+	public void reset (int type)  // 0: regular 1: after victory cruise 2: vary beginning 3: skip title check
+	{
 		System.GC.Collect ();
 		if (gm.worldNum == 1)
 			level10null ();
@@ -1855,12 +1853,12 @@ public class MoveShip : MonoBehaviour
 		level = gm.level;
 		artCountSaved = PlayerPrefs.GetInt (("Level" + level + "ArtCount"), 000);	
 		Xspeed = 0;	
-		state.started = false;
-		state.elapsedTime = 0;
-		state.stopDead = false;
-		state.fullStop = false;
+
+		state = State.PreStart;
+		stats.elapsedTime = 0;
+
 		gm.killLevel ();
-		state.jumpStore = false;
+		stats.jumpStore = false;
 		minZSpeed = 0;
 		brakeOverride = false;
 		targetSpeed = 0.0f;
@@ -1874,12 +1872,10 @@ public class MoveShip : MonoBehaviour
 		}
 		shipMat.SetTexture ("_Shad", Resources.Load<Texture2D> ("ship/world" + gm.worldNum + " Refl"));
 
-		state.tunnel = false;
-		state.tunnel2 = false;
+		cam.tunnelSwitch (0);
 		jumpMult = 1.0f;
 
 		resetCards ();
-		explosionMark.transform.position = new Vector3 (0, 0, -50);
 
 		if (gm.level % 10 == 0 && levelAttempts == 1 && type != 3 && gm.worldNum != 6) {
 			titleScreen ();
@@ -1891,7 +1887,6 @@ public class MoveShip : MonoBehaviour
 				gui.switchGUI ("play");
 			disableGUI ();
 			enableGUI ();
-			state.title = false;
 
 			if (gm.worldNum == 5 || gm.worldNum == 1)
 				RenderSettings.fogStartDistance = 100;
@@ -1899,15 +1894,13 @@ public class MoveShip : MonoBehaviour
 				RenderSettings.fogStartDistance = 10;
 			RenderSettings.fogEndDistance = 300;
 			shad.enabled = true;
-			state.crashing = false;
-			state.cruising = false;
-			state.jumps = 2;
-			state.landed = false;
+			stats.jumps = 2;
+			stats.landed = false;
 			gui.message = "none";
 			gm.makeLevel ();
 			xf = 0;
 			sub.rotation = Quaternion.Euler (0, 0, 0);
-			cam.switchTo (MoveCam.Mode.Play);
+			cam.switchTo (MoveCam.Mode.PreStart);
 			anim2.Stop ();
 			if (shipNum == 10) {
 				anim.Stop ("jump");
@@ -1916,7 +1909,7 @@ public class MoveShip : MonoBehaviour
 			else
 				anim.Play ("idle");
 			yf = false;
-			state.jbClear = true;
+			stats.jbClear = true;
 			brakes = true;
 			musicSourceScript.SetTrack ();
 		}
@@ -1924,16 +1917,19 @@ public class MoveShip : MonoBehaviour
 		UpdateArtIcons ();
 		System.GC.Collect ();
 
-
 		gm.resetEasy ();
+		stats.elapsedTime = 0;
+		guiUpdate ();
+
 		if (gm.worldNum == 1)
 			level10Init ();
 	}
 
+
 	void checkGates ()
 	{
 		foreach (Transform gate in gm.gateways) {
-			if (gate != null && !state.winning) {
+			if (gate != null) {
 				float dist = Vector3.Distance (gate.position + new Vector3 (0, 3, 0), transform.position);
 				if (dist < gateDist) {
 					winCards (gate.position); 
@@ -1943,37 +1939,36 @@ public class MoveShip : MonoBehaviour
 		}
 	}
 
+
 	public void stopDead ()
 	{
-		if (!state.stopDead) {
+		if (state != State.StoppedDead) {
 			print ("Stoppin'....Dead");
 			//playSound("land");
 
-			state.stopDead = true;
+			state = State.StoppedDead;
 			rb.velocity = new Vector3 (rb.velocity.x, rb.velocity.y, 0);
 			minZSpeed = 0;
 			targetSpeed = 0;
 		}
 	}
 
+
 	void bounceBack ()
 	{
-
 		rb.position += Vector3.back;
 		rb.velocity = new Vector3 (rb.velocity.x, rb.velocity.y, -30);
 		targetSpeed = 0;
-		state.stunned = true;
+		state = State.Stunned;
 //		yield WaitForSeconds(0.2);
-		state.stunned = false;
+		state = State.Normal;
 	}
+
 
 	void resetCards ()
 	{
 		//reset explosion
-		splode.transform.localEulerAngles = new Vector3 (336, 180, 180);
-		splode.transform.position = new Vector3 (0, 0, -100);
-		splodeScript = splode.GetComponentInChildren<CardAnim> ();
-		splodeParticles = splode.GetComponentInChildren<ParticleEmitter> ();
+		splode.reset ();
 
 		//reset win cards
 		for (int i = 0; i < 2; i++) {
@@ -1983,6 +1978,7 @@ public class MoveShip : MonoBehaviour
 		warpPath.transform.position = new Vector3 (0, 0, -100);
 		warpPathAniObj.GetComponent<Animation> ().Rewind ("warpPath");
 	}
+
 
 	void playSound (string which)
 	{ // jump, land, win, explode
@@ -2025,6 +2021,7 @@ public class MoveShip : MonoBehaviour
 		}
 	}
 
+
 	public IEnumerator speedUpZ ()
 	{
 		brakeOverride = true;
@@ -2036,19 +2033,20 @@ public class MoveShip : MonoBehaviour
 		brakeOverride = false;
 	}
 
+
 	void disableX (int which)
 	{
-		state.xDisabled = which;
+		stats.xDisabled = which;
 
 		for (int i = 1; i <= maxXspeed; i++) {
 			if (i < 12)
-				state.handling = maxXspeed / i;
+				stats.handling = maxXspeed / i;
 			if (i == 12)
-				state.xDisabled = 0;
+				stats.xDisabled = 0;
 //			yield WaitForSeconds(0.01);
 			if (i == maxXspeed) {
-				if (!state.grounded)
-					state.handling = airHandling;
+				if (!stats.grounded)
+					stats.handling = airHandling;
 			}
 		}
 	}
