@@ -3,7 +3,7 @@ private var guiWidth: int = 480;
 private var guiHeight: int =320;
 private var elapsedTime: float = 0.0;
 private var lastTime: float =0.0;
-private var letterAdvance: int = -1;
+private var letterAdvance: int = 0;
 var timeInc: float;
 private var dynTimeInc: float;
 var btnTexture : Texture[];
@@ -140,7 +140,7 @@ function nexty() {
 	if (whichText>=texty.length) {
 		end();
 	} else {
-		letterAdvance=-1;
+		letterAdvance=0;
 		dynTimeInc=timeInc;
 		dynPauseInc=pauseInc;
 		state="write";
