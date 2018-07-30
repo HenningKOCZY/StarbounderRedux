@@ -85,7 +85,7 @@ var airSparksMat: Material;
 
 var airBurst : GameObject;
 var airBurstScript : CardAnim;
-var airBurstScript2 : AirBurst2;
+var airBurstScript2 : AirBurst;
 var airBurstMat: Material;
 var elecBurst: GameObject[];
 var warpPath: GameObject;

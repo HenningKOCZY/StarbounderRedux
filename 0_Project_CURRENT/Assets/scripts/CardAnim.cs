@@ -26,6 +26,7 @@ public class CardAnim : MonoBehaviour
 
 	public void CardGo ()
 	{
+		frameCount = 0;
 		cardGo = true;
 		timer = 0;
 	}

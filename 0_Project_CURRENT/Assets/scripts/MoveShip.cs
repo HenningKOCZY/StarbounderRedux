@@ -46,13 +46,12 @@ public class MoveShip : MonoBehaviour
 	public GUIQuadObj a1;
 	public GUIQuadObj a2;
 	public GUIQuadObj a3;
-	public Material engineFlareMat;
-	public Explosion splode;
+	//	public Material engineFlareMat;
 
 	public Material shipBoosterMat;
 	public Material shipMat;
 
-	// side sparks
+	// side sparks ??
 	GameObject splodeInst;
 	public GameObject sparkDownPF;
 	public Material engineSparkMat;
@@ -85,18 +84,18 @@ public class MoveShip : MonoBehaviour
 	public GameObject airSparksPF;
 	public Material airSparksMat;
 
-	public GameObject airBurst;
-	public CardAnim airBurstScript;
-	public AirBurst2 airBurstScript2;
-	public Material airBurstMat;
+	//	public GameObject airBurst;
+	public Explosion splode;
+	public JumpBurst jumpBurst;
+	public ArtBurst artBurst;
+	//	public Material airBurstMat;
 	public GameObject[] elecBurst;
 	public GameObject warpPath;
 	public GameObject warpPathAniObj;
 	public CardAnim[] elecBurstScript;
 	int artCount;
 	private int artCountSaved;
-	public GameObject artBurst;
-	public CardAnim artBurstScript;
+
 	public Transform warpTubePF;
 	//var warpPathPF: GameObject;
 	public GameObject pTracksPF;
@@ -115,7 +114,7 @@ public class MoveShip : MonoBehaviour
 	public Material explosionMaterial;
 	public Material explosionParticleMat;
 
-	Color boosterColor;
+	public Color boosterColor;
 	public float winDist = 10;
 	bool paused = false;
 	private float xfLim = 0;
@@ -130,7 +129,6 @@ public class MoveShip : MonoBehaviour
 	//var highestY: float = 0.0;
 	float actualY = 0.0f;
 
-
 	public float xf;
 	bool qf;
 	bool qbClear = true;
@@ -141,7 +139,6 @@ public class MoveShip : MonoBehaviour
 	float xRot;
 	float xRotSpeed = 10;
 	float yv2 = 0;
-
 
 	int pTen = -1;
 	int pDigit = -1;
@@ -229,6 +226,15 @@ public class MoveShip : MonoBehaviour
 	public SoundClips sound = new SoundClips ();
 
 
+
+	void Awake ()
+	{
+		GameObject guiQuadMgr = GameObject.Find ("GUIQuadMgr");
+		guiObjs = guiQuadMgr.GetComponentsInChildren<GUIQuadObj> ();
+
+	}
+
+
 	void Start ()
 	{
 		System.GC.Collect ();
@@ -248,26 +254,15 @@ public class MoveShip : MonoBehaviour
 		if (!sfx)
 			engineAudio.SetActive (false);
 		defGrav = grav;
-		initShip ();
+		InitShip ();
 		reset (2);
 		blackerPause = gui.blackerPause;
 		camTrans = cam.transform;
+
 	}
 
 
-	void Awake ()
-	{
-		GameObject guiQuadMgr = GameObject.Find ("GUIQuadMgr");
-		guiObjs = guiQuadMgr.GetComponentsInChildren<GUIQuadObj> ();
-		
-		boosterColor = new Vector4 (PlayerPrefs.GetFloat ("BoostColor_R", 0f), PlayerPrefs.GetFloat ("BoostColor_G", 0.5f), PlayerPrefs.GetFloat ("BoostColor_B", 1f), 1);	
-		explosionMaterial.SetColor ("_Emission", new Vector4 (boosterColor.r / 2, boosterColor.g / 2, boosterColor.b / 2, 1));
-		explosionParticleMat.SetColor ("_TintColor", new Vector4 (((1 - boosterColor.r) / 4 + boosterColor.r), ((1 - boosterColor.g) / 4 + boosterColor.g), ((1 - boosterColor.b) / 4 + boosterColor.b), 1));
-		airBurst.GetComponent<Renderer> ().material.SetColor ("_Emission", new Vector4 (boosterColor.r / 2, boosterColor.g / 2, boosterColor.b / 2, 1));
-	}
-
-
-	void initShip ()
+	void InitShip ()
 	{	
 		Transform parentToObj = transform.GetChild (0).GetChild (0);
 		
@@ -307,6 +302,7 @@ public class MoveShip : MonoBehaviour
 
 		Color baseColor = new Vector4 (PlayerPrefs.GetFloat ("BaseColor_R", 0.5f), PlayerPrefs.GetFloat ("BaseColor_G", 0.5f), PlayerPrefs.GetFloat ("BaseColor_B", 0.5f), 1);
 		Color patColor = new Vector4 (PlayerPrefs.GetFloat ("PatColor_R", 0.5f), PlayerPrefs.GetFloat ("PatColor_G", 0), PlayerPrefs.GetFloat ("PatColor_B", 0), 1);
+		boosterColor = new Vector4 (PlayerPrefs.GetFloat ("BoostColor_R", 0f), PlayerPrefs.GetFloat ("BoostColor_G", 0.5f), PlayerPrefs.GetFloat ("BoostColor_B", 1f), 1);
 
 		shipMat.SetColor ("_BaseColor", baseColor * 0.5f);
 		shipMat.SetColor ("_PatColor", patColor * 0.6f);
@@ -318,12 +314,15 @@ public class MoveShip : MonoBehaviour
 		shipMat.SetTextureOffset ("_Shad", new Vector2 (0, shipMatOffset [shipNum]));
 		shipMat.SetTextureScale ("_Shad", new Vector2 (1, shipMatScale [shipNum]));	
 
-		shipBoosterMat.SetColor ("_Emission", new Vector4 (((1 - boosterColor.r) / 2 + boosterColor.r), ((1 - boosterColor.g) / 2 + boosterColor.g), ((1 - boosterColor.b) / 2 + boosterColor.b), 1));
-		engineFlareMat.SetColor ("_TintColor", new Vector4 (boosterColor.r / 2, boosterColor.g / 2, boosterColor.b / 2, 0.5f));
-
-		// set splode color
-
-		// set airburst color?
+		// set boosters
+		shipBoosterMat.SetColor ("_Tint", boosterColor);
+//		engineFlareMat.SetColor ("_TintColor", new Vector4 (boosterColor.r / 2, boosterColor.g / 2, boosterColor.b / 2, 0.5f));
+		// set engine lights
+	
+		// set splode and airburst colors based on booster Color
+		splode.InitColor (boosterColor);
+		jumpBurst.InitColor (boosterColor);
+		//		explosionParticleMat.SetColor ("_TintColor", new Vector4 (((1 - boosterColor.r) / 4 + boosterColor.r), ((1 - boosterColor.g) / 4 + boosterColor.g), ((1 - boosterColor.b) / 4 + boosterColor.b), 1));
 
 		artCount = artCountSaved;
 	}
@@ -516,7 +515,7 @@ public class MoveShip : MonoBehaviour
 
 
 		// jumps
-		if (yf && stats.jbClear && state == State.Normal) {
+		if (yf && stats.jbClear && (state == State.Normal || state == State.PreStart)) {
 			if (stats.jumps == 1) { // double jump
 				if (rc == 0) {
 					jump (2);
@@ -682,7 +681,8 @@ public class MoveShip : MonoBehaviour
 		rby = jumpforce * jumpMult;
 
 		if (which > 0 && which <= 2) {
-			jumpCards (which, Time.time);
+//			jumpCards (which, Time.time);
+			jumpBurst.MakeJump (transform.position, stats.lv);
 		}
 		stats.jumpTimer = 0.06f;
 	}
@@ -803,14 +803,15 @@ public class MoveShip : MonoBehaviour
 	//
 	//	}
 
-	void jumpCards (int which, float startTime)
-	{ // which 2 means mirror the card in x
-		if (which == 2)
-			airBurstScript.transform.localScale = new Vector3 (airBurstScript.transform.localScale.x * -1, airBurstScript.transform.localScale.y, airBurstScript.transform.localScale.z);
-
-		airBurstScript.CardGo ();
-		airBurstScript2.yPos = transform.position.y - 0.5f;
-	}
+	//	void jumpCards ()
+	//	{ // which 2 means mirror the card in x
+	////		if (which == 2)
+	////			airBurstScript.transform.localScale = new Vector3 (airBurstScript.transform.localScale.x * -1, airBurstScript.transform.localScale.y, airBurstScript.transform.localScale.z);
+	////
+	////		airBurstScript.CardGo ();
+	////		airBurstScript2.yPos = transform.position.y - 0.5f;
+	//		jumpBurst.MakeJump (transform.position);
+	//	}
 
 	void winCards (Vector3 pos)
 	{ // makes cam flare and path after win gate
@@ -824,22 +825,6 @@ public class MoveShip : MonoBehaviour
 		for (int i = 0; i < 2; i++) {
 			elecBurstScript [i].CardGo ();
 		}
-
-	}
-
-
-
-	IEnumerator ArtiBurst (Vector3 pos)
-	{ // makes cam flare when artifact is collected
-		if (sfx)
-			GetComponent<AudioSource> ().PlayOneShot (sound.artSound);
-		artBurst.transform.position = pos;
-		artBurst.transform.parent = camTrans;
-		artBurstScript.CardGo ();
-		yield return new WaitForSeconds (1f);
-
-		artBurst.transform.parent = null;
-		artBurst.transform.position = new Vector3 (0, 0, -100);
 
 	}
 
@@ -895,7 +880,7 @@ public class MoveShip : MonoBehaviour
 			stats.jumps = 0;
 			stats.landed = true;
 			stats.grounded = true;
-			airBurstScript.CardStop ();
+//			airBurstScript.CardStop ();
 			stats.handling = defaultHandling;
 			//playSound("land");
 
@@ -956,10 +941,12 @@ public class MoveShip : MonoBehaviour
 //			state.tunnel2 = true;
 			cam.tunnelSwitch (2);
 		} else if (ct.tag == "artifact" && ct.position.z > 0) { // >0 necessary to stop double collisions and therefore playing the second at -100, for some reason
-			print (ct.name);
 			// set off burst
-			StartCoroutine (ArtiBurst (ct.position));
+			artBurst.MakeArtBurst (ct.position);
 			ct.position = new Vector3 (ct.position.x, ct.position.y, -100); // "disappear" the artifact out of the way
+			if (sfx)
+				GetComponent<AudioSource> ().PlayOneShot (sound.artSound);
+			
 			// update guis
 			if (ct.name == "artifact1") {
 				if (gui.a1state == 0)

@@ -651,10 +651,6 @@ MonoBehaviour:
   progBox2: {fileID: 244}
   barLength: 320
   aspectMult: 1
---- !u!1 &61 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 100000, guid: 33090435943fe4f689acd3770d967869, type: 2}
-  m_PrefabInternal: {fileID: 269}
 --- !u!1 &62
 GameObject:
   m_ObjectHideFlags: 0
@@ -689,6 +685,12 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &65 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114538904818374642, guid: 33090435943fe4f689acd3770d967869,
+    type: 2}
+  m_PrefabInternal: {fileID: 269}
+  m_Script: {fileID: 11500000, guid: 2b1fa27637a7eab4d85f05f4f191d677, type: 3}
 --- !u!1 &68
 GameObject:
   m_ObjectHideFlags: 0
@@ -723,7 +725,7 @@ GameObject:
   - component: {fileID: 181}
   - component: {fileID: 259}
   m_Layer: 0
-  m_Name: airBurstPlane
+  m_Name: jumpBurstPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -754,7 +756,7 @@ GameObject:
   - component: {fileID: 154}
   - component: {fileID: 238}
   m_Layer: 0
-  m_Name: airBurst
+  m_Name: jumpBurst
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -960,7 +962,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &105
 Transform:
@@ -1044,7 +1046,7 @@ Transform:
   - {fileID: 235094784}
   - {fileID: 1343264324}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &114
 Transform:
@@ -1169,7 +1171,7 @@ Transform:
   - {fileID: 111}
   - {fileID: 112}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &123
 Transform:
@@ -1195,7 +1197,7 @@ Transform:
   m_LocalScale: {x: 0.8, y: 1, z: 4.5}
   m_Children: []
   m_Father: {fileID: 163}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &125
 Transform:
@@ -1208,7 +1210,7 @@ Transform:
   m_LocalScale: {x: 0.8, y: 1, z: 4.5}
   m_Children: []
   m_Father: {fileID: 163}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &126
 Transform:
@@ -1375,7 +1377,7 @@ Transform:
   - {fileID: 133}
   - {fileID: 132}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &138
 Transform:
@@ -1388,7 +1390,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &142
 Transform:
@@ -1415,7 +1417,7 @@ Transform:
   m_Children:
   - {fileID: 142}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &148
 Transform:
@@ -1428,7 +1430,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &152
 Transform:
@@ -1463,12 +1465,12 @@ Transform:
   m_PrefabParentObject: {fileID: 400000, guid: dc15815c418cf455cba418cf019a8ae8, type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 74}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.43678284, z: -0.9662997}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 153}
-  m_Father: {fileID: 163}
+  m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &155 stripped
@@ -1486,7 +1488,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 163}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &157
 Transform:
@@ -1512,7 +1514,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &159
 Transform:
@@ -1525,7 +1527,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &160
 Transform:
@@ -1541,7 +1543,7 @@ Transform:
   - {fileID: 106}
   - {fileID: 105}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &161
 Transform:
@@ -1555,7 +1557,7 @@ Transform:
   m_Children:
   - {fileID: 164}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &162
 Transform:
@@ -1582,13 +1584,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 162}
-  - {fileID: 154}
   - {fileID: 124}
   - {fileID: 125}
   - {fileID: 156}
   - {fileID: 155}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &164
 Transform:
@@ -2884,8 +2885,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e11db2b987634bfc90be5dce883093a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  yPos: 0
-  airBurstScript: {fileID: 259}
 --- !u!114 &241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3263,7 +3262,7 @@ MonoBehaviour:
   pantherFlag: {fileID: 42}
   pantherFlagScript: {fileID: 241}
   level: 27
-  setData: 1
+  setData: 0
   sd:
     GamePhase: 0
     ShipNum: 3
@@ -3703,9 +3702,7 @@ MonoBehaviour:
   a1: {fileID: 246}
   a2: {fileID: 245}
   a3: {fileID: 247}
-  engineFlareMat: {fileID: 2100000, guid: df5bc9cef1b124fd5bfffe50e09657af, type: 2}
-  splode: {fileID: 276}
-  shipBoosterMat: {fileID: 2100000, guid: 5bc94d9c3a54d4a88aec4e57a219bf9d, type: 2}
+  shipBoosterMat: {fileID: 2100000, guid: c0ac30fc58fad5d45a7943c3a3d1fd07, type: 2}
   shipMat: {fileID: 2100000, guid: 5e8b78c7b7a96459999049651d4c6c87, type: 2}
   sparkDownPF: {fileID: 100036, guid: 2ce8603dbe539dc4cbc0982c111866f1, type: 2}
   engineSparkMat: {fileID: 2100000, guid: a248df5e99a27e2488fcf17c88b979a7, type: 2}
@@ -3716,10 +3713,9 @@ MonoBehaviour:
   targetSpeed: 0
   airSparksPF: {fileID: 100002, guid: b269c6151860a46a69e513bb0389596c, type: 2}
   airSparksMat: {fileID: 2100000, guid: 1bad0e9cf77a9421db6d5be54e287817, type: 2}
-  airBurst: {fileID: 72}
-  airBurstScript: {fileID: 259}
-  airBurstScript2: {fileID: 238}
-  airBurstMat: {fileID: 2100000, guid: 9252aeae9961042c3a5759ca06e7bb22, type: 2}
+  splode: {fileID: 276}
+  jumpBurst: {fileID: 238}
+  artBurst: {fileID: 65}
   elecBurst:
   - {fileID: 71}
   - {fileID: 30}
@@ -3728,8 +3724,6 @@ MonoBehaviour:
   elecBurstScript:
   - {fileID: 2103307172}
   - {fileID: 1700852284}
-  artBurst: {fileID: 61}
-  artBurstScript: {fileID: 2103307172}
   warpTubePF: {fileID: 400008, guid: b6a2499d83fe84b47b7e89f2748b3689, type: 2}
   pTracksPF: {fileID: 100008, guid: fa9fef1d8be28d5499030f6354ec38bd, type: 2}
   cruiseLightsPF: {fileID: 400000, guid: 3f91e03efc264d54d980c35ee5691c64, type: 2}
@@ -3740,6 +3734,7 @@ MonoBehaviour:
   explosionMaterial: {fileID: 2100000, guid: 6f630b35d47ee4eca9b559a0b280d8b0, type: 2}
   explosionParticleMat: {fileID: 2100000, guid: 87e791f3fed694edd8911f82b0c3336a,
     type: 2}
+  boosterColor: {r: 0, g: 0, b: 0, a: 0}
   winDist: 10
   xf: 0
   xf2: 0
@@ -3898,7 +3893,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: b269c6151860a46a69e513bb0389596c, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b269c6151860a46a69e513bb0389596c, type: 2}
@@ -3944,7 +3939,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 4d7b69acfaabb4b2a9e73c3db5dbb2f2, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4d7b69acfaabb4b2a9e73c3db5dbb2f2, type: 2}
@@ -3958,11 +3953,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 33090435943fe4f689acd3770d967869, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 23.64
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 33090435943fe4f689acd3770d967869, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 9.19
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 33090435943fe4f689acd3770d967869, type: 2}
       propertyPath: m_LocalPosition.z
@@ -3970,15 +3965,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 33090435943fe4f689acd3770d967869, type: 2}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 33090435943fe4f689acd3770d967869, type: 2}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 33090435943fe4f689acd3770d967869, type: 2}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 33090435943fe4f689acd3770d967869, type: 2}
       propertyPath: m_LocalRotation.w
@@ -3990,14 +3985,13 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114538904818374642, guid: 33090435943fe4f689acd3770d967869,
         type: 2}
-      propertyPath: ship
-      value: 
-      objectReference: {fileID: 264}
-    - target: {fileID: 114538904818374642, guid: 33090435943fe4f689acd3770d967869,
-        type: 2}
       propertyPath: cam
       value: 
       objectReference: {fileID: 265}
+    - target: {fileID: 100002, guid: 33090435943fe4f689acd3770d967869, type: 2}
+      propertyPath: m_Name
+      value: artBurstPlane
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 33090435943fe4f689acd3770d967869, type: 2}
   m_IsPrefabParent: 0
@@ -4042,7 +4036,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: f87ee542d8ad14e53b9985f8bdb274cd, type: 2}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f87ee542d8ad14e53b9985f8bdb274cd, type: 2}
@@ -4084,7 +4078,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 64999dbd0e40e4eb3a29fb9dd8cae7ef, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 64999dbd0e40e4eb3a29fb9dd8cae7ef, type: 2}
       propertyPath: m_Name

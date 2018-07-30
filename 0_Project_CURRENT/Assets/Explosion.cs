@@ -20,12 +20,16 @@ public class Explosion : MonoBehaviour
 
 	}
 
+	public void InitColor (Vector4 inColor)
+	{
+		card.GetComponent<Renderer> ().material.SetColor ("_Emission", inColor * 0.8f);
+	}
 
-	public void MakeSplode (Vector3 pos)
+	public void MakeSplode (Vector3 inPos)
 	{
 		//playSound("explode");
-		crashPos = pos;
-		transform.position = pos;
+		crashPos = inPos;
+		transform.position = inPos;
 		// random rot
 		card.transform.localEulerAngles = new Vector3 (0, Random.Range (0, 360), 0);
 		//			//		splodeParticles.GetComponent.<ParticleEmitter>().emit = true;
