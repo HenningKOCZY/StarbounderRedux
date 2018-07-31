@@ -19,6 +19,7 @@ public class MoveShip : MonoBehaviour
 	public MoveCam cam;
 	Transform camTrans;
 	public GUIScript gui;
+	public GUInew guinew;
 	public GameMaster gm;
 
 	public GameObject engineAudio;
@@ -170,10 +171,12 @@ public class MoveShip : MonoBehaviour
 		Title,
 		Stunned,
 		FullStop,
-		Paused
+		Paused,
+		Prev
 	}
 
 	public State state = State.PreStart;
+	State prevState = State.PreStart;
 
 	public class ShipStats
 	{
@@ -230,10 +233,41 @@ public class MoveShip : MonoBehaviour
 	void Awake ()
 	{
 		GameObject guiQuadMgr = GameObject.Find ("GUIQuadMgr");
-		guiObjs = guiQuadMgr.GetComponentsInChildren<GUIQuadObj> ();
+//		guiObjs = guiQuadMgr.GetComponentsInChildren<GUIQuadObj> ();
 
 	}
 
+	public void SwitchState (State to)
+	{
+		if (to == State.Prev && prevState != State.Prev) {
+			SwitchState (prevState);
+			return;
+		}
+
+		prevState = state;
+
+		switch (to) {
+		case State.Paused:
+			if (sfx && engineAudio.activeSelf)
+				engineAudio.GetComponent<AudioSource> ().Stop ();
+			break;
+
+		case State.Normal:
+			if (sfx && engineAudio.active)
+				engineAudio.GetComponent<AudioSource> ().Play ();
+			break;
+
+		case State.Stunned:
+			rb.position += Vector3.back;
+			rb.velocity = new Vector3 (rb.velocity.x, rb.velocity.y, -30);
+			targetSpeed = 0;
+			StartCoroutine (Stun ());
+			break;
+
+		}
+
+		state = to;
+	}
 
 	void Start ()
 	{
@@ -456,8 +490,8 @@ public class MoveShip : MonoBehaviour
 
 		if (state == State.Normal) {
 			stats.elapsedTime += Time.deltaTime / gm.gameSpeed;
-			gui.UpdateTime (stats.elapsedTime);
-			gui.UpdateProg (Mathf.Clamp01 (stats.progress / winDist));
+			guinew.UpdateTime (stats.elapsedTime);
+			guinew.UpdateProg (Mathf.Clamp01 (stats.progress / winDist));
 
 			// check gateways
 			if (transform.position.z > winDist && winDist > 0)
@@ -578,27 +612,20 @@ public class MoveShip : MonoBehaviour
 					if (touch.position.x > Screen.width / 4 && touch.position.x < Screen.width - (Screen.width / 4)) {   
 						if (Mathf.Abs (touch.deltaPosition.y) > 10) {
 							if (state == State.Normal) { 
-								Pause ();
+								gm.Pause ();
 							}
 						}
 					}
 				}
 			} else {
 				if (Input.GetButton ("pause"))
-					Pause ();
+					gm.Pause ();
 			}
 		}
 	}
 
 
-	void Pause ()
-	{
-		Time.timeScale = 0; 
-		state = State.Paused; 
-		gui.switchGUI ("paused"); 
-		if (sfx && engineAudio.activeSelf)
-			engineAudio.GetComponent<AudioSource> ().Stop ();
-	}
+
 
 
 	IEnumerator VCfly ()
@@ -782,7 +809,8 @@ public class MoveShip : MonoBehaviour
 	//								state.jumps = 1;
 	//								//rigidbody.position.z-=1.0;
 	//								//rigidbody.velocity.z=-30;
-	//								bounceBack();
+	//								// bounceBack();
+	//                              SwitchState(State.Stunned);
 	//							}
 	//		} else { // for normaL ships
 	//			// for inclines
@@ -1218,11 +1246,13 @@ public class MoveShip : MonoBehaviour
 
 	void VictoryCruise ()
 	{
+		// send moveship to GM for this?
 		Time.timeScale = 1;
-		disableGUI ();
+//		disableGUI ();
 		System.GC.Collect ();
-		gui.updateVC ();
+//		gui.updateVC ();
 		gui.switchGUI ("victoryCruise");
+		guinew.switchGUI (GUInew.State.VictoryCruise); 
 		RenderSettings.fogStartDistance = 10;
 		RenderSettings.fogEndDistance = 300;
 		//playSound("vc");
@@ -1247,14 +1277,14 @@ public class MoveShip : MonoBehaviour
 		//make star streaks
 		warpTubeObj = Instantiate (warpTubePF, Vector3.zero, Quaternion.identity) as Transform;
 		// make star lights
-		for (int i = 1; i <= 20; i++) {
-			shipWarpRefl [i] = Resources.Load<Texture2D> ("ship/world" + gm.worldNum + "_warpRefl/world" + gm.worldNum + "_warpRefl_" + i);
-		}
-		InvokeRepeating ("ReflectWarpTube", 0, 0.04f);
-		gui.resetVC ();
+//		for (int i = 1; i <= 20; i++) {
+//			shipWarpRefl [i] = Resources.Load<Texture2D> ("ship/world" + gm.worldNum + "_warpRefl/world" + gm.worldNum + "_warpRefl_" + i);
+//		}
+//		InvokeRepeating ("ReflectWarpTube", 0, 0.04f);
+//		gui.resetVC ();
 
-		gui.CamBlack ("up");
-		gui.playAnim (1.9f);
+//		gui.CamBlack ("up");
+//		gui.playAnim (1.9f);
 	}
 
 
@@ -1267,41 +1297,9 @@ public class MoveShip : MonoBehaviour
 	}
 
 
-	void enableGUI ()
-	{
-		if (gui.state == "play" && level < 60) {
-			for (int i = 0; i < guiObjs.Length; i++) {
-				guiObjs [i].Enabled = true;
-				guiObjs [i].Visible = true;
-			}
-		} else {
-			for (int i = 0; i < guiObjs.Length; i++) {
-				if (guiObjs [i].name == "Brake" || guiObjs [i].name == "Jump") {
-					guiObjs [i].Enabled = true;
-					guiObjs [i].Visible = true;
-				} else {
-					guiObjs [i].Enabled = false;
-					guiObjs [i].Visible = false;
-				}
-			}
-		}
-		guiCam.enabled = true;
-
-	}
-
-	void disableGUI ()
-	{
-		for (int i = 0; i < guiObjs.Length; i++) {
-			guiObjs [i].Enabled = false;
-			guiObjs [i].Visible = false;
-		}
-		guiCam.enabled = false;
-
-	}
-
 	void titleScreen ()
 	{
-		disableGUI ();
+//		disableGUI ();
 		musicSourceScript.StopTrack ();
 		if (gm.worldNum != 1) {
 			RenderSettings.fogStartDistance = 110;
@@ -1407,8 +1405,8 @@ public class MoveShip : MonoBehaviour
 
 		state = State.PreStart;
 		stats.elapsedTime = 0;
-		gui.UpdateTime (0);
-		gui.UpdateProg (0);
+		guinew.UpdateTime (0);
+		guinew.UpdateProg (0);
 
 		gm.killLevel ();
 		stats.jumpStore = false;
@@ -1433,13 +1431,16 @@ public class MoveShip : MonoBehaviour
 		if (gm.level % 10 == 0 && levelAttempts == 1 && type != 3 && gm.worldNum != 6) {
 			titleScreen ();
 			gui.switchGUI ("clear");
+			guinew.switchGUI (GUInew.State.Title); 
 		} else {
 			if (gm.worldNum == 6)
 				gui.switchGUI ("tutorial");
-			else
+			else {
 				gui.switchGUI ("play");
-			disableGUI ();
-			enableGUI ();
+				guinew.switchGUI (GUInew.State.Play); 
+			}
+//			disableGUI ();
+//			enableGUI ();
 
 			if (gm.worldNum == 5 || gm.worldNum == 1)
 				RenderSettings.fogStartDistance = 100;
@@ -1507,16 +1508,11 @@ public class MoveShip : MonoBehaviour
 	}
 
 
-	void bounceBack ()
+	IEnumerator Stun ()
 	{
-		rb.position += Vector3.back;
-		rb.velocity = new Vector3 (rb.velocity.x, rb.velocity.y, -30);
-		targetSpeed = 0;
-		state = State.Stunned;
-//		yield WaitForSeconds(0.2);
-		state = State.Normal;
+		yield return new WaitForSeconds (0.25f);
+		SwitchState (State.Normal);
 	}
-
 
 	void resetCards ()
 	{

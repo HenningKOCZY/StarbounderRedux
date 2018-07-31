@@ -22,6 +22,7 @@ public class GameMaster : MonoBehaviour
 
 	public BG_plane bgScript;
 	public GUIScript gui;
+	public GUInew guinew;
 	public MoveShip ship;
 	public MoveCam cam;
 	public GameObject pantherFlag;
@@ -565,6 +566,28 @@ public class GameMaster : MonoBehaviour
 		}
 	
 		return levTotal;
+	}
+
+
+	public void Pause ()
+	{
+		Time.timeScale = 0; 
+		ship.SwitchState (MoveShip.State.Paused);
+		gui.switchGUI ("paused"); 
+		guinew.switchGUI (GUInew.State.Paused); 
+
+	}
+
+	public void Unpause ()
+	{
+		if (level >= 60)
+			gui.switchGUI ("tutorial");
+		else {
+			gui.switchGUI ("play");
+			guinew.switchGUI (GUInew.State.Play); 
+		}
+		ship.SwitchState (MoveShip.State.Prev);
+		Time.timeScale = gameSpeed;
 	}
 
 

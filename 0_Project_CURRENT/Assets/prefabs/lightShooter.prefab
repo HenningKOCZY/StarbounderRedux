@@ -377,7 +377,6 @@ MonoBehaviour:
   lightPPs:
   - {fileID: 400008}
   - {fileID: 400006}
-  camTrans: {fileID: 0}
   backlights:
   - {fileID: 10800002}
   - {fileID: 10800000}

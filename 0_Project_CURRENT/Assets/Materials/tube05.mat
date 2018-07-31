@@ -21,12 +21,12 @@ Material:
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 8cc6614400b31264fb712fd21bb8ea46, type: 3}
         m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0.8116627, y: -0.4324665}
+        m_Offset: {x: -0.8999939, y: 0.9463332}
     m_Floats:
     - _InvFade: 0.90253735
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _TintColor: {r: 0.2417661, g: 0.14509805, b: 0.69803923, a: 1}
+    - _TintColor: {r: 0.18823531, g: 0.28627452, b: 1, a: 1}
 --- !u!1002 &2100001
 EditorExtensionImpl:
   serializedVersion: 6
