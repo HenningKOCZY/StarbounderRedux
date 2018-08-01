@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: explosion
-  m_Shader: {fileID: 4800000, guid: dacb166403cf04679ab93feebda1a934, type: 3}
+  m_Shader: {fileID: 4800000, guid: fdf9eee7b65bf409b9f7df24ab3dacd8, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -27,7 +27,7 @@ Material:
     - _Shininess: 0.7
     m_Colors:
     - _Color: {r: 0, g: 0, b: 0, a: 1}
-    - _Emission: {r: 0.754717, g: 0, b: 0.39955607, a: 1}
+    - _Emission: {r: 0.75471693, g: 0, b: 0.39955604, a: 1}
     - _SpecColor: {r: 0, g: 0, b: 0, a: 0}
     - _TintColor: {r: 1, g: 0, b: 0.90270615, a: 1}
 --- !u!1002 &2100001

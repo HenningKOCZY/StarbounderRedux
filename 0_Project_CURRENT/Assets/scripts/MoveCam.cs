@@ -33,7 +33,7 @@ public class MoveCam : MonoBehaviour
 	public Transform lookTarget;
 	public float goalZ = 0;
 	float goalRY = 0;
-	float goalZoom = 35;
+	public float goalZoom = 35;
 	float zoomLerp = 2;
 
 	public Transform titlePF;
@@ -72,12 +72,11 @@ public class MoveCam : MonoBehaviour
 	public bool go = false;
 
 	int level;
-	float t;
 	public bool newRecordCheck = false;
 	float camXLerpSpeed;
 
 	public Vector3 lp;
-	public Vector3 lv;
+	public Vector3 vel;
 
 	float diff = 0;
 
@@ -103,18 +102,25 @@ public class MoveCam : MonoBehaviour
 			y = transform.position.y + (((goalHeight - transform.position.y) * 0.1f) * Time.deltaTime * 40 * diff);
 		}
 
-		if (mode == Mode.Crash || mode == Mode.Fall || mode == Mode.Win) {
-			z = Mathf.Lerp (transform.position.z, goalZ, Time.deltaTime * lerpSpeed);
-			x = transform.position.x;
+		if (mode == Mode.Crash || mode == Mode.Fall || mode == Mode.Win) { // on crash or win, last velocity takes over
+			vel = Vector3.Lerp (vel, Vector3.zero, Time.deltaTime * lerpSpeed * 0.75f);
+			x = transform.position.x + vel.x;
+			y = transform.position.y + vel.y;
+			if (mode == Mode.Fall)
+				z = transform.position.z + vel.z;
+			else
+				z = Mathf.Lerp (transform.position.z, goalZ, Time.deltaTime * lerpSpeed);
 		} else {
 			z = target.position.z;
 			x = Mathf.Lerp (transform.position.x, target.position.x, Time.deltaTime * camXLerpSpeed);
 		}
 
 		transform.position = new Vector3 (x, y, z);
-		
-		lv = transform.position - lp;
-		lp = transform.position;		
+
+		if (mode == Mode.Play) {
+			vel = transform.position - lp;
+			lp = transform.position;		
+		}
 	}
 
 
@@ -144,7 +150,7 @@ public class MoveCam : MonoBehaviour
 			cam.transform.LookAt (new Vector3 (lookTarget.position.x, 3, lookTarget.position.z) + new Vector3 (-goalRY, 0.9f, 0));
 
 		} else if (mode == Mode.Play) {
-			goalZoom = 34 + (ship.targetSpeed * 0.08f) + (1.2f * diff);
+			goalZoom = 34 + (ship.targetSpeed * 0.1f);
 			camXLerpSpeed = Mathf.Lerp (camXLerpSpeed, defaultLerpSpeed * 2, Time.deltaTime); // lerping lerps?
 			cam.transform.localPosition = new Vector3 (0f, Mathf.Lerp (cam.transform.localPosition.y, yPos, Time.deltaTime * yLerp), Mathf.Lerp (cam.transform.localPosition.z, zPos, Time.deltaTime * zLerp));
 

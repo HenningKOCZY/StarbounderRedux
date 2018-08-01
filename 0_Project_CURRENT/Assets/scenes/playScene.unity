@@ -2995,7 +2995,7 @@ MonoBehaviour:
   sd:
     GamePhase: 0
     ShipNum: 3
-    MaxLevel: 15
+    MaxLevel: 51
     Level: 15
     gameSpeed: 2
   worldNum: 0

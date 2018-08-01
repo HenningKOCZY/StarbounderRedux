@@ -22,7 +22,8 @@ public class Explosion : MonoBehaviour
 
 	public void InitColor (Vector4 inColor)
 	{
-		card.GetComponent<Renderer> ().material.SetColor ("_Emission", inColor * 0.8f);
+//		card.GetComponent<Renderer> ().material.SetColor ("_Emission", inColor * 0.8f);
+		card.GetComponent<Renderer> ().material.SetColor ("_TintColor", inColor * 0.7f);
 	}
 
 	public void MakeSplode (Vector3 inPos)

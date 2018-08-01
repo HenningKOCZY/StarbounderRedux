@@ -30,7 +30,7 @@ public class ArtBurst : MonoBehaviour
 		transform.parent = cam.transform;
 
 		while (card.cardGo) {
-			transform.localPosition -= new Vector3 (cam.lv.x * Mathf.Clamp01 (2f * slowdown), cam.lv.y * Mathf.Clamp01 (2f * slowdown), cam.lv.z * slowdown) * Time.deltaTime;
+			transform.localPosition -= new Vector3 (cam.vel.x * Mathf.Clamp01 (2f * slowdown), cam.vel.y * Mathf.Clamp01 (2f * slowdown), cam.vel.z * slowdown) * Time.deltaTime;
 			yield return null;
 		}
 

@@ -528,7 +528,7 @@ public class MoveShip : MonoBehaviour
 
 		// spacecraft pitch up down on jumps and fall 
 		if (stats.jumps > 0) {
-			xRot = Mathf.Lerp (xRot, -1.5f * rby, Time.deltaTime * xRotSpeed);
+			xRot = Mathf.Lerp (xRot, -5 + (-1.8f * rby), Time.deltaTime * xRotSpeed);
 		} else {
 			if (rby < -10) { // free fall over the edge / take away a jump 
 				if (gm.worldNum == 1)
@@ -587,7 +587,7 @@ public class MoveShip : MonoBehaviour
 
 
 		// fall off the bottom death
-		if (rb.position.y < -25.5f && state != State.Crashing)
+		if (rb.position.y < -20f && state != State.Crashing)
 			Crash (1);
 		
 
@@ -1102,36 +1102,38 @@ public class MoveShip : MonoBehaviour
 	{ //type: 0=wall hit, 1=falling death (no sound or splode or wait)
 		shad.enabled = false;
 		state = State.Crashing;
-		cam.goalZ = rb.position.z + 2;
-		cam.switchTo (MoveCam.Mode.Crash);
+		cam.goalZ = rb.position.z + 3;
+		if (type == 1)
+			cam.switchTo (MoveCam.Mode.Fall);
+		else
+			cam.switchTo (MoveCam.Mode.Crash);
 		minZSpeed = 0;
 		targetSpeed = 0;
-		xf = 0;	
+//		xf = 0;	
 		brakes = true;
 
 		levelAttempts++;
 		StartCoroutine (CrashCO (type));
 	}
 
+
 	IEnumerator CrashCO (int type)
 	{
-		float secs = 0;
 		if (type == 0) {	
 			splode.MakeSplode (rb.position);
-			secs = 1.55f;
+			DisappearShip ();
+			yield return new WaitForSeconds (0.25f);
+			if (type == 0) {
+				splode.MakeSplodeMark ();
+			}
+			yield return new WaitForSeconds (1.5f);
 		} else if (type == 1) {
-			secs = 1.1f;
+			yield return new WaitForSeconds (1.2f);
 		}
 
-		DisappearShip ();
-		yield return new WaitForSeconds (0.2f);
-		if (type == 0) {
-			splode.MakeSplodeMark ();
-		}
-
-		yield return new WaitForSeconds (secs);
 		reset (0);
 	}
+
 
 	void DisappearShip ()
 	{
@@ -1312,6 +1314,7 @@ public class MoveShip : MonoBehaviour
 		stats.jumps = 2;
 		cam.goalHeight = -1;
 		targetSpeed = 0;
+
 		cam.switchTo (MoveCam.Mode.Title);
 		anim2.Play ("titleCruise");	
 		repoShip ();	
@@ -1323,9 +1326,11 @@ public class MoveShip : MonoBehaviour
 
 	public void repoShip ()
 	{
+		print ("repoShip");
 		xf = 0;
 		grav = 0;
 		targetSpeed = 0;
+		xRot = 0;
 		rb.velocity = Vector3.zero;
 		rb.position = gm.startPos + new Vector3 (0, 5, 0);	
 		stats.lastY = rb.position.y;
@@ -1342,6 +1347,7 @@ public class MoveShip : MonoBehaviour
 		xf = 0;
 		grav = 0;
 		targetSpeed = 0;
+		xRot = 0;
 		rb.velocity = Vector3.zero;
 		rb.position = gm.resetPos [gm.rPointCounter] + new Vector3 (0, 5, 0);	
 		stats.lastY = rb.position.y;

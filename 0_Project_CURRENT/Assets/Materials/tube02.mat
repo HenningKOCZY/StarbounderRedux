@@ -21,7 +21,7 @@ Material:
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: f9b593901260d7345bee488c577c44a9, type: 3}
         m_Scale: {x: 1, y: 1}
-        m_Offset: {x: -0.94999695, y: 0.92666715}
+        m_Offset: {x: -0.3861103, y: 0.7181482}
     m_Floats:
     - _InvFade: 0.90253735
     - _Shininess: 0.7
@@ -29,7 +29,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Emission: {r: 0.2533972, g: 0.48507464, b: 0.4170295, a: 1}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 0}
-    - _TintColor: {r: 0.1764706, g: 0.007843138, b: 0.5019608, a: 1}
+    - _TintColor: {r: 0.882353, g: 0.098039225, b: 0.6745098, a: 1}
 --- !u!1002 &2100001
 EditorExtensionImpl:
   serializedVersion: 6
