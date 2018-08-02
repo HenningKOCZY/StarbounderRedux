@@ -42,8 +42,8 @@ private var o: int = 1;
 function Start() {
 	if(!gameObject.Find("MusicSource(Clone)")) Instantiate(Resources.Load("MusicSource"), Vector3(0,0,0),Quaternion.identity);
 	var musicSource: GameObject = gameObject.Find("MusicSource(Clone)");
-	var musicSourceScript: Music= musicSource.GetComponent("Music");
-	musicSourceScript.SetTrack();
+//	var musicSourceScript: Music= musicSource.GetComponent("Music");
+//	musicSourceScript.SetTrack();
 	fader = gameObject.Find("fader");
 
 	if(PlayerPrefs.GetInt("CinemaState",0)<3) PlayerPrefs.SetInt("CinemaState", 3);
@@ -208,17 +208,17 @@ function inCard(which: int) {
 		cardObj.transform.position=GUItexts[0].transform.position;
 		cardObj.transform.localScale=Vector3(Mathf.Clamp01(aspectMult), Mathf.Clamp01(aspectMult), 1);
 	}
-	var cardScript: IntroCardAnim = cardObj.GetComponent(IntroCardAnim);
-	cardScript.dur=0.25;
-	cardScript.fadeIn();
+//	var cardScript: IntroCardAnim = cardObj.GetComponent(IntroCardAnim);
+//	cardScript.dur=0.25;
+//	cardScript.fadeIn();
 }
 
 function outCard(which: int) {
 	var cardObj: GameObject = GameObject.Find("card"+which);
 	if (cardObj) {
-		var cardScript: IntroCardAnim = cardObj.GetComponent(IntroCardAnim);
-		cardScript.dur=5;
-		cardScript.fadeOut();
+//		var cardScript: IntroCardAnim = cardObj.GetComponent(IntroCardAnim);
+//		cardScript.dur=5;
+//		cardScript.fadeOut();
 	}
 }
 

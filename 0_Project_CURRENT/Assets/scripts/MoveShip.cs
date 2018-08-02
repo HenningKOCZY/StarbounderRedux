@@ -358,22 +358,6 @@ public class MoveShip : MonoBehaviour
 		jumpBurst.InitColor (boosterColor);
 		//		explosionParticleMat.SetColor ("_TintColor", new Vector4 (((1 - boosterColor.r) / 4 + boosterColor.r), ((1 - boosterColor.g) / 4 + boosterColor.g), ((1 - boosterColor.b) / 4 + boosterColor.b), 1));
 
-		artCount = artCountSaved;
-	}
-
-
-	void UpdateArtIcons ()
-	{
-		if (gm.gamePhase < 2) {
-			artCount = artCountSaved;
-			a1.UV = new Vector2 (((Mathf.Floor (artCount / 100)) * 16) + 464, a1.UV.y);	
-			a2.UV = new Vector2 (((Mathf.Floor ((artCount % 100) / 10)) * 16) + 464, a2.UV.y);
-			a3.UV = new Vector2 (((artCount % 10) * 16) + 464, a3.UV.y);
-		} else {
-			a1.UV = new Vector2 (448, a1.UV.y);
-			a2.UV = new Vector2 (448, a2.UV.y);
-			a3.UV = new Vector2 (448, a3.UV.y);
-		}	
 	}
 
 
@@ -977,23 +961,16 @@ public class MoveShip : MonoBehaviour
 			
 			// update guis
 			if (ct.name == "artifact1") {
-				if (gui.a1state == 0)
-					artCount += 100;
-				gui.a1state = 1;
-				a1.UV = new Vector2 (480, 0);
+				artCount += 100;
 			} else if (ct.name == "artifact2") {
-				if (gui.a2state == 0)
-					artCount += 10;
-				gui.a2state = 1;
-				a2.UV = new Vector2 (480, 0);
+				artCount += 10;
 			} else if (ct.name == "artifact3") {
-				if (gui.a3state == 0)
-					artCount += 1;
-				gui.a3state = 1;
-				a3.UV = new Vector2 (480, 0);
+				artCount += 1;
 			} else if (ct.name == "artifact0") { // special for tutorial
 				gui.a1state++;
 			}
+
+			guinew.UpdateArti (artCount);
 		}
 	}
 
@@ -1413,6 +1390,8 @@ public class MoveShip : MonoBehaviour
 		stats.elapsedTime = 0;
 		guinew.UpdateTime (0);
 		guinew.UpdateProg (0);
+		guinew.UpdateArti (artCountSaved);
+		artCount = artCountSaved;
 
 		gm.killLevel ();
 		stats.jumpStore = false;
@@ -1474,8 +1453,7 @@ public class MoveShip : MonoBehaviour
 			brakes = true;
 			musicSourceScript.SetTrack ();
 		}
-		artCount = artCountSaved;
-		UpdateArtIcons ();
+
 		System.GC.Collect ();
 
 		gm.resetEasy ();
