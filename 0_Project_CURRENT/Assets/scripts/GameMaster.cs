@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GameMaster : MonoBehaviour
 {
+
+	public static GameMaster instance = null;
+
 	public enum DeviceType
 	{
 		Computer,
@@ -30,12 +33,12 @@ public class GameMaster : MonoBehaviour
 	GameObject musicSource;
 
 	public int level;
-	bool clearData;
-	public bool setData;
 
 	[System.Serializable]
 	public class SetDataState
 	{
+		public bool clearData;
+		public bool setData;
 		public int GamePhase;
 		public int ShipNum;
 		public int MaxLevel;
@@ -95,15 +98,20 @@ public class GameMaster : MonoBehaviour
 	int music = 1;
 	public string[] worldTrackName;
 
-	float oldRecord;
+	public float oldRecord;
 	TutScript tutScript;
-
 
 
 
 	void Awake ()
 	{
 		Application.targetFrameRate = 60;
+		if (instance == null)
+			instance = this;
+		else if (instance != this) {
+			Debug.Log ("There was already a GameMaster. And there can be only one.");
+			Destroy (gameObject);
+		}
 
 		if (GameObject.Find ("MusicSource") == null) {
 			musicSource = Instantiate (Resources.Load<GameObject> ("MusicSource"), Vector3.zero, Quaternion.identity) as GameObject;
@@ -121,28 +129,33 @@ public class GameMaster : MonoBehaviour
 //	Time.timeScale=gameSpeed;
 	}
 
+	void ClearData ()
+	{
+		for (int i = 0; i < 60; i++) {
+			PlayerPrefs.SetFloat (("Level" + i + "Time"), 99.99f);
+			PlayerPrefs.SetInt (("Level" + i + "ArtCount"), 000);
+			PlayerPrefs.SetInt (("Level" + i + "PantherFlag"), 0);
+		}	
+
+		PlayerPrefs.SetInt ("SawIntro", 0);
+		PlayerPrefs.SetInt ("GamePhase", 0);
+		PlayerPrefs.SetInt (("MaxLevel"), 0);	
+		PlayerPrefs.SetInt (("Level"), 0);	
+		PlayerPrefs.SetInt (("ArtCount"), 0);
+
+		PlayerPrefs.SetInt ("CinemaState", 1);
+		PlayerPrefs.SetInt ("TutorialState", 1);
+		PlayerPrefs.SetInt ("FromLS", 0);
+	}
+
 	void Start ()
 	{
 	
-		if (clearData) { // set in gameMaster... for diag purposes
-			for (int i = 0; i < 60; i++) {
-				PlayerPrefs.SetFloat (("Level" + i + "Time"), 99.99f);
-				PlayerPrefs.SetInt (("Level" + i + "ArtCount"), 000);
-				PlayerPrefs.SetInt (("Level" + i + "PantherFlag"), 0);
-			}	
-		
-			PlayerPrefs.SetInt ("SawIntro", 0);
-			PlayerPrefs.SetInt ("GamePhase", 0);
-			PlayerPrefs.SetInt (("MaxLevel"), 0);	
-			PlayerPrefs.SetInt (("Level"), 0);	
-			PlayerPrefs.SetInt (("ArtCount"), 0);
-			
-			PlayerPrefs.SetInt ("CinemaState", 1);
-			PlayerPrefs.SetInt ("TutorialState", 1);
-			PlayerPrefs.SetInt ("FromLS", 0);
+		if (sd.clearData) { // set in gameMaster... for diag purposes
+			ClearData ();
 		}
 	
-		if (setData) { 
+		if (sd.setData) { 
 			PlayerPrefs.SetInt (("Level"), sd.Level);	
 			PlayerPrefs.SetInt ("GamePhase", sd.GamePhase);
 			PlayerPrefs.SetInt (("ShipNum"), sd.ShipNum);
@@ -187,7 +200,7 @@ public class GameMaster : MonoBehaviour
 		
 			PlayerPrefs.SetInt (("Level29ArtCount"), 110);
 //		PlayerPrefs.SetInt(("Level12ArtCount"), 110);
-			countArtifacts ();
+			CountArtifacts ();
 		}
 	
 
@@ -502,7 +515,7 @@ public class GameMaster : MonoBehaviour
 		}
 	}
 
-	public void incrementLevel ()
+	public void IncrementLevel ()
 	{
 		level++;
 		if (level == 60)
@@ -512,16 +525,22 @@ public class GameMaster : MonoBehaviour
 			PlayerPrefs.SetInt ("MaxLevel", level);
 	}
 
+	public void SetArtifacts (int lev, int artIndex)
+	{
+		PlayerPrefs.SetInt ("Level" + lev + "ArtCount", artIndex);
+	}
 
-	public void setLevel (int lev)
+	public void SetLevel (int lev)
 	{
 		level = lev;
 		PlayerPrefs.SetInt ("Level", lev);
 	}
 
-	public bool saveTime (float t)
+	public bool SaveTime (float t)
 	{
 		oldRecord = PlayerPrefs.GetFloat (("Level" + level + "Time"), 99.99f);
+//		print ("gm thinks old rec is: " + oldRecord);
+
 		if (t < oldRecord) {
 			PlayerPrefs.SetFloat (("Level" + level + "Time"), t);
 			return true;
@@ -529,7 +548,7 @@ public class GameMaster : MonoBehaviour
 			return false;
 	}
 
-	public int countPanthers ()
+	public int CountPanthers ()
 	{
 		int flagTotal = 0;
 	
@@ -540,7 +559,7 @@ public class GameMaster : MonoBehaviour
 		return flagTotal;
 	}
 
-	public int countArtifacts ()
+	public int CountArtifacts ()
 	{
 		int artTotal = 0;
 	
@@ -556,7 +575,7 @@ public class GameMaster : MonoBehaviour
 		return artTotal;
 	}
 
-	public int countLevels ()
+	public int CountLevels ()
 	{
 		int levTotal = 0;
 	

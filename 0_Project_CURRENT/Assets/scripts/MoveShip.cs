@@ -8,19 +8,19 @@ public class MoveShip : MonoBehaviour
 
 	Transform sub;
 	Transform animSub;
-	public Animation anim;
-	public Animation anim2;
+	Animation anim;
+	Animation anim2;
 	public Projector shad;
 	Rigidbody rb;
 	float rbx;
 	float rby;
 	float rbz;
 
-	public MoveCam cam;
+	MoveCam cam;
 	Transform camTrans;
-	public GUIScript gui;
-	public GUInew guinew;
-	public GameMaster gm;
+	GUIScript gui;
+	GUInew guinew;
+	GameMaster gm;
 
 	public GameObject engineAudio;
 	public float[] shipMatOffset;
@@ -43,11 +43,6 @@ public class MoveShip : MonoBehaviour
 
 	float ultraMaxZSpeed;
 	float defPantherMaxZ = 90;
-
-	public GUIQuadObj a1;
-	public GUIQuadObj a2;
-	public GUIQuadObj a3;
-	//	public Material engineFlareMat;
 
 	public Material shipBoosterMat;
 	public Material shipMat;
@@ -95,7 +90,7 @@ public class MoveShip : MonoBehaviour
 	public GameObject warpPathAniObj;
 	public CardAnim[] elecBurstScript;
 	int artCount;
-	private int artCountSaved;
+	int artCountSaved;
 
 	public Transform warpTubePF;
 	//var warpPathPF: GameObject;
@@ -145,7 +140,6 @@ public class MoveShip : MonoBehaviour
 	int pDigit = -1;
 
 	float curTime = 0;
-	public bool newRecord = false;
 	public bool sfx = false;
 
 	int rc;
@@ -232,8 +226,41 @@ public class MoveShip : MonoBehaviour
 
 	void Awake ()
 	{
-		GameObject guiQuadMgr = GameObject.Find ("GUIQuadMgr");
-//		guiObjs = guiQuadMgr.GetComponentsInChildren<GUIQuadObj> ();
+		gm = GameMaster.instance;
+		if (gm == null)
+			Debug.Log ("You need a GameMaster.");
+		rb = GetComponent<Rigidbody> ();
+		guinew = gm.guinew;
+		gui = gm.gui;
+		cam = gm.cam;
+	}
+
+	void Start ()
+	{
+		System.GC.Collect ();
+
+		int ppsfx = PlayerPrefs.GetInt ("Sfx", 1);
+		if (ppsfx == 1)
+			sfx = true;
+		else
+			sfx = false;
+
+
+		sub = transform.GetChild (0);
+		animSub = sub.GetChild (0);
+		anim2 = sub.GetComponent<Animation> ();
+		anim = animSub.GetComponent<Animation> ();
+
+		guiCam = GameObject.Find ("GUICameraL1").GetComponent<Camera> ();
+		musicSource = GameObject.Find ("MusicSource(Clone)");
+		musicSourceScript = musicSource.GetComponent<Music> ();
+		if (!sfx)
+			engineAudio.SetActive (false);
+		defGrav = grav;
+		InitShip ();
+		reset (2);
+		blackerPause = gui.blackerPause;
+		camTrans = cam.transform;
 
 	}
 
@@ -267,32 +294,6 @@ public class MoveShip : MonoBehaviour
 		}
 
 		state = to;
-	}
-
-	void Start ()
-	{
-		System.GC.Collect ();
-		int ppsfx = PlayerPrefs.GetInt ("Sfx", 1);
-		if (ppsfx == 1)
-			sfx = true;
-		else
-			sfx = false;
-		rb = GetComponent<Rigidbody> ();
-
-		sub = transform.GetChild (0);
-		animSub = sub.GetChild (0);
-
-		guiCam = GameObject.Find ("GUICameraL1").GetComponent<Camera> ();
-		musicSource = GameObject.Find ("MusicSource(Clone)");
-		musicSourceScript = musicSource.GetComponent<Music> ();
-		if (!sfx)
-			engineAudio.SetActive (false);
-		defGrav = grav;
-		InitShip ();
-		reset (2);
-		blackerPause = gui.blackerPause;
-		camTrans = cam.transform;
-
 	}
 
 
@@ -1120,25 +1121,7 @@ public class MoveShip : MonoBehaviour
 
 	IEnumerator Win ()
 	{
-		//artCount=(gui.a1state*100)+(gui.a2state*10)+gui.a3state;
 
-		PlayerPrefs.SetInt ("Level" + level + "ArtCount", artCount);
-
-		if (shipNum == 10) {
-			if (gm.pantherFlagScript.on == 1) {
-				PlayerPrefs.SetInt (("Level" + level + "PantherFlag"), 1);
-				print ("panther woooooo");	
-			}
-		}
-		//curTime = state.elapsedTime;
-		//	print("current time: "+curTime);
-		//	print("record time: "+PlayerPrefs.GetFloat("Level"+level+"Time", 60.00));
-		//	print("artifact: "+artCount);
-		if (gm.saveTime (gui.curTime))
-			newRecord = true; // savetime here. Like panthers and artifacts, must set player prefs before deciding whether to victory cruise or outro
-		else
-			newRecord = false;
-		// print ("Level: "+level+"   Time: "+gui.curTime);
 		//playSound("win");
 		cam.switchTo (MoveCam.Mode.Win);
 		state = State.Winning;
@@ -1150,6 +1133,24 @@ public class MoveShip : MonoBehaviour
 		cam.goalZ = warpPath.transform.position.z + 7;
 
 		DisappearShip ();
+
+		// save everything here. Must set player prefs before deciding whether to victory cruise or outro... and before player has a chance to pause out of it...
+		// maybe give breathing space so not all happening on same cycle
+		gm.SetArtifacts (level, artCount);
+		yield return null;
+		gm.SaveTime (stats.elapsedTime); 
+		yield return null;
+		gm.IncrementLevel ();
+		yield return null;
+
+		if (shipNum == 10) {
+			if (gm.pantherFlagScript.on == 1) {
+				PlayerPrefs.SetInt (("Level" + level + "PantherFlag"), 1);
+				print ("panther woooooo");	
+			}
+		}
+
+
 		yield return new WaitForSeconds (2.5f);
 		gui.CamBlack ("down");
 		yield return new WaitForSeconds (blackerPause);
@@ -1163,7 +1164,7 @@ public class MoveShip : MonoBehaviour
 		// ultimate win conditions
 		if (gm.gamePhase < 2) { // <2 means Safe for the unlikely eventuality that someone beats the last level and gets the last artifact on the same run!
 			// nested ifs so it doesn't run count___ for everything, every time
-			if (gm.countArtifacts () == 180) {
+			if (gm.CountArtifacts () == 180) {
 				ultimateWin = true;
 				PlayerPrefs.SetInt ("GamePhase", 2);
 				gm.gamePhase = 2;
@@ -1177,7 +1178,7 @@ public class MoveShip : MonoBehaviour
 			} 
 			if (gm.gamePhase == 0) {
 				//print("Levels beaten: "+gm.countLevels());
-				if (gm.countLevels () == 60) {
+				if (gm.CountLevels () == 60) {
 					ultimateWin = true;
 					PlayerPrefs.SetInt ("GamePhase", 1);
 					PlayerPrefs.SetInt ("MaxLevel", 59);
@@ -1189,7 +1190,7 @@ public class MoveShip : MonoBehaviour
 				}
 			}
 		} else if (gm.gamePhase == 2) { 
-			if (gm.countPanthers () == 60) {
+			if (gm.CountPanthers () == 60) {
 				ultimateWin = true;
 				PlayerPrefs.SetInt ("GamePhase", 3);
 				PlayerPrefs.SetInt ("CinemaState", 5);
@@ -1203,7 +1204,7 @@ public class MoveShip : MonoBehaviour
 			if (level < 60)
 				VictoryCruise ();
 
-			if (level >= 60 && level <= 61) {	
+			if (level == 60 || level == 61) {	
 				if (PlayerPrefs.GetInt ("FromLS", 0) == 1) {
 					PlayerPrefs.SetInt ("Quit", 2);
 					Application.LoadLevel (0);
@@ -1211,9 +1212,8 @@ public class MoveShip : MonoBehaviour
 					if (level == 60) {
 						//gm.level=0;
 						PlayerPrefs.SetInt ("Level", 0);
-						Application.LoadLevel (1);	
-					}
-					if (level == 61) {
+						Application.LoadLevel (1);
+					} else if (level == 61) {
 						PlayerPrefs.SetInt ("Quit", 2);
 						Application.LoadLevel (0);
 					}
@@ -1221,7 +1221,6 @@ public class MoveShip : MonoBehaviour
 			}	
 		}
 	}
-
 
 	void VictoryCruise ()
 	{
@@ -1240,32 +1239,27 @@ public class MoveShip : MonoBehaviour
 		stats.jumps = 2;
 		StartCoroutine (VCfly ());
 		cam.goalHeight = 0;
-		if (newRecord)
-			cam.newRecordCheck = true;
 
-		gm.incrementLevel ();
+//		gm.IncrementLevel ();
 		gm.bgScript.killBackground ();
 		gm.killLevel ();
 		anim2.Play ("winCruise1");	
 		repoShip ();	
 
 		cam.switchTo (MoveCam.Mode.Cruise);
+		VCshipAdj ();
 		gui.message = "none";
 
 		targetSpeed = 0;
 		//make star streaks
 		warpTubeObj = Instantiate (warpTubePF, Vector3.zero, Quaternion.identity) as Transform;
-		// make star lights
-//		for (int i = 1; i <= 20; i++) {
-//			shipWarpRefl [i] = Resources.Load<Texture2D> ("ship/world" + gm.worldNum + "_warpRefl/world" + gm.worldNum + "_warpRefl_" + i);
-//		}
-//		InvokeRepeating ("ReflectWarpTube", 0, 0.04f);
-//		gui.resetVC ();
-
-//		gui.CamBlack ("up");
-//		gui.playAnim (1.9f);
 	}
 
+	void VCshipAdj () // adjust ship's height to fit it more pleasingly on the VC screen
+	{
+		float[] adj = new float[]{ 0, 0, 0, 0, -0.2f, 0, -0.4f, 0, 0, 0, -0.67f };
+		anim.transform.localPosition = new Vector3 (0, adj [gm.shipNum], 0);
+	}
 
 	void ReflectWarpTube ()
 	{
@@ -1301,6 +1295,7 @@ public class MoveShip : MonoBehaviour
 		gui.CamBlack ("up");	
 	}
 
+
 	public void repoShip ()
 	{
 		print ("repoShip");
@@ -1333,6 +1328,7 @@ public class MoveShip : MonoBehaviour
 		gm.rPointCounter++;
 
 		StopAllCoroutines ();
+		Xspeed = maxXspeed;
 		StartCoroutine (AfterReset ());
 	}
 
@@ -1568,7 +1564,7 @@ public class MoveShip : MonoBehaviour
 	}
 
 
-	void disableX (int which)
+	void disableX (int which) // this is for panther only. What is this?
 	{
 		stats.xDisabled = which;
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class GUIScript : MonoBehaviour
 {
 
-	public GameMaster gm;
+	GameMaster gm;
 	public MoveShip ship;
 	public GUInew guinew;
 
@@ -173,7 +173,7 @@ public class GUIScript : MonoBehaviour
 
 	float pauseEndTime;
 	float pauseEndTime2;
-	bool loadLevelGo;
+	bool loadLevelGo = false;
 	int counter = 0;
 	Color normColor;
 
@@ -236,6 +236,7 @@ public class GUIScript : MonoBehaviour
 
 	void Start ()
 	{
+		gm = GameMaster.instance;
 		sfx = PlayerPrefs.GetInt ("Sfx", 1);
 		updateWorld ();
 //		resetVC ();
@@ -528,83 +529,83 @@ public class GUIScript : MonoBehaviour
 
 		}
 		if (which == "levelSelect") { 
-			selectable = true;
-			clearGUIs ();
-			updateWorld ();
-			lsCalc ();
-			GUItexts [0].GetComponent<Renderer> ().material = fontMats [0];
-			GUItexts [1].GetComponent<Renderer> ().material = fontMats [0];
-			GUItexts [3].GetComponent<Renderer> ().material = fontMats [0];
-			GUItexts [4].GetComponent<Renderer> ().material = fontMats [0];
-
-			GUIcam [3].GetComponent<Camera> ().rect = new Rect (0, 0, 1, 1);
-			GUIcam [4].GetComponent<Camera> ().rect = new Rect (0, 0, 1, 1);
-			GUIcam [3].transform.position = new Vector3 (0, GUIcam [3].transform.position.y, GUIcam [3].transform.position.z);
-			GUIcam [4].transform.position = new Vector3 (0, GUIcam [3].transform.position.y, GUIcam [3].transform.position.z);
-
-			GUIplane (0, 0, (int)(500 * aspectMult), 330, pauseBG, 0, 0);
-			GUIplanes [0].gameObject.layer = 18;
-			if (worldNum != 6) {
-				for (int i = 0; i <= levelLimit; i++) {
-					GUIbutton ((int)((Mathf.Floor (i / 5) * 2 - 1) * 115) + 3, (83 - ((i % 5) * 41)), 210, 36, levelBack, i, 10);
-					if (gm.gamePhase < 2) {
-						GUItext ((int)((Mathf.Floor (i / 5) * 2 - 1) * 115) - 87, (96 - ((i % 5) * 41)), 5.9f, levelString [i], i, 20);
-					} else {
-						levelTime [i] = (PlayerPrefs.GetFloat ("Level" + (worldNum * 10 + i) + "Time", 99.99f)).ToString ("00.00");
-						pantherFlag [i] = PlayerPrefs.GetInt ("Level" + (worldNum * 10 + i) + "PantherFlag", 0);
-						GUItext ((int)((Mathf.Floor (i / 5) * 2 - 1) * 115) - 87, (96 - ((i % 5) * 41)), 5.9f, levelString [i] + "    " + levelTime [i], i, 20);
-					}
-					GUItexts [i].gameObject.layer = 17;
-					GUIbuttons [i].gameObject.layer = 17;
-					GUItexts [i].anchor = TextAnchor.UpperLeft;
-				}
-			} else {
-				for (int i = 0; i < tutorialState; i++) {
-					GUIbutton (-115 + 3, (83 - ((i % 5) * 41)), 210, 36, levelBack1, i, 10);
-					GUItext ((-115 - 87), (96 - ((i % 5) * 41)), 5.9f, tutString [i], i, 20);
-					GUItexts [i].anchor = TextAnchor.UpperLeft;
-					GUItexts [i].gameObject.layer = 17;
-					GUIbuttons [i].gameObject.layer = 17;
-				}
-				for (int i = 0; i < cinemaState; i++) {
-					GUIbutton (115 + 3, (83 - ((i % 5) * 41)), 210, 36, levelBack1, i + 5, 10);
-					GUItext ((115 - 87), (96 - ((i % 5) * 41)), 5.9f, cinString [i], i + 5, 20);
-					GUItexts [i + 5].anchor = TextAnchor.UpperLeft;
-					GUItexts [i + 5].gameObject.layer = 17;
-					GUIbuttons [i + 5].gameObject.layer = 17;
-				}
-			}
-
-			if (worldNum != 6) {		
-				if (gm.gamePhase < 2) {
-					// gamePhase 0,1 draw artifacts
-					for (int i = 0; i <= levelLimit; i++) {
-						GUIplane (((int)(Mathf.Floor (i / 5) * 2 - 1) * 115) + 3, (83 - ((i % 5) * 41)), aIconSize, aIconSize, artifactIcon [a1 [i]], 11 + (i * 3), 20);
-						GUIplane (((int)(Mathf.Floor (i / 5) * 2 - 1) * 115) + 34, (83 - ((i % 5) * 41)), aIconSize, aIconSize, artifactIcon [a2 [i]], 11 + (i * 3) + 1, 20);
-						GUIplane (((int)(Mathf.Floor (i / 5) * 2 - 1) * 115) + 65, (83 - ((i % 5) * 41)), aIconSize, aIconSize, artifactIcon [a3 [i]], 11 + (i * 3) + 2, 20);
-					}
-				} else { 
-					// gamephase == 2, draw the panther icon
-					for (int i = 0; i <= 9; i++) {
-						if (pantherFlag [i] == 1)
-							GUIplane ((int)((Mathf.Floor (i / 5) * 2 - 1) * 115) - 30, (83 - ((i % 5) * 41)), 28, 28, pantherIcon [1], 11 + i, 20);
-					}
-				}	
-			} 
-			for (int i = 11; i < 41; i++)
-				GUIplanes [i].gameObject.layer = 17;
-
-
-			drawSelection ();
-			GUIcam [3].GetComponent<Camera> ().orthographicSize = 160 * (1 / Mathf.Clamp01 (aspectMult)); // resize camera for middle buttons for 4:3
-
-			GUIplane (0, 135, (int)(370 * Mathf.Clamp01 (aspectMult)), 40, titleBack, 1, 10);
-			GUIplane (0, 135, (int)(330 * Mathf.Clamp01 (aspectMult)), 31, title [worldNum], 2, 20);
-			GUIbutton ((int)(-207 * Mathf.Clamp01 (aspectMult)), 135, 48, 40, selectL, 10, 20);
-			GUIbutton ((int)(207 * Mathf.Clamp01 (aspectMult)), 135, 48, 40, selectR, 11, 20);
-			GUIbutton ((int)(-240 * aspectMult + 64), -132, 128, 55, xBut, 12, 20);
-			GUIbutton ((int)(240 * aspectMult - 64), -132, 128, 55, vBut, 13, 20);
-
+//			selectable = true;
+//			clearGUIs ();
+//			updateWorld ();
+//			lsCalc ();
+//			GUItexts [0].GetComponent<Renderer> ().material = fontMats [0];
+//			GUItexts [1].GetComponent<Renderer> ().material = fontMats [0];
+//			GUItexts [3].GetComponent<Renderer> ().material = fontMats [0];
+//			GUItexts [4].GetComponent<Renderer> ().material = fontMats [0];
+//
+//			GUIcam [3].GetComponent<Camera> ().rect = new Rect (0, 0, 1, 1);
+//			GUIcam [4].GetComponent<Camera> ().rect = new Rect (0, 0, 1, 1);
+//			GUIcam [3].transform.position = new Vector3 (0, GUIcam [3].transform.position.y, GUIcam [3].transform.position.z);
+//			GUIcam [4].transform.position = new Vector3 (0, GUIcam [3].transform.position.y, GUIcam [3].transform.position.z);
+//
+//			GUIplane (0, 0, (int)(500 * aspectMult), 330, pauseBG, 0, 0);
+//			GUIplanes [0].gameObject.layer = 18;
+//			if (worldNum != 6) {
+//				for (int i = 0; i <= levelLimit; i++) {
+//					GUIbutton ((int)((Mathf.Floor (i / 5) * 2 - 1) * 115) + 3, (83 - ((i % 5) * 41)), 210, 36, levelBack, i, 10);
+//					if (gm.gamePhase < 2) {
+//						GUItext ((int)((Mathf.Floor (i / 5) * 2 - 1) * 115) - 87, (96 - ((i % 5) * 41)), 5.9f, levelString [i], i, 20);
+//					} else {
+//						levelTime [i] = (PlayerPrefs.GetFloat ("Level" + (worldNum * 10 + i) + "Time", 99.99f)).ToString ("00.00");
+//						pantherFlag [i] = PlayerPrefs.GetInt ("Level" + (worldNum * 10 + i) + "PantherFlag", 0);
+//						GUItext ((int)((Mathf.Floor (i / 5) * 2 - 1) * 115) - 87, (96 - ((i % 5) * 41)), 5.9f, levelString [i] + "    " + levelTime [i], i, 20);
+//					}
+//					GUItexts [i].gameObject.layer = 17;
+//					GUIbuttons [i].gameObject.layer = 17;
+//					GUItexts [i].anchor = TextAnchor.UpperLeft;
+//				}
+//			} else {
+//				for (int i = 0; i < tutorialState; i++) {
+//					GUIbutton (-115 + 3, (83 - ((i % 5) * 41)), 210, 36, levelBack1, i, 10);
+//					GUItext ((-115 - 87), (96 - ((i % 5) * 41)), 5.9f, tutString [i], i, 20);
+//					GUItexts [i].anchor = TextAnchor.UpperLeft;
+//					GUItexts [i].gameObject.layer = 17;
+//					GUIbuttons [i].gameObject.layer = 17;
+//				}
+//				for (int i = 0; i < cinemaState; i++) {
+//					GUIbutton (115 + 3, (83 - ((i % 5) * 41)), 210, 36, levelBack1, i + 5, 10);
+//					GUItext ((115 - 87), (96 - ((i % 5) * 41)), 5.9f, cinString [i], i + 5, 20);
+//					GUItexts [i + 5].anchor = TextAnchor.UpperLeft;
+//					GUItexts [i + 5].gameObject.layer = 17;
+//					GUIbuttons [i + 5].gameObject.layer = 17;
+//				}
+//			}
+//
+//			if (worldNum != 6) {		
+//				if (gm.gamePhase < 2) {
+//					// gamePhase 0,1 draw artifacts
+//					for (int i = 0; i <= levelLimit; i++) {
+//						GUIplane (((int)(Mathf.Floor (i / 5) * 2 - 1) * 115) + 3, (83 - ((i % 5) * 41)), aIconSize, aIconSize, artifactIcon [a1 [i]], 11 + (i * 3), 20);
+//						GUIplane (((int)(Mathf.Floor (i / 5) * 2 - 1) * 115) + 34, (83 - ((i % 5) * 41)), aIconSize, aIconSize, artifactIcon [a2 [i]], 11 + (i * 3) + 1, 20);
+//						GUIplane (((int)(Mathf.Floor (i / 5) * 2 - 1) * 115) + 65, (83 - ((i % 5) * 41)), aIconSize, aIconSize, artifactIcon [a3 [i]], 11 + (i * 3) + 2, 20);
+//					}
+//				} else { 
+//					// gamephase == 2, draw the panther icon
+//					for (int i = 0; i <= 9; i++) {
+//						if (pantherFlag [i] == 1)
+//							GUIplane ((int)((Mathf.Floor (i / 5) * 2 - 1) * 115) - 30, (83 - ((i % 5) * 41)), 28, 28, pantherIcon [1], 11 + i, 20);
+//					}
+//				}	
+//			} 
+//			for (int i = 11; i < 41; i++)
+//				GUIplanes [i].gameObject.layer = 17;
+//
+//
+//			drawSelection ();
+//			GUIcam [3].GetComponent<Camera> ().orthographicSize = 160 * (1 / Mathf.Clamp01 (aspectMult)); // resize camera for middle buttons for 4:3
+//
+//			GUIplane (0, 135, (int)(370 * Mathf.Clamp01 (aspectMult)), 40, titleBack, 1, 10);
+//			GUIplane (0, 135, (int)(330 * Mathf.Clamp01 (aspectMult)), 31, title [worldNum], 2, 20);
+//			GUIbutton ((int)(-207 * Mathf.Clamp01 (aspectMult)), 135, 48, 40, selectL, 10, 20);
+//			GUIbutton ((int)(207 * Mathf.Clamp01 (aspectMult)), 135, 48, 40, selectR, 11, 20);
+//			GUIbutton ((int)(-240 * aspectMult + 64), -132, 128, 55, xBut, 12, 20);
+//			GUIbutton ((int)(240 * aspectMult - 64), -132, 128, 55, vBut, 13, 20);
+//
 		}
 		if (which == "victoryCruise") { 
 			selectable = true;
@@ -901,116 +902,116 @@ public class GUIScript : MonoBehaviour
 						drawHilites ();
 					}
 				} else if (state == "levelSelect") {
-					if (r == 1) {
-						if (worldNum != 6) {
-							for (int i = 0; i <= levelLimit; i++) {					
-								if (hitname == ("button" + i) && p == 1) {				
-									if (selectedLevel == i) {
-										loadLevel1 ("level");
-									} else {
-										selectionOn = true;
-										selectedLevel = i;
-										drawSelection ();
-									}
-								}
-							}
-						} else { //worldNum == 6;
-							for (int i = 0; i < tutorialState; i++) {
-								if (hitname == ("button" + i) && p == 1) {
-									if (selectedLevel == i) {
-										tutLevel = 60 + i;
-										PlayerPrefs.SetInt ("FromLS", 1);
-										loadLevel1 ("tutorial");
-									} else {
-										selectionOn = true;
-										selectedLevel = i;
-										drawSelection ();
-									}
-								}
-							}
-							for (int i = 5; i < cinemaState + 5; i++) {
-								if (hitname == ("button" + i) && p == 1) {					
-									if (selectedLevel == i) {
-										PlayerPrefs.SetInt ("FromLS", 1);
-										if (i == 5)
-											cinLevel = 2;
-										if (i == 6)
-											cinLevel = 3;
-										if (i == 7)
-											cinLevel = 5;
-										if (i == 8)
-											cinLevel = 4;
-										if (i == 9)
-											cinLevel = 6;
-										loadLevel1 ("cinema");
-									} else {
-										selectionOn = true;
-										selectedLevel = i;
-										drawSelection ();
-									}
-								}
-							}
-							print (selectedLevel);
-						}
-					} // end ray 1
-
-					else {
-
-						if (p == 3 || (hitname == "button10" && p == 1)) {
-							selectedLevel = 99;
-							selectionOn = false;
-							if (sfx == 1)
-								GetComponent<AudioSource> ().PlayOneShot (blip2);
-							worldNum--;
-							if (worldNum < 0)
-								worldNum = 6;
-							else if (worldNum > maxWorld && worldNum != 6)
-								worldNum = maxWorld;
-							switchGUI ("levelSelect");
-
-						} else if (p == 2 || (hitname == "button11" && p == 1)) {
-							selectedLevel = 99;
-							selectionOn = false;
-							if (sfx == 1)
-								GetComponent<AudioSource> ().PlayOneShot (blip2);
-							worldNum++;
-							if (worldNum > maxWorld && worldNum < 6)
-								worldNum = 6;
-							if (worldNum > 6)
-								worldNum = 0;
-							switchGUI ("levelSelect");
-
-						} else if (hitname == "button12" && p == 1) {
-							selectedLevel = 99;
-							selectionOn = false;
-							if (sfx == 1)
-								GetComponent<AudioSource> ().PlayOneShot (blip3);
-							switchGUI ("paused");
-							guinew.switchGUI (GUInew.State.Paused);
-
-						} else if (hitname == "button13" && p == 1) {
-							if (selectionOn) {
-								if (worldNum != 6)
-									loadLevel1 ("level");
-								else if (worldNum == 6 && selectedLevel < 5) {
-									tutLevel = 60 + selectedLevel;
-									loadLevel1 ("tutorial");
-								} else if (worldNum == 6 && selectedLevel >= 5) {
-									if (selectedLevel == 5)
-										cinLevel = 2;
-									if (selectedLevel == 6)
-										cinLevel = 3;
-									if (selectedLevel == 7)
-										cinLevel = 5;
-									if (selectedLevel == 8)
-										cinLevel = 4;
-									if (selectedLevel == 9)
-										cinLevel = 6;
-									loadLevel1 ("cinema");
-								} 
-							} 
-						}
-					} // end ray 0
+//					if (r == 1) {
+//						if (worldNum != 6) {
+//							for (int i = 0; i <= levelLimit; i++) {					
+//								if (hitname == ("button" + i) && p == 1) {				
+//									if (selectedLevel == i) {
+//										loadLevel1 ("level");
+//									} else {
+//										selectionOn = true;
+//										selectedLevel = i;
+//										drawSelection ();
+//									}
+//								}
+//							}
+//						} else { //worldNum == 6;
+//							for (int i = 0; i < tutorialState; i++) {
+//								if (hitname == ("button" + i) && p == 1) {
+//									if (selectedLevel == i) {
+//										tutLevel = 60 + i;
+//										PlayerPrefs.SetInt ("FromLS", 1);
+//										loadLevel1 ("tutorial");
+//									} else {
+//										selectionOn = true;
+//										selectedLevel = i;
+//										drawSelection ();
+//									}
+//								}
+//							}
+//							for (int i = 5; i < cinemaState + 5; i++) {
+//								if (hitname == ("button" + i) && p == 1) {					
+//									if (selectedLevel == i) {
+//										PlayerPrefs.SetInt ("FromLS", 1);
+//										if (i == 5)
+//											cinLevel = 2;
+//										if (i == 6)
+//											cinLevel = 3;
+//										if (i == 7)
+//											cinLevel = 5;
+//										if (i == 8)
+//											cinLevel = 4;
+//										if (i == 9)
+//											cinLevel = 6;
+//										loadLevel1 ("cinema");
+//									} else {
+//										selectionOn = true;
+//										selectedLevel = i;
+//										drawSelection ();
+//									}
+//								}
+//							}
+//							print (selectedLevel);
+//						}
+//					} // end ray 1
+//
+//					else {
+//
+//						if (p == 3 || (hitname == "button10" && p == 1)) {
+//							selectedLevel = 99;
+//							selectionOn = false;
+//							if (sfx == 1)
+//								GetComponent<AudioSource> ().PlayOneShot (blip2);
+//							worldNum--;
+//							if (worldNum < 0)
+//								worldNum = 6;
+//							else if (worldNum > maxWorld && worldNum != 6)
+//								worldNum = maxWorld;
+//							switchGUI ("levelSelect");
+//
+//						} else if (p == 2 || (hitname == "button11" && p == 1)) {
+//							selectedLevel = 99;
+//							selectionOn = false;
+//							if (sfx == 1)
+//								GetComponent<AudioSource> ().PlayOneShot (blip2);
+//							worldNum++;
+//							if (worldNum > maxWorld && worldNum < 6)
+//								worldNum = 6;
+//							if (worldNum > 6)
+//								worldNum = 0;
+//							switchGUI ("levelSelect");
+//
+//						} else if (hitname == "button12" && p == 1) {
+//							selectedLevel = 99;
+//							selectionOn = false;
+//							if (sfx == 1)
+//								GetComponent<AudioSource> ().PlayOneShot (blip3);
+//							switchGUI ("paused");
+//							guinew.switchGUI (GUInew.State.Paused);
+//
+//						} else if (hitname == "button13" && p == 1) {
+//							if (selectionOn) {
+//								if (worldNum != 6)
+//									loadLevel1 ("level");
+//								else if (worldNum == 6 && selectedLevel < 5) {
+//									tutLevel = 60 + selectedLevel;
+//									loadLevel1 ("tutorial");
+//								} else if (worldNum == 6 && selectedLevel >= 5) {
+//									if (selectedLevel == 5)
+//										cinLevel = 2;
+//									if (selectedLevel == 6)
+//										cinLevel = 3;
+//									if (selectedLevel == 7)
+//										cinLevel = 5;
+//									if (selectedLevel == 8)
+//										cinLevel = 4;
+//									if (selectedLevel == 9)
+//										cinLevel = 6;
+//									loadLevel1 ("cinema");
+//								} 
+//							} 
+//						}
+//					} // end ray 0
 				}
 				// end LS
 				else if (state == "victoryCruise" && p == 1) {
@@ -1033,7 +1034,7 @@ public class GUIScript : MonoBehaviour
 
 
 
-	void loadMenu ()
+	void loadMenu () // main menu from pause
 	{
 		PlayerPrefs.SetInt ("Quit", 1);
 		ship.state = MoveShip.State.Crashing;							
@@ -1057,12 +1058,13 @@ public class GUIScript : MonoBehaviour
 	}
 
 
-	void loadLevel2 (string which)
+	void loadLevel2 (string which) // for level select screeen
 	{
+		print ("loadingLevel 2: this should only happen after level select menu");
 		if (which == "level")
-			gm.setLevel (worldNum * 10 + selectedLevel);
+			gm.SetLevel (worldNum * 10 + selectedLevel);
 		else if (which == "tutorial") {
-			gm.setLevel (tutLevel);
+			gm.SetLevel (tutLevel);
 			if (selectedLevel == 1)
 				PlayerPrefs.SetInt ("ShipNum", 10);
 		}
@@ -1077,17 +1079,17 @@ public class GUIScript : MonoBehaviour
 	}
 
 
-	IEnumerator VCcontinue ()
-	{
-		VCbuttonState = 1;
-		if (sfx == 1)
-			GetComponent<AudioSource> ().PlayOneShot (gameStart);
-		yield return new WaitForSeconds (0.4f);
-		CamBlack ("down");
-		yield return new WaitForSeconds (0.8f);
-
-		Application.LoadLevel (1);
-	}
+	//	IEnumerator VCcontinue ()
+	//	{
+	//		VCbuttonState = 1;
+	//		if (sfx == 1)
+	//			GetComponent<AudioSource> ().PlayOneShot (gameStart);
+	//		yield return new WaitForSeconds (0.4f);
+	//		CamBlack ("down");
+	//		yield return new WaitForSeconds (0.8f);
+	//
+	//		Application.LoadLevel (1);
+	//	}
 
 
 	void Update ()

@@ -6,7 +6,7 @@ public class MoveCam : MonoBehaviour
 {
 
 	public MoveShip ship;
-	public GameMaster gm;
+	GameMaster gm;
 
 	Transform target;
 	public float defaultCamXRot = 10;
@@ -43,21 +43,6 @@ public class MoveCam : MonoBehaviour
 	public string[] titleAudioName;
 	// why are these here?
 
-	Transform VC_interface;
-	Transform interfaceTilt;
-	Transform newRecord;
-	Transform levelTime;
-	Transform buttons;
-	public GameObject vcnPF;
-	Transform curTime;
-	Transform recordTime;
-	GameObject vcn;
-	GameObject vcn2;
-	GameObject vcn3t;
-
-	GameObject Rvcn;
-	GameObject Rvcn2;
-	GameObject Rvcn3;
 
 	float yPos;
 	float zPos;
@@ -66,13 +51,6 @@ public class MoveCam : MonoBehaviour
 	int zLerp;
 	int xLerp;
 
-	public float[] VCshipAdj;
-	// victory cruise ship adjust height(?) by
-
-	public bool go = false;
-
-	int level;
-	public bool newRecordCheck = false;
 	float camXLerpSpeed;
 
 	public Vector3 lp;
@@ -80,8 +58,10 @@ public class MoveCam : MonoBehaviour
 
 	float diff = 0;
 
-	void Start ()
+
+	void Awake ()
 	{
+		gm = GameMaster.instance;
 		lerpSpeed = defaultLerpSpeed;
 		target = ship.transform;
 		//	iPhoneKeyboard.autorotateToPortrait = false; 
@@ -224,8 +204,6 @@ public class MoveCam : MonoBehaviour
 			goalZoom = 35;
 			cam.transform.localPosition = new Vector3 (0, 4.3f, -7);
 			cam.transform.localRotation = Quaternion.Euler (20, 0, 0);
-				// adjust the alt of the ship to center for victory cruise. Is this necessary?
-			ship.anim.transform.localPosition = new Vector3 (0, VCshipAdj [gm.shipNum], 0);
 			lerpSpeed = 2.0f;
 			transform.position = new Vector3 (target.GetComponent<Rigidbody> ().position.x - 12, 10, 0);
 			transform.localEulerAngles = new Vector3 (transform.localEulerAngles.x, Random.Range (-35, 35), transform.localEulerAngles.z);
@@ -241,6 +219,7 @@ public class MoveCam : MonoBehaviour
 			transform.localEulerAngles = Vector3.zero;
 			cam.transform.localRotation = Quaternion.Euler (defaultCamXRot, 0, 0);
 			goalZoom = 35;
+			// again, why are these here??
 			titleObj = Instantiate (titlePF, Vector3.zero, Quaternion.identity) as Transform;
 			titleArtifactObj = Instantiate (titleArtifactPFs [gm.worldNum], Vector3.zero, Quaternion.identity) as Transform;
 			titleObj.parent = cam.transform;

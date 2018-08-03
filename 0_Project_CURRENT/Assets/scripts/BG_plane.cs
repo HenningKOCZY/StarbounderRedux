@@ -2,35 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BG_plane : MonoBehaviour {
+public class BG_plane : MonoBehaviour
+{
 	
 	public Transform cam;
 	//var BGobjs: Transform[];
 	GameObject currBG;
 	public Color[] levelFog;
-	//var artifactColor: Color[];
-	//var artifactBurstMat: Material;
-	//var ren: Renderer;
-	//var plane: Transform;
 
 
+	void Update ()
+	{
 
-	void Update() {
-
-		transform.position = new Vector3(cam.position.x * 0.8f, cam.position.y * 0.7f, cam.position.z);
+		transform.position = new Vector3 (cam.position.x * 0.8f, cam.position.y * 0.7f, cam.position.z);
 		//transform.localRotation.y = cam.position.x*-0.001;
 	}
 
-	public int changeBackground(int level) {
-		int worldNum = (int)Mathf.Floor((level + 0.1f) / 10);
+	public int changeBackground (int level)
+	{
+		int worldNum = (int)Mathf.Floor ((level + 0.1f) / 10);
 
 		//artifactBurstMat.SetColor("_TintColor", artifactColor[worldNum]);
 
 		if (currBG)
-			Destroy(currBG);
-		RenderSettings.fogColor = levelFog[worldNum];
+			Destroy (currBG);
+		RenderSettings.fogColor = levelFog [worldNum];
 
-		currBG = Instantiate(Resources.Load("BG/BGobj" + worldNum), Vector3.zero, Quaternion.identity) as GameObject;
+		currBG = Instantiate (Resources.Load ("BG/BGobj" + worldNum), Vector3.zero, Quaternion.identity) as GameObject;
 		currBG.transform.parent = transform;
 		currBG.transform.localPosition = Vector3.zero;
 
@@ -44,7 +42,8 @@ public class BG_plane : MonoBehaviour {
 		return worldNum;
 	}
 
-	public void killBackground() {
-		Destroy(currBG);
+	public void killBackground ()
+	{
+		Destroy (currBG);
 	}
 }
