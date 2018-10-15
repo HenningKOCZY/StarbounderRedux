@@ -107,7 +107,7 @@ public class PantherFlagScript : MonoBehaviour
 		if (on == 0) {
 			stoppedMoment = Time.time;
 			ship.fakeCC = true;
-			ship.checkLanding ();
+			ship.CheckLanding ();
 			base.GetComponent<AudioSource> ().PlayOneShot (platformDescend);
 			pFlag.GetComponent<Animation> ().Play ();
 //			ship.state.started = false;

@@ -36,8 +36,6 @@ public class MoveCam : MonoBehaviour
 	public float goalZoom = 35;
 	float zoomLerp = 2;
 
-	public Transform titlePF;
-	Transform titleObj;
 	public Transform[] titleArtifactPFs;
 	Transform titleArtifactObj;
 	public string[] titleAudioName;
@@ -104,25 +102,12 @@ public class MoveCam : MonoBehaviour
 	}
 
 
-
 	void LateUpdate ()
 	{	
 
 		cam.fieldOfView = Mathf.Lerp (cam.fieldOfView, goalZoom, Time.deltaTime * zoomLerp);
 
-		if (mode == Mode.Title) {
-			if (gm.device == GameMaster.DeviceType.iPhone) {	
-				foreach (Touch touch in Input.touches) {
-					if (touch.phase == TouchPhase.Began) {
-						ship.reset (3);
-					}
-				}
-			} else { // computer CTRLs
-				if ((Input.GetMouseButtonDown (0)) || (Input.GetButtonDown ("Fire1"))) {
-					ship.reset (3);
-				}
-			}
-		} else if (mode == Mode.Cruise) {
+		if (mode == Mode.Cruise) {
 			// rotate cam based on tilt
 			goalRY = Mathf.Clamp (goalRY - (ship.xf * Time.deltaTime * 3), -1, 1);	
 			transform.localEulerAngles = new Vector3 (transform.localEulerAngles.x, 40 * Mathf.Sin (goalRY));
@@ -177,8 +162,7 @@ public class MoveCam : MonoBehaviour
 			zoomLerp = 1.2f;
 			cam.fieldOfView = 40;
 			anim.Stop ();
-			if (titleObj) {
-				Destroy (titleObj.gameObject);
+			if (titleArtifactObj) {
 				Destroy (titleArtifactObj.gameObject);
 			}
 			goalZoom = 35;
@@ -209,7 +193,7 @@ public class MoveCam : MonoBehaviour
 			transform.localEulerAngles = new Vector3 (transform.localEulerAngles.x, Random.Range (-35, 35), transform.localEulerAngles.z);
 			break;
 
-		case Mode.Title: // move title arti creation, sound biz title and all to gameMaster, then gm not necessary?
+		case Mode.Title: // move title arti creation, sound biz to gameMaster, then gm not necessary?
 
 			if (ship.sfx) {
 				GetComponent<AudioSource> ().clip = (Resources.Load<AudioClip> (titleAudioName [gm.worldNum]));
@@ -219,13 +203,9 @@ public class MoveCam : MonoBehaviour
 			transform.localEulerAngles = Vector3.zero;
 			cam.transform.localRotation = Quaternion.Euler (defaultCamXRot, 0, 0);
 			goalZoom = 35;
+
 			// again, why are these here??
-			titleObj = Instantiate (titlePF, Vector3.zero, Quaternion.identity) as Transform;
 			titleArtifactObj = Instantiate (titleArtifactPFs [gm.worldNum], Vector3.zero, Quaternion.identity) as Transform;
-			titleObj.parent = cam.transform;
-			titleObj.localPosition = Vector3.zero;
-				//	TitleScript titleScript = titleObj.GetComponent<TitleScript<();
-//				titleScript.updateTitle(gm.worldNum);
 			break;
 
 		case Mode.Crash:

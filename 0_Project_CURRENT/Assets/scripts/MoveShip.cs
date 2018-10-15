@@ -18,7 +18,7 @@ public class MoveShip : MonoBehaviour
 
 	MoveCam cam;
 	Transform camTrans;
-	GUIScript gui;
+	//	GUIScript gui;
 	GUInew guinew;
 	GameMaster gm;
 
@@ -101,8 +101,7 @@ public class MoveShip : MonoBehaviour
 	public int levelAttempts = 1;
 	Transform warpTubeObj;
 
-	private float blackerPause;
-	private float zForce;
+	float blackerPause;
 
 	public int shipNum;
 	bool brakes = true;
@@ -151,7 +150,7 @@ public class MoveShip : MonoBehaviour
 	public Music musicSourceScript;
 	int cc = 0;
 	public bool fakeCC = false;
-	GUIQuadObj[] guiObjs;
+
 
 	public bool restarted = false;
 
@@ -231,7 +230,7 @@ public class MoveShip : MonoBehaviour
 			Debug.Log ("You need a GameMaster.");
 		rb = GetComponent<Rigidbody> ();
 		guinew = gm.guinew;
-		gui = gm.gui;
+//		gui = gm.gui;
 		cam = gm.cam;
 	}
 
@@ -251,15 +250,16 @@ public class MoveShip : MonoBehaviour
 		anim2 = sub.GetComponent<Animation> ();
 		anim = animSub.GetComponent<Animation> ();
 
-		guiCam = GameObject.Find ("GUICameraL1").GetComponent<Camera> ();
+//		guiCam = GameObject.Find ("GUICameraL1").GetComponent<Camera> ();
 		musicSource = GameObject.Find ("MusicSource(Clone)");
 		musicSourceScript = musicSource.GetComponent<Music> ();
 		if (!sfx)
 			engineAudio.SetActive (false);
 		defGrav = grav;
 		InitShip ();
-		reset (2);
-		blackerPause = gui.blackerPause;
+		blackerPause = guinew.blackerPause;
+		Reset (2);
+
 		camTrans = cam.transform;
 
 	}
@@ -351,13 +351,17 @@ public class MoveShip : MonoBehaviour
 
 		// set boosters
 		shipBoosterMat.SetColor ("_Tint", boosterColor);
-//		engineFlareMat.SetColor ("_TintColor", new Vector4 (boosterColor.r / 2, boosterColor.g / 2, boosterColor.b / 2, 0.5f));
+
 		// set engine lights
+		Light[] ls = shipObj.GetComponentsInChildren<Light> ();
+		foreach (Light l in ls) {
+			l.color = boosterColor;
+		}
 	
 		// set splode and airburst colors based on booster Color
 		splode.InitColor (boosterColor);
 		jumpBurst.InitColor (boosterColor);
-		//		explosionParticleMat.SetColor ("_TintColor", new Vector4 (((1 - boosterColor.r) / 4 + boosterColor.r), ((1 - boosterColor.g) / 4 + boosterColor.g), ((1 - boosterColor.b) / 4 + boosterColor.b), 1));
+		//	explosionParticleMat.SetColor ("_TintColor", new Vector4 (((1 - boosterColor.r) / 4 + boosterColor.r), ((1 - boosterColor.g) / 4 + boosterColor.g), ((1 - boosterColor.b) / 4 + boosterColor.b), 1));
 
 	}
 
@@ -377,6 +381,8 @@ public class MoveShip : MonoBehaviour
 	}
 
 
+
+
 	void FixedUpdate ()
 	{
 
@@ -384,7 +390,7 @@ public class MoveShip : MonoBehaviour
 		rbx = rb.velocity.x;
 		rby = rb.velocity.y;
 		rbz = rb.velocity.z;
-        
+
 		if (state != State.Crashing && state != State.Winning) {
 			if (gm.device == GameMaster.DeviceType.iPhone) {
 				// inputs (merged from OldFixedUpdate)
@@ -399,6 +405,11 @@ public class MoveShip : MonoBehaviour
 						if (Input.GetTouch (i).position.x > Screen.width - (Screen.width / 4)) {
 							if (Input.GetTouch (i).phase == TouchPhase.Began || Input.GetTouch (i).phase != TouchPhase.Ended) {
 								yf = true;
+								if (state == State.Title) { 
+									guinew.Reset (3);
+								} else if (state == State.Cruising) {
+									guinew.ResetHardVC ();
+								}
 							} else
 								yf = false;
 							//if (jumpTouches == 0) yf = false;
@@ -408,8 +419,10 @@ public class MoveShip : MonoBehaviour
 							} else
 								brakes = false;
 						}
+
 					}
 				}
+
 			} else { // computer ctrls
 				//inputs (new)
 				yf = Input.GetButton ("Fire1");
@@ -424,6 +437,14 @@ public class MoveShip : MonoBehaviour
 					else
 						brakes = true;
 				} 
+				if (state == State.Title) {
+					if (yf || (Input.GetMouseButtonDown (0))) {
+						guinew.Reset (3);
+					}
+				} else if (state == State.Cruising) {
+					if (yf)
+						guinew.ResetHardVC ();
+				}
 			}
 			if (brakeOverride)
 				brakes = false;
@@ -437,7 +458,7 @@ public class MoveShip : MonoBehaviour
 			qbClear = true;
 		}
 		if (qf && qbClear && state != State.Cruising)
-			resetRepoShip ();
+			ResetRepoShip ();
 
 
 		// velocity z
@@ -454,9 +475,7 @@ public class MoveShip : MonoBehaviour
 			rbz = targetSpeed;
 		} else { // for stopping
 			rbz = Mathf.Lerp (rb.velocity.z, 0.0f, Time.deltaTime * 6);
-		}
-
-		zForce = rbz / maxZSpeed;   //ratio for display?
+		} 
 
 
 		// start the motion of the ship and the clock when brakes released
@@ -473,17 +492,16 @@ public class MoveShip : MonoBehaviour
 			}
 		}
 
-		if (state == State.Normal) {
+		if (state == State.Normal) { // update stats and GUI, check win
 			stats.elapsedTime += Time.deltaTime / gm.gameSpeed;
-			guinew.UpdateTime (stats.elapsedTime);
-			guinew.UpdateProg (Mathf.Clamp01 (stats.progress / winDist));
 
-			// check gateways
-			if (transform.position.z > winDist && winDist > 0)
+			guinew.UpdatePlayGUI (stats.elapsedTime, rbz, Mathf.Clamp01 (stats.progress / winDist));
+
+			if ((transform.position.z > winDist - 0.5f) && (winDist > 0))
 				checkGates ();
+		} else if (state == State.Crashing) {
+			guinew.UpdatePlayGUI (stats.elapsedTime, rbz, Mathf.Clamp01 (stats.progress / winDist));
 		}
-
-
 
 		// gravity 
 		if (state == State.Normal || state == State.PreStart)
@@ -516,8 +534,7 @@ public class MoveShip : MonoBehaviour
 			xRot = Mathf.Lerp (xRot, -5 + (-1.8f * rby), Time.deltaTime * xRotSpeed);
 		} else {
 			if (rby < -10) { // free fall over the edge / take away a jump 
-				if (gm.worldNum == 1)
-					//level10off();
+
 				xRot = 0;
 				xRotSpeed = 4;
 				stats.jumps = 1;
@@ -537,14 +554,14 @@ public class MoveShip : MonoBehaviour
 		if (yf && stats.jbClear && (state == State.Normal || state == State.PreStart)) {
 			if (stats.jumps == 1) { // double jump
 				if (rc == 0) {
-					jump (2);
+					Jump (2);
 					stats.jumps = 2;
 				} else {
-					jump (2);
+					Jump (2);
 					stats.jumps = 1;
 				}
 			} else if (stats.jumps == 0) { // jump
-				jump (1);
+				Jump (1);
 				stats.jumps = 1;
 			}
 		}
@@ -633,7 +650,6 @@ public class MoveShip : MonoBehaviour
 			}
 			rb.rotation = Quaternion.Slerp (rb.rotation, Quaternion.Euler (0, 0, goalZtemp), Time.deltaTime * 2);
 			rb.position = new Vector3 (rb.position.x, Random.Range (2.995f, 3.005f), rb.position.z);
-			//anim2.transform.position.y=Random.Range(2.99, 3.01);
 
 			yield return null;		
 		}
@@ -671,39 +687,26 @@ public class MoveShip : MonoBehaviour
 	}
 
 
-	void level10off ()
-	{
-		topSurface.GetComponent<Animation> ().Play ("10_off");	
-		sideSurface.GetComponent<Animation> ().Play ("10_off");	
-		frontSurface.GetComponent<Animation> ().Play ("10_off");
-		//shipLight10s.animation.Play("10_light_off");
-	}
-
-	void jump (int which)
+	void Jump (int which)
 	{
 		stats.jbClear = false;
 		stats.grounded = false;
 		stats.landing = false;
 		stats.handling = airHandling;
 
-		rb.position += new Vector3 (0f, 0.4f, 0f);
+		rb.position += new Vector3 (0f, 0.25f, 0f);
 
-
-		jumpMult = 1.04f;
+		jumpMult = 1.1f;
 		rby = jumpforce * jumpMult;
 
-		if (which > 0 && which <= 2) {
-//			jumpCards (which, Time.time);
-			jumpBurst.MakeJump (transform.position, stats.lv);
-		}
+		guinew.UpdateJump (which);
+		jumpBurst.MakeJump (transform.position, stats.lv);
+
 		stats.jumpTimer = 0.06f;
 	}
 
 
 
-
-	//
-	//
 	//
 	//	void jumpOld(int which) { // 1: single  2: doubleJump  3: left wall jump  4: right wall jump  5: panther boost 6: front wall jump
 	//
@@ -826,6 +829,7 @@ public class MoveShip : MonoBehaviour
 	//		jumpBurst.MakeJump (transform.position);
 	//	}
 
+
 	void winCards (Vector3 pos)
 	{ // makes cam flare and path after win gate
 
@@ -852,7 +856,7 @@ public class MoveShip : MonoBehaviour
 			if (stats.lv.y < -1) { // used to be state.lv.y
 //				print(collision.gameObject.name);
 //				print("vel y: " + state.lv.y + "    enter..");
-				checkLanding ();
+				CheckLanding ();
 			}
 		}
 	}
@@ -861,12 +865,12 @@ public class MoveShip : MonoBehaviour
 	{
 		if (!stats.grounded) {
 			if (rb.velocity.y < -1)
-				checkLanding (); 
+				CheckLanding (); 
 		}
 	}
 
 
-	string checkSides ()
+	string CheckSides ()
 	{
 		int cc = raycheckSide (0);	
 		if (cc > 0) {
@@ -884,16 +888,17 @@ public class MoveShip : MonoBehaviour
 	}
 
 
-	public void checkLanding ()
+	public void CheckLanding ()
 	{
 
-		cc = raycheckDown (1);	
+		cc = RaycheckDown (1);	
 		if (cc > 0 || fakeCC == true) {
 			stats.fJumping = false;
 			stats.jumps = 0;
 			stats.landed = true;
 			stats.grounded = true;
-//			airBurstScript.CardStop ();
+
+			guinew.UpdateJump (0);
 			stats.handling = defaultHandling;
 			//playSound("land");
 
@@ -913,33 +918,14 @@ public class MoveShip : MonoBehaviour
 				anim.Play ("land");
 				anim.PlayQueued ("run");
 			}
-
-//			rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+				
 			rby = 0;
 			if (state == State.Normal)
 				cam.goalHeight = stats.lastY;
 		}
-		if (gm.worldNum == 1)
-		if (stats.grounded == true)
-				//level10on();
+	
 		cc = 0;
 		fakeCC = false;
-	}
-
-	void level10on ()
-	{
-		topSurface.GetComponent<Animation> ().Play ("10_on");	
-		sideSurface.GetComponent<Animation> ().Play ("10_on");	
-		frontSurface.GetComponent<Animation> ().Play ("10_on");
-		//shipLight10s.animation.Play("10_light_on");
-//		yield WaitForSeconds(.3);
-		if (!topSurface.GetComponent<Animation> ().isPlaying)
-			topSurface.GetComponent<Animation> ().Play ("10_idle");	
-		if (!sideSurface.GetComponent<Animation> ().isPlaying)
-			sideSurface.GetComponent<Animation> ().Play ("10_idle");	
-		if (!frontSurface.GetComponent<Animation> ().isPlaying)
-			frontSurface.GetComponent<Animation> ().Play ("10_idle");
-		//if(!shipLight10s.animation.isPlaying)shipLight10s.animation.Play("10_light_idle");
 	}
 
 
@@ -948,10 +934,8 @@ public class MoveShip : MonoBehaviour
 		Transform ct = collision.transform;
 
 		if (ct.name == "camDropBox") {
-//			state.tunnel = true;
 			cam.tunnelSwitch (1);
 		} else if (ct.name == "camDropBox2") {
-//			state.tunnel2 = true;
 			cam.tunnelSwitch (2);
 		} else if (ct.tag == "artifact" && ct.position.z > 0) { // >0 necessary to stop double collisions and therefore playing the second at -100, for some reason
 			// set off burst
@@ -968,7 +952,7 @@ public class MoveShip : MonoBehaviour
 			} else if (ct.name == "artifact3") {
 				artCount += 1;
 			} else if (ct.name == "artifact0") { // special for tutorial
-				gui.a1state++;
+//				gui.a1state++;
 			}
 
 			guinew.UpdateArti (artCount);
@@ -984,7 +968,8 @@ public class MoveShip : MonoBehaviour
 		}
 	}
 
-	int raycheckDown (int which)
+
+	int RaycheckDown (int which)
 	{
 		RaycastHit hit;
 		float xRad = 0.9f;
@@ -1012,13 +997,10 @@ public class MoveShip : MonoBehaviour
 		if (Physics.Raycast (new Vector3 (pos.x - xRad, pos.y + yRad, pos.z - zRad), -Vector3.up, out hit, rayDist))
 		if (hit.collider.tag != "Kill")
 			count++;
-		//World 1 Ground Flicker
-		//if (gm.worldNum == 1)
-		//	if (count > 0)
-		//		level10on();
 
 		return count;
 	}
+
 
 	int raycheckSide (int which)
 	{ // 0 = left check.  1 = right check
@@ -1044,34 +1026,6 @@ public class MoveShip : MonoBehaviour
 				count++;
 		}
 
-		return count;
-	}
-
-
-	int raycheckFront ()
-	{
-		RaycastHit hit;
-		float xRad = 0.9f;
-		float zRad = 0.5f;
-		float yRad = 1.6f;
-		float rayDist = 4.0f;
-		Vector3 pos = transform.position;
-		int count = 0;
-		Debug.DrawRay (new Vector3 (pos.x + xRad, pos.y + 0.5f, pos.z + zRad), Vector3.forward * (rayDist), Color.green);
-		Debug.DrawRay (new Vector3 (pos.x - xRad, pos.y + 0.5f, pos.z + zRad), Vector3.forward * (rayDist), Color.green);
-		Debug.DrawRay (new Vector3 (pos.x + xRad, pos.y + yRad, pos.z + zRad), Vector3.forward * (rayDist), Color.green);
-		Debug.DrawRay (new Vector3 (pos.x - xRad, pos.y + yRad, pos.z + zRad), Vector3.forward * (rayDist), Color.green);
-		//cast 4 down
-		if (Physics.Raycast (new Vector3 (pos.x + xRad, pos.y + 0.5f, pos.z + zRad), Vector3.forward, out hit, rayDist))
-			count++;
-		if (Physics.Raycast (new Vector3 (pos.x - xRad, pos.y + 0.5f, pos.z + zRad), Vector3.forward, out hit, rayDist))
-			count++;
-		if (Physics.Raycast (new Vector3 (pos.x + xRad, pos.y + yRad, pos.z + zRad), Vector3.forward, out hit, rayDist))
-			count++;
-		if (Physics.Raycast (new Vector3 (pos.x - xRad, pos.y + yRad, pos.z + zRad), Vector3.forward, out hit, rayDist))
-			count++;
-		if (Physics.Raycast (new Vector3 (pos.x, pos.y + 1, pos.z + zRad), Vector3.forward, out hit, rayDist))
-			count++;
 		return count;
 	}
 
@@ -1104,12 +1058,16 @@ public class MoveShip : MonoBehaviour
 			if (type == 0) {
 				splode.MakeSplodeMark ();
 			}
-			yield return new WaitForSeconds (1.5f);
+			yield return new WaitForSeconds (1.3f);
 		} else if (type == 1) {
-			yield return new WaitForSeconds (1.2f);
+			yield return new WaitForSeconds (1.1f);
 		}
 
-		reset (0);
+		guinew.Reset (0);
+//		guinew.camBlack.Go ("in");
+//		yield return new WaitForSeconds (blackerPause);
+//
+//		Reset (0);
 	}
 
 
@@ -1152,7 +1110,7 @@ public class MoveShip : MonoBehaviour
 
 
 		yield return new WaitForSeconds (2.5f);
-		gui.CamBlack ("down");
+		guinew.camBlack.Go ("in");
 		yield return new WaitForSeconds (blackerPause);
 		CheckWinCons ();
 
@@ -1229,7 +1187,7 @@ public class MoveShip : MonoBehaviour
 //		disableGUI ();
 		System.GC.Collect ();
 //		gui.updateVC ();
-		gui.switchGUI ("victoryCruise");
+//		gui.switchGUI ("victoryCruise");
 		guinew.switchGUI (GUInew.State.VictoryCruise); 
 		RenderSettings.fogStartDistance = 10;
 		RenderSettings.fogEndDistance = 300;
@@ -1244,15 +1202,16 @@ public class MoveShip : MonoBehaviour
 		gm.bgScript.killBackground ();
 		gm.killLevel ();
 		anim2.Play ("winCruise1");	
-		repoShip ();	
+		RepoShip ();	
 
 		cam.switchTo (MoveCam.Mode.Cruise);
 		VCshipAdj ();
-		gui.message = "none";
+//		gui.message = "none";
 
 		targetSpeed = 0;
 		//make star streaks
 		warpTubeObj = Instantiate (warpTubePF, Vector3.zero, Quaternion.identity) as Transform;
+		guinew.camBlack.Go ("out");
 	}
 
 	void VCshipAdj () // adjust ship's height to fit it more pleasingly on the VC screen
@@ -1270,33 +1229,33 @@ public class MoveShip : MonoBehaviour
 	}
 
 
-	void titleScreen ()
+	void TitleScreen ()
 	{
 //		disableGUI ();
 		musicSourceScript.StopTrack ();
-		if (gm.worldNum != 1) {
-			RenderSettings.fogStartDistance = 110;
-			RenderSettings.fogEndDistance = 190;
-		} else {
-			RenderSettings.fogStartDistance = 150;
-			RenderSettings.fogEndDistance = 300;	
-		}
-		state = State.Cruising; // ??
+//		if (gm.worldNum != 1) {
+//			RenderSettings.fogStartDistance = 110;
+//			RenderSettings.fogEndDistance = 190;
+//		} else {
+//			RenderSettings.fogStartDistance = 150;
+//			RenderSettings.fogEndDistance = 300;	
+//		}
+		state = State.Title; // ??
 		stats.jumps = 2;
 		cam.goalHeight = -1;
 		targetSpeed = 0;
 
 		cam.switchTo (MoveCam.Mode.Title);
 		anim2.Play ("titleCruise");	
-		repoShip ();	
+		RepoShip ();	
 		if (sfx && engineAudio.activeSelf)
 			engineAudio.GetComponent<AudioSource> ().Stop ();
 		DisappearShip ();
-		gui.CamBlack ("up");	
+		guinew.camBlack.Go ("out");	
 	}
 
 
-	public void repoShip ()
+	public void RepoShip ()
 	{
 		print ("repoShip");
 		xf = 0;
@@ -1313,7 +1272,7 @@ public class MoveShip : MonoBehaviour
 	}
 
 
-	public void resetRepoShip () // this is for skipping through a level to custom "resetPos[]" for testing. 
+	public void ResetRepoShip () // this is for skipping through a level to custom "resetPos[]" for testing. 
 	{
 		qbClear = false;
 		xf = 0;
@@ -1334,34 +1293,18 @@ public class MoveShip : MonoBehaviour
 
 	IEnumerator AfterReset ()
 	{
-		yield return new WaitForSeconds (blackerPause / 4);
+		yield return new WaitForSeconds (blackerPause / 2);
 		grav = defGrav;
 		stats.grounded = false;
 		stats.jumpTimer = 0.25f;
 	}
 
 
-	void level10null ()
-	{
-		topSurface = null;
-		sideSurface = null;
-		frontSurface = null;
-	}
 
-
-	void level10Init ()
-	{
-		topSurface = GameObject.Find ("topSurfaces");
-		sideSurface = GameObject.Find ("sideSurfaces");
-		frontSurface = GameObject.Find ("frontSurfaces");
-	}
-
-
-	public void reset (int type)  // 0: regular 1: after victory cruise 2: vary beginning 3: skip title check
+	public void Reset (int type)  // 0: regular 1: after victory cruise 2: vary beginning 3: skip title check
 	{
 		System.GC.Collect ();
-		if (gm.worldNum == 1)
-			level10null ();
+
 //		if (type != 2) { // what is this??
 //			gui.CamBlack ("down");
 ////			yield WaitForSeconds(blackerPause);
@@ -1375,18 +1318,19 @@ public class MoveShip : MonoBehaviour
 			levelAttempts++;
 			restarted = false;
 		}
-		if (gui.state == "tutorial")
-			gui.lineCount = -1;
+//		if (gui.state == "tutorial")
+//			gui.lineCount = -1;
 
 		level = gm.level;
+
 		artCountSaved = PlayerPrefs.GetInt (("Level" + level + "ArtCount"), 000);	
 		Xspeed = 0;	
 
 		state = State.PreStart;
 		stats.elapsedTime = 0;
-		guinew.UpdateTime (0);
-		guinew.UpdateProg (0);
+		guinew.UpdatePlayGUI (0, 0, 0);
 		guinew.UpdateArti (artCountSaved);
+		guinew.UpdateJump (2);
 		artCount = artCountSaved;
 
 		gm.killLevel ();
@@ -1407,21 +1351,17 @@ public class MoveShip : MonoBehaviour
 		cam.tunnelSwitch (0);
 		jumpMult = 1.0f;
 
-		resetCards ();
+		ResetCards ();
 
 		if (gm.level % 10 == 0 && levelAttempts == 1 && type != 3 && gm.worldNum != 6) {
-			titleScreen ();
-			gui.switchGUI ("clear");
+			TitleScreen ();
 			guinew.switchGUI (GUInew.State.Title); 
 		} else {
 			if (gm.worldNum == 6)
-				gui.switchGUI ("tutorial");
+				guinew.switchGUI (GUInew.State.Title);
 			else {
-				gui.switchGUI ("play");
 				guinew.switchGUI (GUInew.State.Play); 
 			}
-//			disableGUI ();
-//			enableGUI ();
 
 			if (gm.worldNum == 5 || gm.worldNum == 1)
 				RenderSettings.fogStartDistance = 100;
@@ -1432,7 +1372,6 @@ public class MoveShip : MonoBehaviour
 			stats.jumps = 2;
 			stats.landed = false;
 			stats.progress = 0;
-			gui.message = "none";
 			gm.makeLevel ();
 			xf = 0;
 			sub.rotation = Quaternion.Euler (0, 0, 0);
@@ -1452,11 +1391,10 @@ public class MoveShip : MonoBehaviour
 
 		System.GC.Collect ();
 
+		guinew.camBlack.Go ("out");
 		gm.resetEasy ();
 		CtrlGUIUpdate ();
 
-		if (gm.worldNum == 1)
-			level10Init ();
 	}
 
 
@@ -1494,7 +1432,7 @@ public class MoveShip : MonoBehaviour
 		SwitchState (State.Normal);
 	}
 
-	void resetCards ()
+	void ResetCards ()
 	{
 		//reset explosion
 		splode.reset ();

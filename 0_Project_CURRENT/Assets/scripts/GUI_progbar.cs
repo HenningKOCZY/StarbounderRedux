@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GUI_progbar : MonoBehaviour
+public class GUI_ProgBar : MonoBehaviour
 {
 
 	Image midbar;
@@ -11,7 +11,7 @@ public class GUI_progbar : MonoBehaviour
 
 	void Awake ()
 	{ 
-		midbar = transform.GetChild (0).GetComponent<Image> ();
+		midbar = transform.GetChild (1).GetComponent<Image> ();
 	}
 
 

@@ -219,7 +219,7 @@ public class GameMaster : MonoBehaviour
 	{
 		gameSpeed = 0.75f + (num * 0.125f);
 		PlayerPrefs.SetInt ("GameSpeed", num);
-		gui.gameSpeed = num;
+//		gui.gameSpeed = num;
 		if (level == 60 || level == 61) { 
 			tutScript.timeInc = 0.017f * gameSpeed; 
 			tutScript.pauseInc = 0.035f * gameSpeed; 
@@ -228,14 +228,14 @@ public class GameMaster : MonoBehaviour
 
 	public void updateWorld ()
 	{
-		if (gui.tutorialState < 1 && level == 60) {
-			gui.tutorialState = 1;
-			PlayerPrefs.SetInt ("TutorialState", 1);
-		}
-		if (gui.tutorialState < 2 && level == 61) {
-			gui.tutorialState = 2;
-			PlayerPrefs.SetInt ("TutorialState", 2);
-		}
+//		if (gui.tutorialState < 1 && level == 60) {
+//			gui.tutorialState = 1;
+//			PlayerPrefs.SetInt ("TutorialState", 1);
+//		}
+//		if (gui.tutorialState < 2 && level == 61) {
+//			gui.tutorialState = 2;
+//			PlayerPrefs.SetInt ("TutorialState", 2);
+//		}
 		/*
 	if(gui.tutorialState<3 && level==69) {
 		gui.tutorialState=3;
@@ -245,8 +245,8 @@ public class GameMaster : MonoBehaviour
 		worldNum = bgScript.changeBackground (level);
 		gatewayMat.mainTexture = Resources.Load<Texture> ("world" + worldNum + "_warpGate");
 		colorBursts ();
-		gui.worldNum = worldNum;
-		gui.updateLevel ();
+//		gui.worldNum = worldNum;
+//		gui.updateLevel ();
 		/*
 	topMat.SetColor( "_Emission", topColor[worldNum]);
 	topMat.SetColor( "_SpecColor", topSpec[worldNum]);
@@ -280,17 +280,17 @@ public class GameMaster : MonoBehaviour
 //***new */
 		if (level < 60) {
 			artCount = PlayerPrefs.GetInt ("Level" + level + "ArtCount", 000);
-			gui.a1state = (int)Mathf.Floor (artCount / 100);	
-			gui.a2state = (int)Mathf.Floor ((artCount % 100) / 10);
-			gui.a3state = (int)artCount % 10;
+//			gui.a1state = (int)Mathf.Floor (artCount / 100);	
+//			gui.a2state = (int)Mathf.Floor ((artCount % 100) / 10);
+//			gui.a3state = (int)artCount % 10;
 //		print("LEVEL: "+level);
 //		print("artifacts: "+artCount);
 //		print("recordTime: "+PlayerPrefs.GetFloat("Level"+level+"Time",0));
 //		print("worldnum = "+worldNum);
 		} else {
-			gui.a1state = 0;	
-			gui.a2state = 0;
-			gui.a3state = 0;
+//			gui.a1state = 0;	
+//			gui.a2state = 0;
+//			gui.a3state = 0;
 		}	
 	}
 
@@ -309,7 +309,8 @@ public class GameMaster : MonoBehaviour
 	
 		currLevel = Instantiate (which, Vector3.zero, Quaternion.identity) as GameObject;
 	
-		gui.level = level;
+//		gui.level = level;
+
 		//currLighting = Instantiate(lightingList[worldNum], Vector3(0,0,0), Quaternion.identity) as Transform;
 		//currLighting.parent = cam.transform;
 		//currLighting.transform.localPosition=Vector3(0,0,0);
@@ -592,7 +593,6 @@ public class GameMaster : MonoBehaviour
 	{
 		Time.timeScale = 0; 
 		ship.SwitchState (MoveShip.State.Paused);
-		gui.switchGUI ("paused"); 
 		guinew.switchGUI (GUInew.State.Paused); 
 
 	}
@@ -600,9 +600,8 @@ public class GameMaster : MonoBehaviour
 	public void Unpause ()
 	{
 		if (level >= 60)
-			gui.switchGUI ("tutorial");
+			guinew.switchGUI (GUInew.State.Title);
 		else {
-			gui.switchGUI ("play");
 			guinew.switchGUI (GUInew.State.Play); 
 		}
 		ship.SwitchState (MoveShip.State.Prev);
@@ -613,6 +612,8 @@ public class GameMaster : MonoBehaviour
 	public void resetEasy ()
 	{
 		// ***new
+		print ("reset easy...? When does this go?");
+
 		//lomScript.UpdateNumbers(level);
 		if (shipNum == 10)
 			pantherFlagScript.InitFlag ();
@@ -620,11 +621,11 @@ public class GameMaster : MonoBehaviour
 			Destroy (pantherFlag);
 		if (checkpoint > 0) {
 			rPointCounter = checkpoint;
-			ship.resetRepoShip (); 
+			ship.ResetRepoShip (); 
 		} else {
-			ship.repoShip ();
+			ship.RepoShip ();
 		}
 				
-		gui.CamBlack ("up");	
+		guinew.camBlack.Go ("out");	
 	}
 }

@@ -219,7 +219,8 @@ public class GUIScript : MonoBehaviour
 	public GUIQuadObj a3Script;
 	public GUIQuadObj progBox1Script;
 	public GUIQuadObj progBox2Script;
-	public GUI_progbar progBarScript;
+	public GUI_ProgBar progBarScript;
+
 	public Transform speedbar;
 	public Transform jumpbar;
 
@@ -818,7 +819,7 @@ public class GUIScript : MonoBehaviour
 						if (gm.level == -1)
 							gm.level = 59;
 						PlayerPrefs.SetInt ("Level", gm.level);
-						ship.reset (3);
+						ship.Reset (3);
 					}
 					// level Select
 					else if (hitname == "button3" && p == 1) {
